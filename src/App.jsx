@@ -2,6 +2,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
+import Profile from "./pages/Profile";
 import SignupPage from "./pages/Signup";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       {/* <LoginPage /> */}
       {/* <SignupPage /> */}
       {/* <Home /> */}
+      <Profile/>
     </>
   );
 }
