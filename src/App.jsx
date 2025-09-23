@@ -1,20 +1,16 @@
+import React from "react";
 import "./App.css";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import LoginPage from "./pages/Login";
-import Profile from "./pages/Profile";
-import SignupPage from "./pages/Signup";
 
-function App() {
+const App = () => {
   return (
     <>
       <Navbar />
-      {/* <LoginPage /> */}
-      {/* <SignupPage /> */}
-      {/* <Home /> */}
-      <Profile/>
+      <RouterProvider router={router}></RouterProvider>
     </>
   );
-}
+};
 
 export default App;
