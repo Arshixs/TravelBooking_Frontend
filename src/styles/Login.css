@@ -1,0 +1,104 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0; /* Also a good idea to reset default margins */
+  padding: 0; /* Reset default padding */
+}
+
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px); /* Adjust 60px to your navbar's height */
+  background: #f0f2f5; /* Light gray background */
+  padding: 2rem;
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 3rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-form h2 {
+  font-size: 2.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.login-form p {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #134686; /* Same primary blue from navbar */
+  box-shadow: 0 0 0 3px rgba(19, 70, 134, 0.2);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 5px;
+  background: #134686; /* Same primary blue from navbar */
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background: #0f3a75; /* Slightly darker blue */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(19, 70, 134, 0.3);
+}
+
+.form-footer {
+  margin-top: 1.5rem;
+  color: #555;
+  /* white-space: nowrap; */
+}
+
+.form-footer a {
+  color: #134686;
+  font-weight: bold;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+/* #nowrap-text {
+  white-space: nowrap;
+} */
