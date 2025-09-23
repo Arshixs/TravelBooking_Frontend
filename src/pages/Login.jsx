@@ -1,15 +1,32 @@
 import React, { useState } from "react";
 import "../styles/Login.css";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../utils/axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Here you would handle the login logic, e.g., an API call
-    console.log("Attempting login with:", { email, password });
-    alert(`Login attempt for ${email}`);
+    try {
+      const response = await axios.post(
+        "/auth/login",
+        JSON.stringify({ email, password })
+      );
+      if (response.status === 200) {
+        if (response.status === 200) {
+          const { refreshToken, accessToken } = response.data;
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
+          alert("Login successful");
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      alert(error?.response?.data?.message || "Login failed!");
+    }
   };
 
   return (
@@ -48,9 +65,7 @@ const LoginPage = () => {
 
           <div className="form-footer">
             <span id="nowrap-text">Don't have an account? </span>
-            <span>
-              <a href="/signup">Sign Up</a>
-            </span>
+            <Link to="/signup">Sign Up</Link>
           </div>
         </form>
       </div>

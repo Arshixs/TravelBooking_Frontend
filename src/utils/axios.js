@@ -26,20 +26,20 @@ axios.interceptors.response.use(
         const refreshToken = localStorage.getItem("refreshToken");
         if (refreshToken) {
           try {
-            const response = await axios.get("/auth/refresh-token", {
+            const response = await axios.get("/auth/refresh-accessToken", {
               headers: {
                 "X-Refresh-Token": `Bearer ${refreshToken}`,
               },
             });
-            const { token } = response.data;
-            localStorage.setItem("token", token);
-            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            const { accessToken } = response.data;
+            localStorage.setItem("accessToken", accessToken);
+            originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
             return axios(originalRequest);
           } catch (error) {
             return Promise.reject(error);
           }
         } else {
-          localStorage.removeItem("token");
+          localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           window.location.href = "/login";
           return Promise.reject(error);
@@ -51,7 +51,7 @@ axios.interceptors.response.use(
         error.response?.data?.error === "Invalid Refresh Token"
       ) {
         toast.error("Your session has expired");
-        localStorage.removeItem("token");
+        localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         window.location.href = "/";
         return Promise.reject(error);
