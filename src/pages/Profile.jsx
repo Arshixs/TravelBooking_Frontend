@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"; // MODIFIED: Import useRef and useEffect
 import "../styles/Profile.css";
+import axios from "../utils/axios";
 
 // --- SVG Icons ---
 const UserIcon = () => (
@@ -16,23 +17,24 @@ const LockIcon = () => (
   </svg>
 );
 
-
 const Profile = () => {
   // --- State Management  ---
   const [isEditing, setIsEditing] = useState(false);
-  const [isPasswordSectionVisible, setIsPasswordSectionVisible] = useState(false);
+  const [isPasswordSectionVisible, setIsPasswordSectionVisible] =
+    useState(false);
 
-  // Mock data 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [profileData, setProfileData] = useState({
-    firstName: "Sarah",
-    lastName: "Johnson",
-    phone: "+1 (555) 123-4567",
-    email: "sarah.j@example.com",
-    dateOfBirth: "1990-05-15",
-    gender: "Female",
-    emergencyContactFirstName: "Michael",
-    emergencyContactLastName: "Johnson",
-    emergencyContactNo: "+1 (555) 765-4321",
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    dateOfBirth: "",
+    gender: "",
+    emergencyContactFirstName: "",
+    emergencyContactLastName: "",
+    emergencyContactNo: "",
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -43,6 +45,30 @@ const Profile = () => {
 
   // --- Refs and Effects for Scrolling ---
   const passwordCardRef = useRef(null); // NEW: Create a ref for the password card
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        // Assumes your API endpoint for fetching profile data is /api/profile
+        const response = await axios.get("/api/profile");
+
+        // Ensure date is in YYYY-MM-DD format for the input field
+        if (response.data.dateOfBirth) {
+          response.data.dateOfBirth = response.data.dateOfBirth.split("T")[0];
+        }
+
+        setProfileData(response.data);
+        setError(null);
+      } catch (err) {
+        setError("Failed to fetch profile data. Please try again later.");
+        console.error("Fetch profile error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
 
   // NEW: Add an effect to scroll when the password section appears
   useEffect(() => {
@@ -65,27 +91,59 @@ const Profile = () => {
     setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProfileSave = (e) => {
+  const handleProfileSave = async (e) => {
     e.preventDefault();
-    console.log("Profile data saved:", profileData);
-    setIsEditing(false);
+    try {
+      // Assumes your API endpoint for updating is a PUT request to /api/profile
+      const response = await axios.put("/api/profile", profileData);
+
+      if (response.status === 200) {
+        alert("Profile updated successfully!");
+        setIsEditing(false);
+      }
+    } catch (err) {
+      alert(err?.response?.data?.message || "Failed to update profile.");
+      console.error("Update profile error:", err);
+    }
   };
 
-  const handlePasswordUpdate = (e) => {
+  const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert("New passwords do not match!");
       return;
     }
-    console.log("Password update submitted for:", passwordData);
-    setPasswordData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
-    alert("Password updated successfully!");
-    setIsPasswordSectionVisible(false);
+
+    try {
+      // Assumes a password change endpoint like /api/auth/change-password
+      const response = await axios.post("/api/auth/change-password", {
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword,
+      });
+
+      if (response.status === 200) {
+        alert("Password updated successfully!");
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+        setIsPasswordSectionVisible(false);
+      }
+    } catch (err) {
+      alert(err?.response?.data?.message || "Failed to update password.");
+      console.error("Password update error:", err);
+    }
   };
+
+  // --- Conditional Rendering for Loading and Error States ---
+  if (loading) {
+    return <div className="profile-page-status">Loading your profile...</div>;
+  }
+
+  if (error) {
+    return <div className="profile-page-status error">{error}</div>;
+  }
 
   return (
     <div className="profile-page">
@@ -115,10 +173,7 @@ const Profile = () => {
                 </button>
               )}
               {!isEditing && (
-                <button
-                  className="btn-edit"
-                  onClick={() => setIsEditing(true)}
-                >
+                <button className="btn-edit" onClick={() => setIsEditing(true)}>
                   <span>Edit Profile</span>
                 </button>
               )}
@@ -203,9 +258,7 @@ const Profile = () => {
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
                     <option value="Other">Other</option>
-                    <option value="Prefer not to say">
-                      Prefer not to say
-                    </option>
+                    <option value="Prefer not to say">Prefer not to say</option>
                   </select>
                 ) : (
                   <p>{profileData.gender}</p>
