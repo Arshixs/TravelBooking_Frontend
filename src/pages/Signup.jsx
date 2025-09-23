@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Signup.css";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../utils/axios"; // Fixed typo
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +17,7 @@ const Signup = () => {
     emergencyLastName: "",
     emergencyPhone: "",
   });
-
+  const navigate = useNavigate();
   const [passwordMatch, setPasswordMatch] = useState(null);
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordError, setPasswordError] = useState("");
@@ -39,17 +41,26 @@ const Signup = () => {
       if (!isValid) {
         const requirements = [
           { met: formData.password.length >= 8, text: "At least 8 characters" },
-          { met: /[A-Z]/.test(formData.password), text: "One uppercase letter" },
-          { met: /[a-z]/.test(formData.password), text: "One lowercase letter" },
+          {
+            met: /[A-Z]/.test(formData.password),
+            text: "One uppercase letter",
+          },
+          {
+            met: /[a-z]/.test(formData.password),
+            text: "One lowercase letter",
+          },
           { met: /[0-9]/.test(formData.password), text: "One number" },
-          { met: /[@$!%*?&]/.test(formData.password), text: "One special character (@$!%*?&)" }
+          {
+            met: /[@$!%*?&]/.test(formData.password),
+            text: "One special character (@$!%*?&)",
+          },
         ];
-        
+
         setPasswordError(
-          <ul style={{ listStyle: 'none', padding: 0 }}>
+          <ul style={{ listStyle: "none", padding: 0 }}>
             {requirements.map((req, index) => (
-              <li key={index} style={{ color: req.met ? 'green' : 'red' }}>
-            {req.met ? '✓' : '✗'} {req.text}
+              <li key={index} style={{ color: req.met ? "green" : "red" }}>
+                {req.met ? "✓" : "✗"} {req.text}
               </li>
             ))}
           </ul>
@@ -68,15 +79,36 @@ const Signup = () => {
     }));
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    // Handle the signup logic here (e.g., API call)
+    try {
+      const response = await axios.post(
+        "/auth/signup",
+        JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
+          email: formData.email,
+          password: formData.password,
+          dateOfBirth: formData.dateOfBirth,
+          gender: formData.gender,
+          emergencyFirstName: formData.emergencyFirstName,
+          emergencyLastName: formData.emergencyLastName,
+          emergencyPhone: formData.emergencyPhone,
+        })
+      );
+      if (response.status === 200) {
+        alert("Account created successfully! Email verification sent.");
+        navigate("/login");
+      }
+    } catch (error) {
+      alert(error?.response?.data?.message || "Something went wrong!");
+    }
     console.log("New user data submitted:", formData);
-    alert("Account created successfully!");
   };
 
   return (
@@ -250,7 +282,7 @@ const Signup = () => {
 
           <div className="form-footer">
             <span>Already have an account? </span>
-            <a href="/login">Sign In</a>
+            <Link to="/login">Sign In</Link>
           </div>
         </form>
       </div>
