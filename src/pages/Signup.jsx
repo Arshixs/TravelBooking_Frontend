@@ -39,7 +39,8 @@ const Signup = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const validatePassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
 
@@ -56,15 +57,27 @@ const Signup = () => {
       if (!isValid) {
         const requirements = [
           { met: formData.password.length >= 8, text: "At least 8 characters" },
-          { met: /[A-Z]/.test(formData.password), text: "One uppercase letter" },
-          { met: /[a-z]/.test(formData.password), text: "One lowercase letter" },
+          {
+            met: /[A-Z]/.test(formData.password),
+            text: "One uppercase letter",
+          },
+          {
+            met: /[a-z]/.test(formData.password),
+            text: "One lowercase letter",
+          },
           { met: /[0-9]/.test(formData.password), text: "One number" },
-          { met: /[@$!%*?&]/.test(formData.password), text: "One special character (@$!%*?&)"},
+          {
+            met: /[@$!%*?&]/.test(formData.password),
+            text: "One special character (@$!%*?&)",
+          },
         ];
         setPasswordError(
-          <ul style={{ listStyle: "none", padding: 0, marginTop: '5px' }}>
+          <ul style={{ listStyle: "none", padding: 0, marginTop: "5px" }}>
             {requirements.map((req, index) => (
-              <li key={index} style={{ color: req.met ? "green" : "red", fontSize: '0.8rem' }}>
+              <li
+                key={index}
+                style={{ color: req.met ? "green" : "red", fontSize: "0.8rem" }}
+              >
                 {req.met ? "✓" : "✗"} {req.text}
               </li>
             ))}
@@ -92,7 +105,8 @@ const Signup = () => {
       return;
     }
     try {
-      const endpoint = activeTab === "user" ? "/auth/signup" : "/auth/vendor/signup";
+      const endpoint =
+        activeTab === "user" ? "auth/signup" : "auth/vendor/signup";
       const data =
         activeTab === "user"
           ? {
@@ -106,6 +120,7 @@ const Signup = () => {
               emergencyFirstName: formData.emergencyFirstName,
               emergencyLastName: formData.emergencyLastName,
               emergencyPhone: formData.emergencyPhone,
+              userType: "CUSTOMER"
             }
           : {
               vendorName: formData.vendorName,
@@ -121,11 +136,13 @@ const Signup = () => {
               accountNo: formData.accountNo,
               ifscCode: formData.ifscCode,
               password: formData.password,
+              userType: "VENDOR"
             };
 
       const response = await axios.post(endpoint, JSON.stringify(data));
+      console.log(response);
       if (response.status === 200) {
-        alert("Account created successfully! Email verification sent.");
+        alert("Account created successfully!.");
         navigate("/login");
       }
     } catch (error) {
@@ -137,10 +154,16 @@ const Signup = () => {
     <div className="signup-page-container">
       <div className="signup-form-wrapper">
         <div className="tab-container">
-          <button className={`tab-button ${activeTab === "user" ? "active" : ""}`} onClick={() => setActiveTab("user")}>
+          <button
+            className={`tab-button ${activeTab === "user" ? "active" : ""}`}
+            onClick={() => setActiveTab("user")}
+          >
             User Signup
           </button>
-          <button className={`tab-button ${activeTab === "vendor" ? "active" : ""}`} onClick={() => setActiveTab("vendor")}>
+          <button
+            className={`tab-button ${activeTab === "vendor" ? "active" : ""}`}
+            onClick={() => setActiveTab("vendor")}
+          >
             Vendor Signup
           </button>
         </div>
@@ -160,19 +183,62 @@ const Signup = () => {
               <fieldset className="form-section">
                 <legend>Personal Details</legend>
                 <div className="form-grid">
-                  <Inputbox label="First Name*" type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} />
-                  <Inputbox label="Last Name*" type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} />
-                  <Inputbox label="Email*" type="email" id="email" name="email" value={formData.email} onChange={handleChange} />
-                  <Inputbox label="Phone*" type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} />
-                  <Inputbox label="Date of Birth*" type="date" id="dateOfBirth" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange}/>
+                  <Inputbox
+                    label="First Name*"
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="Last Name*"
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="Email*"
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="Phone*"
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="Date of Birth*"
+                    type="date"
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleChange}
+                  />
                   <div className="input-group">
                     <label htmlFor="gender">Gender*</label>
-                    <select id="gender" name="gender" value={formData.gender} onChange={handleChange} required>
+                    <select
+                      id="gender"
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleChange}
+                      required
+                    >
                       <option value="">Select...</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                       <option value="Other">Other</option>
-                      <option value="Prefer not to say">Prefer not to say</option>
+                      <option value="Prefer not to say">
+                        Prefer not to say
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -181,10 +247,34 @@ const Signup = () => {
               <fieldset className="form-section">
                 <legend>Emergency Contact (Optional)</legend>
                 <div className="form-grid">
-                  <Inputbox label="First Name" type="text" id="emergencyFirstName" name="emergencyFirstName" value={formData.emergencyFirstName} onChange={handleChange} required={false}/>
-                  <Inputbox label="Last Name" type="text" id="emergencyLastName" name="emergencyLastName" value={formData.emergencyLastName} onChange={handleChange} required={false}/>
+                  <Inputbox
+                    label="First Name"
+                    type="text"
+                    id="emergencyFirstName"
+                    name="emergencyFirstName"
+                    value={formData.emergencyFirstName}
+                    onChange={handleChange}
+                    required={false}
+                  />
+                  <Inputbox
+                    label="Last Name"
+                    type="text"
+                    id="emergencyLastName"
+                    name="emergencyLastName"
+                    value={formData.emergencyLastName}
+                    onChange={handleChange}
+                    required={false}
+                  />
                   <div className="full-width">
-                    <Inputbox label="Phone" type="tel" id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required={false}/>
+                    <Inputbox
+                      label="Phone"
+                      type="tel"
+                      id="emergencyPhone"
+                      name="emergencyPhone"
+                      value={formData.emergencyPhone}
+                      onChange={handleChange}
+                      required={false}
+                    />
                   </div>
                 </div>
               </fieldset>
@@ -194,38 +284,121 @@ const Signup = () => {
               <fieldset className="form-section">
                 <legend>Vendor Details</legend>
                 <div className="form-grid">
-                  <Inputbox label="Firm Name*" type="text" id="vendorName" name="vendorName" value={formData.vendorName} onChange={handleChange} />
+                  <Inputbox
+                    label="Firm Name*"
+                    type="text"
+                    id="vendorName"
+                    name="vendorName"
+                    value={formData.vendorName}
+                    onChange={handleChange}
+                  />
                   <div className="input-group">
                     <label htmlFor="serviceType">Service Type*</label>
-                    <select id="serviceType" name="serviceType" value={formData.serviceType} onChange={handleChange} required>
+                    <select
+                      id="serviceType"
+                      name="serviceType"
+                      value={formData.serviceType}
+                      onChange={handleChange}
+                      required
+                    >
                       <option value="">Select...</option>
                       <option value="Guide">Guide</option>
                       <option value="Transport">Transport</option>
                       <option value="Hotel">Hotel</option>
                     </select>
                   </div>
-                  <Inputbox label="Email*" type="email" id="vendorEmail" name="vendorEmail" value={formData.vendorEmail} onChange={handleChange} />
-                  <Inputbox label="Phone*" type="tel" id="vendorPhone" name="vendorPhone" value={formData.vendorPhone} onChange={handleChange} />
-                  <Inputbox label="Street Name*" type="text" id="streetName" name="streetName" value={formData.streetName} onChange={handleChange}/>
-                  <Inputbox label="City*" type="text" id="city" name="city" value={formData.city} onChange={handleChange} />
-                  <Inputbox label="State*" type="text" id="state" name="state" value={formData.state} onChange={handleChange} />
-                  <Inputbox label="PIN Code*" type="text" id="pin" name="pin" value={formData.pin} onChange={handleChange} />
+                  <Inputbox
+                    label="Email*"
+                    type="email"
+                    id="vendorEmail"
+                    name="vendorEmail"
+                    value={formData.vendorEmail}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="Phone*"
+                    type="tel"
+                    id="vendorPhone"
+                    name="vendorPhone"
+                    value={formData.vendorPhone}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="Street Name*"
+                    type="text"
+                    id="streetName"
+                    name="streetName"
+                    value={formData.streetName}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="City*"
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="State*"
+                    type="text"
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="PIN Code*"
+                    type="text"
+                    id="pin"
+                    name="pin"
+                    value={formData.pin}
+                    onChange={handleChange}
+                  />
                 </div>
               </fieldset>
 
               <fieldset className="form-section">
                 <legend>Contact Person Details</legend>
                 <div className="form-grid">
-                  <Inputbox label="First Name*" type="text" id="contactPersonFirstName" name="contactPersonFirstName" value={formData.contactPersonFirstName} onChange={handleChange} />
-                  <Inputbox label="Last Name*" type="text" id="contactPersonLastName" name="contactPersonLastName" value={formData.contactPersonLastName} onChange={handleChange} />
+                  <Inputbox
+                    label="First Name*"
+                    type="text"
+                    id="contactPersonFirstName"
+                    name="contactPersonFirstName"
+                    value={formData.contactPersonFirstName}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="Last Name*"
+                    type="text"
+                    id="contactPersonLastName"
+                    name="contactPersonLastName"
+                    value={formData.contactPersonLastName}
+                    onChange={handleChange}
+                  />
                 </div>
               </fieldset>
 
               <fieldset className="form-section">
                 <legend>Bank Details</legend>
                 <div className="form-grid">
-                  <Inputbox label="Account Number*" type="text" id="accountNo" name="accountNo" value={formData.accountNo} onChange={handleChange} />
-                  <Inputbox label="IFSC Code*" type="text" id="ifscCode" name="ifscCode" value={formData.ifscCode} onChange={handleChange} />
+                  <Inputbox
+                    label="Account Number*"
+                    type="text"
+                    id="accountNo"
+                    name="accountNo"
+                    value={formData.accountNo}
+                    onChange={handleChange}
+                  />
+                  <Inputbox
+                    label="IFSC Code*"
+                    type="text"
+                    id="ifscCode"
+                    name="ifscCode"
+                    value={formData.ifscCode}
+                    onChange={handleChange}
+                  />
                 </div>
               </fieldset>
             </>
@@ -242,7 +415,13 @@ const Signup = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                style={{ borderColor: formData.password ? (passwordValid ? "green" : "red") : "" }}
+                style={{
+                  borderColor: formData.password
+                    ? passwordValid
+                      ? "green"
+                      : "red"
+                    : "",
+                }}
               >
                 {formData.password && passwordError && (
                   <div className="error-message">{passwordError}</div>
@@ -256,7 +435,12 @@ const Signup = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 style={{
-                  borderColor: passwordMatch === null ? "" : passwordMatch ? "green" : "red",
+                  borderColor:
+                    passwordMatch === null
+                      ? ""
+                      : passwordMatch
+                      ? "green"
+                      : "red",
                 }}
               />
             </div>

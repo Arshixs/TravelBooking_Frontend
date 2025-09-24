@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react"; // MODIFIED: Import useRef and useEffect
+import React, { useState, useRef, useEffect } from "react";
 import "../styles/Profile.css";
 import axios from "../utils/axios";
+import { useUser } from "../context/context.jsx";
 
 // --- SVG Icons ---
 const UserIcon = () => (
@@ -18,13 +19,12 @@ const LockIcon = () => (
 );
 
 const Profile = () => {
-  // --- State Management  ---
+  const { user, isAuthenticated } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [isPasswordSectionVisible, setIsPasswordSectionVisible] =
     useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // Initialize state with a default, empty structure.
   const [profileData, setProfileData] = useState({
     firstName: "",
     lastName: "",
@@ -43,34 +43,31 @@ const Profile = () => {
     confirmPassword: "",
   });
 
-  // --- Refs and Effects for Scrolling ---
-  const passwordCardRef = useRef(null); // NEW: Create a ref for the password card
+  const passwordCardRef = useRef(null);
 
+  // This effect correctly populates the form once the user data is available from the context.
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        // Assumes your API endpoint for fetching profile data is /api/profile
-        const response = await axios.get("/api/profile");
+    if (user) {
+      setProfileData({
+        firstName: user.data.firstName || "",
+        lastName: user.data.lastName || "",
+        phone: user.data.phone || "",
+        email: user.data.email || "",
+        dateOfBirth: user.data.dateOfBirth
+          ? user.dateOfBirth.split("T")[0]
+          : "",
+        gender: user.data.gender || "",
+        emergencyContactFirstName: user.data.emergencyContactFirstName || "",
+        emergencyContactLastName: user.data.emergencyContactLastName || "",
+        emergencyContactNo: user.data.emergencyContactNo || "",
+      });
 
-        // Ensure date is in YYYY-MM-DD format for the input field
-        if (response.data.dateOfBirth) {
-          response.data.dateOfBirth = response.data.dateOfBirth.split("T")[0];
-        }
+      console.log(profileData);
+      console.log(user);
+    }
+  }, [user]);
 
-        setProfileData(response.data);
-        setError(null);
-      } catch (err) {
-        setError("Failed to fetch profile data. Please try again later.");
-        console.error("Fetch profile error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfileData();
-  }, []);
-
-  // NEW: Add an effect to scroll when the password section appears
+  // Effect for scrolling to the password section.
   useEffect(() => {
     if (isPasswordSectionVisible && passwordCardRef.current) {
       passwordCardRef.current.scrollIntoView({
@@ -78,9 +75,9 @@ const Profile = () => {
         block: "start",
       });
     }
-  }, [isPasswordSectionVisible]); // This effect runs only when isPasswordSectionVisible changes
+  }, [isPasswordSectionVisible]);
 
-  // --- Handlers  ---
+  // --- Handlers ---
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({ ...prev, [name]: value }));
@@ -94,9 +91,7 @@ const Profile = () => {
   const handleProfileSave = async (e) => {
     e.preventDefault();
     try {
-      // Assumes your API endpoint for updating is a PUT request to /api/profile
-      const response = await axios.put("/api/profile", profileData);
-
+      const response = await axios.put("auth/profile", profileData);
       if (response.status === 200) {
         alert("Profile updated successfully!");
         setIsEditing(false);
@@ -113,10 +108,8 @@ const Profile = () => {
       alert("New passwords do not match!");
       return;
     }
-
     try {
-      // Assumes a password change endpoint like /api/auth/change-password
-      const response = await axios.post("/api/auth/change-password", {
+      const response = await axios.post("auth/change-password", {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });
@@ -136,18 +129,22 @@ const Profile = () => {
     }
   };
 
-  // --- Conditional Rendering for Loading and Error States ---
-  if (loading) {
+  // --- Conditional Rendering ---
+  // Use `isAuthenticated` from context to determine loading/error state.
+  if (isAuthenticated === null) {
     return <div className="profile-page-status">Loading your profile...</div>;
   }
 
-  if (error) {
-    return <div className="profile-page-status error">{error}</div>;
+  if (!isAuthenticated) {
+    return (
+      <div className="profile-page-status error">
+        Could not load profile. Please log in.
+      </div>
+    );
   }
 
   return (
     <div className="profile-page">
-      {/* --- Profile Header  --- */}
       <section className="profile-header">
         <h1>My Account</h1>
         <p>View and manage your personal details and security settings.</p>
@@ -181,7 +178,6 @@ const Profile = () => {
           </div>
           <form onSubmit={handleProfileSave}>
             <div className="details-grid">
-              {/* Form fields rendered based on isEditing state */}
               <div className="form-group">
                 <label>First Name</label>
                 {isEditing ? (
@@ -255,6 +251,7 @@ const Profile = () => {
                     value={profileData.gender}
                     onChange={handleProfileChange}
                   >
+                    <option value="">Select...</option>
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
                     <option value="Other">Other</option>
@@ -326,9 +323,8 @@ const Profile = () => {
           </form>
         </div>
 
-        {/* --- Change Password Card (Conditionally Rendered) --- */}
+        {/* --- Change Password Card --- */}
         {isPasswordSectionVisible && (
-          // MODIFIED: Attach the ref to this div
           <div className="profile-card" ref={passwordCardRef}>
             <div className="card-header">
               <h2>
