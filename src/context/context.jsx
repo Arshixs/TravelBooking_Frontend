@@ -50,10 +50,12 @@ export const UserProvider = ({ children }) => {
     };
 
     fetchUser();
-  }, []); // Empty array ensures this runs only once on app startup
+  }, [isAuthenticated]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, isAuthenticated }}>
+    <UserContext.Provider
+      value={{ user, setUser, isAuthenticated, setIsAuthenticated }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -3,6 +3,7 @@ import "../styles/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
 import Inputbox from "../components/inputBox";
+import { useUser } from "../context/context";
 
 const LoginPage = () => {
   // Use a single state object for the form data
@@ -11,6 +12,7 @@ const LoginPage = () => {
     password: "",
     userType: "CUSTOMER",
   });
+  const { user, setUser, isAuthenticated, setIsAuthenticated } = useUser();
   const navigate = useNavigate();
 
   // A single handler for all input changes
@@ -45,6 +47,7 @@ const LoginPage = () => {
         );
 
         alert("Login successful");
+        setIsAuthenticated(true);
         navigate("/profile");
       } else {
         // Handle cases where the API call was successful but login failed (e.g., wrong password)
