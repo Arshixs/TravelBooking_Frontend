@@ -9,6 +9,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    userType: "CUSTOMER",
   });
   const navigate = useNavigate();
 
@@ -24,20 +25,35 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "/auth/login",
-        JSON.stringify(formData)
-      );
-      // Removed redundant nested if-statement here
-      if (response.status === 200) {
-        const { refreshToken, accessToken } = response.data;
+      const response = await axios.post("auth/login", JSON.stringify(formData));
+
+      // Check for the success flag from your backend's response structure
+      if (response.data.success && response.status === 200) {
+        // FIX 1: Access the nested 'data' object
+        const responseData = response.data.data;
+        console.log(responseData);
+        const { accessToken, refreshToken, userType, userId, email } =
+          responseData;
+
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+
+        // FIX 2: Use JSON.stringify() to store the user object
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ userType, userId, email })
+        );
+
         alert("Login successful");
-        navigate("/");
+        navigate("/profile");
+      } else {
+        // Handle cases where the API call was successful but login failed (e.g., wrong password)
+        alert(response.data.message || "Login failed!");
       }
     } catch (error) {
-      alert(error?.response?.data?.message || "Login failed!");
+      alert(
+        error?.response?.data?.message || "An error occurred during login!"
+      );
     }
   };
 
