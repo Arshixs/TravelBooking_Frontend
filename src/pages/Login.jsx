@@ -2,27 +2,39 @@ import React, { useState } from "react";
 import "../styles/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
+import Inputbox from "../components/inputBox";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // Use a single state object for the form data
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const navigate = useNavigate();
+
+  // A single handler for all input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
         "/auth/login",
-        JSON.stringify({ email, password })
+        JSON.stringify(formData)
       );
+      // Removed redundant nested if-statement here
       if (response.status === 200) {
-        if (response.status === 200) {
-          const { refreshToken, accessToken } = response.data;
-          localStorage.setItem("accessToken", accessToken);
-          localStorage.setItem("refreshToken", refreshToken);
-          alert("Login successful");
-          navigate("/");
-        }
+        const { refreshToken, accessToken } = response.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        alert("Login successful");
+        navigate("/");
       }
     } catch (error) {
       alert(error?.response?.data?.message || "Login failed!");
@@ -33,31 +45,25 @@ const LoginPage = () => {
     <div className="login-page-container">
       <div className="login-form-wrapper">
         <form className="login-form" onSubmit={handleLogin}>
-          <h2>Welcome Back!</h2>
+          <h2>Welcome Back! 👋</h2>
 
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+          <Inputbox
+            label="Email"
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
 
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          <Inputbox
+            label="Password"
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
           <button type="submit" className="login-btn">
             Sign In
