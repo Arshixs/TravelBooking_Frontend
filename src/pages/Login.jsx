@@ -61,7 +61,7 @@ const LoginPage = () => {
     <div className="login-page-container">
       <div className="login-form-wrapper">
         <form className="login-form" onSubmit={handleLogin}>
-          <h2>Welcome Back! 👋</h2>
+          <h2>Welcome Back!</h2>
 
           <Inputbox
             label="Email"
