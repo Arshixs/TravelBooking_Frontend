@@ -1,0 +1,212 @@
+.details-modal-content {
+    background: #f4f7f9;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 15px 50px rgba(19, 70, 134, 0.2);
+    animation: slideInUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.details-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 1px solid #dde4ea;
+    background-color: #fff;
+}
+
+.details-modal-header h2 {
+    color: #134686;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.details-modal-body {
+    padding: 30px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.details-main-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.details-image {
+    width: 100%;
+    height: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.details-info-wrapper .status-badge {
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.details-summary {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+.details-grid p {
+    margin: 0;
+}
+
+.details-itinerary {
+    background-color: #fff;
+    padding: 25px 30px; /* Adjusted padding */
+    border-radius: 12px;
+    border: 1px solid #e7eaf3;
+}
+
+.details-itinerary h3 {
+    font-size: 1.35rem; /* Slightly larger title */
+    font-weight: 700;
+    color: #134686;
+    margin: 0 0 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f2f5;
+}
+
+.itinerary-day {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+}
+.itinerary-day:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.itinerary-day h4 {
+    color: #ed3f27;
+    font-size: 1.1rem;
+    margin: 0 0 8px;
+}
+.itinerary-day p {
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.details-modal-footer {
+    padding: 20px 30px;
+    border-top: 1px solid #dde4ea;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    background-color: #ffffff;
+}
+
+
+.details-modal-footer .btn-danger {
+    background-color: #ffe6e6; /* Light red background */
+    color: #dc3545;            /* Red text color */
+    border: 2px solid #f5c6cb; /* Light red border */
+    border-radius: 100px;      /* Fully rounded */
+    padding: 10px 25px;        /* Consistent padding */
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.details-modal-footer .btn-danger:hover {
+    border-color: #dc3545;     /* Solid red border on hover */
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2); /* Red shadow on hover */
+}
+
+/* Ensure the primary button has consistent styling */
+.details-modal-footer .btn-primary {
+    font-weight: 600;
+    border-radius: 100px; /* Make primary button also fully rounded */
+    padding: 10px 25px; /* Consistent padding */
+    font-size: 0.95rem;
+}
+
+/* The main timeline container */
+.timeline {
+    position: relative;
+    padding-left: 30px; /* Make space for the timeline line and dots */
+}
+
+/* The vertical timeline line */
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; /* Centered with the 18px marker width */
+    top: 5px;
+    bottom: 5px;
+    width: 2px;
+    background-color: #dde4ea;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 25px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+/* The marker container on the timeline line */
+.timeline-marker {
+    position: absolute;
+    left: -30px; /* Position it on the timeline */
+    top: 5px;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The colored dot */
+.timeline-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #ed3f27;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px #fde2de; /* Outer glow effect */
+}
+
+.timeline-content {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px 20px;
+    border: 1px solid #e7eaf3;
+}
+
+.timeline-content h4 {
+    color: #134686;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+}
+
+.timeline-content p {
+    margin: 0;
+    color: #555;
+    line-height: 1.6;
+}

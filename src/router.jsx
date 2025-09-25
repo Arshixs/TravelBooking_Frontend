@@ -7,7 +7,7 @@ import Profile from "./pages/Profile";
 import ExplorePackages from "./pages/ExplorePackages";
 import { UserProvider } from "./context/context";
 import Layout from "./layout/Layout";
-
+import TourPackages from "./pages/TourPackage";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "TourPackages",
+        element: <TourPackages />,
       },
       {
         path: "explore",

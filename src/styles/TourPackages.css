@@ -1,0 +1,65 @@
+/* --- Update TourPackages.css --- */
+.packages-page {
+    padding: 40px 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.packages-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.packages-header h1 {
+    color: #134686;
+    font-size: 2rem;
+}
+
+.add-package-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* NEW GRID LAYOUT */
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.no-data-message {
+    grid-column: 1 / -1; /* Span full width */
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 15px;
+    color: #555;
+}
+.no-data-message h3 {
+    color: #134686;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.status-message { text-align: center; font-size: 1.2rem; padding: 50px; color: #134686; }
+.status-message.error { color: #dc3545; }
+
+/* Status badge styles can be shared or kept here */
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.status-published { background-color: #d4edda; color: #155724; }
+.status-draft { background-color: #fff3cd; color: #856404; }
+.status-archived { background-color: #f8d7da; color: #721c24; }
