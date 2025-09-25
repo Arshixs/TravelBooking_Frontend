@@ -105,8 +105,8 @@ const Signup = () => {
       return;
     }
     try {
-      const endpoint =
-        activeTab === "user" ? "auth/signup" : "auth/vendor/signup";
+      const endpoint = "auth/signup";
+
       const data =
         activeTab === "user"
           ? {
@@ -120,7 +120,7 @@ const Signup = () => {
               emergencyFirstName: formData.emergencyFirstName,
               emergencyLastName: formData.emergencyLastName,
               emergencyPhone: formData.emergencyPhone,
-              userType: "CUSTOMER"
+              userType: "CUSTOMER",
             }
           : {
               vendorName: formData.vendorName,
@@ -136,7 +136,7 @@ const Signup = () => {
               accountNo: formData.accountNo,
               ifscCode: formData.ifscCode,
               password: formData.password,
-              userType: "VENDOR"
+              userType: "VENDOR",
             };
 
       const response = await axios.post(endpoint, JSON.stringify(data));
