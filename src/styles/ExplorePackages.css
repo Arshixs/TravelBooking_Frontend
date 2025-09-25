@@ -1,0 +1,136 @@
+.explore-packages-container {
+  min-height: 100vh;
+  background: #fdf4e3;
+  padding: 100px 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.explore-packages-container h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #134686;
+  margin-bottom: 50px;
+  font-weight: 700;
+  position: relative;
+  animation: fadeInUp 1s ease-out;
+}
+
+.explore-packages-container h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(135deg, #ed3f27, #feb21a);
+  border-radius: 2px;
+  animation: expandWidth 1.5s ease-out 1s both;
+}
+
+.packages-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  animation: slideInUp 1s ease-out 0.5s both;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.2rem;
+  color: #134686;
+  font-weight: 600;
+  position: relative;
+}
+
+.loading::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 3px solid #134686;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  margin-left: 15px;
+  animation: spin 1s linear infinite;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandWidth {
+  from {
+    width: 0;
+  }
+  to {
+    width: 60px;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .explore-packages-container {
+    padding: 60px 0;
+  }
+  
+  .explore-packages-container h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+  
+  .packages-list {
+    padding: 0 15px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .explore-packages-container h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

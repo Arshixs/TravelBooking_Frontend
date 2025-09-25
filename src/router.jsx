@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import ExplorePackages from "./pages/ExplorePackages";
 import { UserProvider } from "./context/context";
 import Layout from "./layout/Layout";
 
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
         path: "profile",
         element: <Profile />,
       },
+      {
+        path: "explore",
+        element: <ExplorePackages />
+      }
     ],
   },
 ]);

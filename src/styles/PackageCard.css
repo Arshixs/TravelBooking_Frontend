@@ -1,0 +1,360 @@
+/* PackageCard.css */
+
+.package-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(19, 70, 134, 0.08);
+  padding: 30px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  animation: slideInUp 0.6s ease-out;
+}
+
+.package-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(19, 70, 134, 0.03),
+    transparent
+  );
+  transition: left 0.6s;
+}
+
+.package-card:hover::before {
+  left: 100%;
+}
+
+.package-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(19, 70, 134, 0.12);
+  border-color: #feb21a;
+}
+
+.package-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.package-name {
+  font-size: 1.6rem;
+  color: #134686;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+  line-height: 1.3;
+}
+
+.package-status {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.package-status.available {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: white;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.package-status.finished {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.package-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fdf4e3;
+  border-radius: 12px;
+  border-left: 4px solid #feb21a;
+}
+
+.package-details p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.package-details strong {
+  color: #134686;
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.package-summary {
+  margin-bottom: 25px;
+}
+
+.package-summary p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.expand-btn {
+  background: linear-gradient(135deg, #ed3f27, #d63520);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expand-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.expand-btn:hover::before {
+  left: 100%;
+}
+
+.expand-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(237, 63, 39, 0.3);
+  background: linear-gradient(135deg, #d63520, #c12e1a);
+}
+
+.expand-btn:focus {
+  outline: 3px solid #feb21a;
+  outline-offset: 2px;
+}
+
+.collapsible-content {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px solid #f0f0f0;
+  animation: expandContent 0.5s ease-out;
+}
+
+.package-itinerary {
+  margin-bottom: 30px;
+}
+
+.package-itinerary h3 {
+  font-size: 1.4rem;
+  color: #134686;
+  margin-bottom: 20px;
+  font-weight: 600;
+  position: relative;
+}
+
+.package-itinerary h3::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: #feb21a;
+  border-radius: 2px;
+}
+
+.itinerary-item {
+  background: #f8fafc;
+  border-left: 4px solid #ed3f27;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 0 12px 12px 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.itinerary-item:hover {
+  background: #f1f5f9;
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(19, 70, 134, 0.08);
+}
+
+.itinerary-item h4 {
+  color: #134686;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.itinerary-item p {
+  margin: 5px 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.itinerary-item p strong {
+  color: #ed3f27;
+  font-weight: 600;
+}
+
+.reviews-section {
+  margin-top: 10px;
+}
+
+.reviews-section h3 {
+  font-size: 1.4rem;
+  color: #134686;
+  margin-bottom: 25px;
+  font-weight: 600;
+  position: relative;
+}
+
+.reviews-section h3::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: #feb21a;
+  border-radius: 2px;
+}
+
+.reviews-section > * + * {
+  margin-top: 20px;
+}
+
+.package-image {
+  width: 100%;
+  height: 250px; /* Adjust height as needed */
+  object-fit: cover;
+  border-radius: 15px 15px 0 0; /* Match the card's top corners */
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandContent {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .package-card {
+    padding: 20px;
+    margin: 0 10px;
+  }
+  
+  .package-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .package-name {
+    font-size: 1.4rem;
+  }
+  
+  .package-details {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 15px;
+  }
+  
+  .itinerary-item {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .package-card {
+    padding: 15px;
+  }
+  
+  .package-name {
+    font-size: 1.3rem;
+  }
+  
+  .package-details {
+    padding: 12px;
+  }
+  
+  .expand-btn {
+    width: 100%;
+    padding: 12px 24px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .package-card,
+  .expand-btn,
+  .itinerary-item {
+    transition: none;
+  }
+  
+  .package-card:hover,
+  .itinerary-item:hover {
+    transform: none;
+  }
+  
+  @keyframes slideInUp {
+    0%, 100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  
+  @keyframes expandContent {
+    0%, 100% {
+      opacity: 1;
+      transform: none;
+      max-height: none;
+    }
+  }
+}

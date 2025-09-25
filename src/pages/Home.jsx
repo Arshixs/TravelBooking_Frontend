@@ -17,7 +17,11 @@ const Home = () => {
               dreams come true with our comprehensive booking platform.
             </p>
             <div className="hero-buttons">
-              <button className="btn-primary">Explore Packages</button>
+              <button className="btn-primary">
+            <a href="/explore">
+              Explore Packages
+            </a>
+          </button>
               <button className="btn-secondary">Plan Your Trip</button>
             </div>
           </div>

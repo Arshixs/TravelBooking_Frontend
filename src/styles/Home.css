@@ -561,6 +561,11 @@
   box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
 }
 
+.btn-primary a {
+  text-decoration: none; /* Removes the underline */
+  color: inherit; /* Inherits the text color from the parent button */
+}
+
 /* Animations */
 @keyframes slideInLeft {
   from {
