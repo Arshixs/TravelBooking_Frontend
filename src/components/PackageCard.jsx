@@ -1,92 +1,57 @@
-import React, { useState } from 'react';
-import ReviewCard from './ReviewCard';
+import React from 'react';
 import '../styles/PackageCard.css';
 
-const PackageCard = ({ packageData }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const PackageCard = ({ packageData, onClick }) => {
+    const { 
+        name, 
+        type, 
+        duration, 
+        capacity, 
+        rating, 
+        price, 
+        description, 
+        link,
+        image 
+    } = packageData;
 
-  const {
-    name,
-    tour_type,
-    duration_days,
-    max_capacity,
-    itinerary_summary,
-    full_description,
-    itinerary_items,
-    status,
-    avg_rating,
-    reviews,
-    image_url
-  } = packageData;
+    const formattedPrice = price.toLocaleString();
 
-  const statusColor = status === 'available' ? 'green' : 'red';
-
-  const renderStars = (rating) => {
-    const fullStars = '★'.repeat(Math.floor(rating));
-    const emptyStars = '☆'.repeat(5 - Math.floor(rating));
     return (
-      <span className="star-rating">
-        {fullStars}{emptyStars}
-      </span>
-    );
-  };
+        <div 
+            className="package-card" 
+            role="button"
+            tabIndex="0"
+            aria-label={`View details for ${name}`}
+        >
+            <div className="card-image-wrapper">
+                <img src={image} alt={name} className="card-image" />
+                <div className="card-tag card-tag-primary">{type}</div>
+            </div>
 
-  return (
-    <div className="package-card">
-      <img
-        src={image_url}
-        alt={name}
-        className="package-image"
-      />
-      <div className="package-header">
-        <h2 className="package-name">{name}</h2>
-        <span className={`package-status ${status}`}>
-          {status === 'available' ? 'Available' : 'Finished'}
-        </span>
-      </div>
-      <div className="package-details">
-        <p><strong>Type:</strong> {tour_type}</p>
-        <p><strong>Duration:</strong> {duration_days} Days</p>
-        <p><strong>Capacity:</strong> {max_capacity}</p>
-        <p><strong>Rating:</strong> {renderStars(avg_rating)} {avg_rating}</p>
-      </div>
-      <div className="package-summary">
-        <p>{itinerary_summary}</p>
-        <button onClick={() => setIsExpanded(!isExpanded)} className="expand-btn">
-          {isExpanded ? 'Collapse' : 'Read More'}
-        </button>
-      </div>
+            <div className="card-content">
+                <h3 className="package-name">{name}</h3>
+                
+                <p className="package-description">{description}</p>
 
-      {isExpanded && (
-        <div className="collapsible-content">
-          <div className="package-description">
-            <h3>Description</h3>
-            <p>{full_description}</p>
-          </div>
-          <div className="package-itinerary">
-            <h3>Itinerary</h3>
-            <ul>
-              {itinerary_items.map((item) => (
-                <li key={item.item_id}>
-                  <strong>Day {item.day_number}: {item.title}</strong>
-                  <p>{item.description}</p>
-                  <p className="itinerary-location">Location: {item.city}, {item.state}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="reviews-section">
-            <h3>Customer Reviews</h3>
-            {/* <div className="reviews-grid"> */}
-              {reviews.map(review => (
-                <ReviewCard key={review.id} reviewData={review} />
-              ))}
-            {/* </div> */}
-          </div>
+                <div className="package-details-grid">
+                    {/* UPDATED LINES BELOW: Using <strong> for bold title */}
+                    <p><strong>Duration:</strong> {duration} Days</p>
+                    <p><strong>Capacity:</strong> {capacity}</p>
+                    <p><strong>Rating:</strong> <span className="rating-stars">{rating}</span></p>
+                    {/* Add Type back here if desired, or keep it as a tag */}
+                </div>
+                
+                <div className="card-footer">
+                    <p className="package-pricing">
+                        From Rs. <strong>{formattedPrice}</strong>
+                    </p>
+                    <button className="btn-explore-card" onClick={() => onClick(link)}>
+                        View Details &rarr;
+                    </button>
+                </div>
+            </div>
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default PackageCard;

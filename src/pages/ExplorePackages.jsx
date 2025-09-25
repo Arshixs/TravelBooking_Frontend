@@ -2,78 +2,130 @@ import React, { useState, useEffect } from 'react';
 import PackageCard from '../components/PackageCard';
 import '../styles/ExplorePackages.css';
 
-const ExplorePackages = () => {
-  const [packages, setPackages] = useState([]);
-  const [loading, setLoading] = useState(true);
+// --- Sample Data ---
+const packagesData = [
+    {
+        id: 1,
+        name: "Majestic Himalayan Trek",
+        type: "Adventure",
+        duration: 10,
+        capacity: 15,
+        rating: 4.8,
+        price: 1200,
+        description: "A challenging trek through the stunning peaks and valleys. Experience the Himalayas with professional guides.",
+        link: "/packages/himalayan-trek-1",
+        image: "https://i.imgur.com/2Y4p5v6.png" // AI-Inspired: Icy blue mountain peak
+    },
+    {
+        id: 2,
+        name: "Historic Parisian Culture",
+        type: "Culture",
+        duration: 5,
+        capacity: 25,
+        rating: 4.5,
+        price: 850,
+        description: "Explore the art, history, and cuisine of Paris. Visit iconic landmarks and enjoy local wine tasting.",
+        link: "/packages/paris-culture-2",
+        image: "https://i.imgur.com/x07Z5V2.png" // AI-Inspired: Sunset on a European historical city street
+    },
+    {
+        id: 3,
+        name: "Tropical Coastal Retreat",
+        type: "Relaxation",
+        duration: 7,
+        capacity: 10,
+        rating: 4.9,
+        price: 950,
+        description: "Seven days of pure relaxation on a secluded beach. Yoga, spa treatments, and gourmet seafood included.",
+        link: "/packages/coastal-relax-3",
+        image: "https://i.imgur.com/Y3gQ3Jq.png" // AI-Inspired: White sand beach with turquoise water
+    },
+    {
+        id: 4,
+        name: "Lush Amazon Wildlife Safari",
+        type: "Wildlife",
+        duration: 14,
+        capacity: 8,
+        rating: 4.7,
+        price: 2500,
+        description: "An immersive exploration deep into the Amazon rainforest, observing unique flora and fauna with expert biologists.",
+        link: "/packages/amazon-safari-4",
+        image: "https://i.imgur.com/W2d3sH8.png" // AI-Inspired: Dense, foggy green rainforest canopy
+    },
+];
 
-  useEffect(() => {
-    // In a real app, you would fetch data from an API here
-    const fetchPackages = async () => {
-      // Mock data for demonstration, updated to reflect the full description
-      const mockPackages = [
-        {
-          package_id: 1,
-          name: 'The Himalayan Trek',
-          tour_type: 'Adventure',
-          duration_days: 10,
-          max_capacity: 15,
-          itinerary_summary: 'A thrilling trek through the majestic Himalayas...',
-          full_description: 'Experience the breathtaking beauty of the Himalayan mountains with our 10-day trekking adventure. This package includes guided tours, accommodation, and all meals. The itinerary is designed to allow for gradual acclimatization, ensuring a safe and enjoyable journey.',
-          image_url: 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=800&auto=format&fit=crop',
-          itinerary_items: [
-            { item_id: 1, day_number: 1, duration: 'Full Day', title: 'Arrival in Kathmandu, Nepal', description: 'Arrive at Tribhuvan International Airport (TIA) and transfer to your hotel. Meet your trek leader and get briefed about the trip.', street_name: 'Thamel', city: 'Kathmandu', state: 'Bagmati Province', pin: '44600' },
-            { item_id: 2, day_number: 2, duration: 'Full Day', title: 'Trek to Phakding', description: 'Begin your trek with a short scenic flight to Lukla and then a gentle walk to Phakding along the Dudh Koshi River.', street_name: 'Dudh Koshi River Trail', city: 'Phakding', state: 'Koshi Province', pin: '56000' },
-            { item_id: 3, day_number: 3, duration: 'Full Day', title: 'Trek to Namche Bazaar', description: 'A challenging climb to the famous Namche Bazaar, the gateway to Mount Everest. Enjoy stunning views of the mountain on the way.', street_name: 'Solukhumbu', city: 'Namche Bazaar', state: 'Koshi Province', pin: '56000' },
-          ],
-          status: 'available',
-          avg_rating: 4.8,
-          reviews: [
-            { id: 1, author: 'Alex Smith', rating: 5, comment: 'An incredible journey, the guides were excellent!' },
-            { id: 2, author: 'Priya Sharma', rating: 4, comment: 'Challenging but rewarding. The views were unbelievable.' }
-          ]
-        },
-        {
-          package_id: 2,
-          name: 'Tropical Bali Escape',
-          tour_type: 'Relaxation',
-          duration_days: 7,
-          max_capacity: 20,
-          itinerary_summary: 'A luxurious retreat to the serene beaches of Bali...',
-          full_description: 'Unwind in paradise with our 7-day Bali package. Enjoy pristine beaches, cultural tours, and world-class spa treatments. This package is perfect for those seeking relaxation and rejuvenation.',
-          image_url: 'https://images.unsplash.com/photo-1536675003310-7469b2d3989c?w=800&auto=format&fit=crop',
-          itinerary_items: [
-            { item_id: 4, day_number: 1, duration: 'Full Day', title: 'Arrival in Denpasar, Bali', description: 'Arrive at Ngurah Rai International Airport and transfer to your villa. Relax and prepare for your week in paradise.', street_name: 'Jalan Raya Kuta', city: 'Kuta', state: 'Bali', pin: '80361' },
-            { item_id: 5, day_number: 2, duration: 'Full Day', title: 'Beach day at Seminyak', description: 'Spend the day enjoying the famous Seminyak beach. Relax on the sand, swim in the ocean, and enjoy the local cafes.', street_name: 'Jalan Petitenget', city: 'Seminyak', state: 'Bali', pin: '80361' },
-          ],
-          status: 'finished',
-          avg_rating: 4.5,
-          reviews: [
-            { id: 3, author: 'John Doe', rating: 5, comment: 'Absolutely amazing! I felt so refreshed after this trip.' },
-            { id: 4, author: 'Jane Wilson', rating: 4, comment: 'Beautiful location, but the booking process could have been smoother.' }
-          ]
-        },
-      ];
-      setPackages(mockPackages);
-      setLoading(false);
+const ExplorePackages = () => {
+    const [filterType, setFilterType] = useState('All');
+    const [filteredPackages, setFilteredPackages] = useState(packagesData);
+
+    useEffect(() => {
+        if (filterType === 'All') {
+            setFilteredPackages(packagesData);
+        } else {
+            const newFiltered = packagesData.filter(pkg => pkg.type === filterType);
+            setFilteredPackages(newFiltered);
+        }
+    }, [filterType]);
+
+    const handleCardClick = (link) => {
+        // Placeholder for React Router navigation
+        console.log(`Simulated Redirecting to: ${link}`);
+        alert(`Redirecting to details page: ${link}`);
     };
 
-    fetchPackages();
-  }, []);
+    return (
+        <div className="explore-page">
+            <header className="explore-header">
+                <h1>Discover Your Next <span className="header-highlight">Adventure</span></h1>
+                <p>Curated travel packages to make your dreams come true.</p>
+            </header>
 
-  if (loading) {
-    return <div className="loading">Loading packages...</div>;
-  }
+            <main className="content-area container">
+                
+                {/* Filter Section */}
+                <aside className="filter-section">
+                    <h2 className="filter-title">Filter Your Trip</h2>
+                    <div className="filter-group">
+                        <label htmlFor="type-filter">Package Type:</label>
+                        <select 
+                            id="type-filter" 
+                            value={filterType} 
+                            onChange={(e) => setFilterType(e.target.value)}
+                        >
+                            <option value="All">All Packages</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Culture">Culture</option>
+                            <option value="Relaxation">Relaxation</option>
+                            <option value="Wildlife">Wildlife</option>
+                        </select>
+                    </div>
 
-  return (
-    <div className="explore-packages-container">
-      <h1>Explore Our Packages</h1>
-      <div className="packages-list">
-        {packages.map(pkg => (
-          <PackageCard key={pkg.package_id} packageData={pkg} />
-        ))}
-      </div>
-    </div>
-  );
+                    <div className="filter-group">
+                        <label>Max Price (Placeholder)</label>
+                        <input type="range" disabled title="Not Implemented Yet"/>
+                    </div>
+                    <button className="btn-filter-apply">Apply Filters</button>
+                </aside>
+
+                {/* Package Cards Container */}
+                <section className="packages-grid">
+                    {filteredPackages.length > 0 ? (
+                        filteredPackages.map(pkg => (
+                            <PackageCard 
+                                key={pkg.id} 
+                                packageData={pkg} 
+                                onClick={handleCardClick}
+                            />
+                        ))
+                    ) : (
+                        <p className="no-packages">
+                            No packages of type **{filterType}** found.
+                        </p>
+                    )}
+                </section>
+            </main>
+        </div>
+    );
 };
 
 export default ExplorePackages;
