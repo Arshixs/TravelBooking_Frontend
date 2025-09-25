@@ -194,7 +194,7 @@
 }
 
 /* Details Grid */
-.details-grid {
+.details-grid2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 25px;
@@ -455,7 +455,7 @@
     padding: 0 15px;
   }
   
-  .details-grid {
+  .details-grid2 {
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 20px;
@@ -505,7 +505,7 @@
     padding: 15px;
   }
   
-  .details-grid {
+  .details-grid2 {
     padding: 15px;
     gap: 15px;
   }

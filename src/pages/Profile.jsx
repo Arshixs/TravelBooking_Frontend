@@ -207,7 +207,7 @@ const Profile = () => {
           </div>
           
           <form onSubmit={handleProfileSave}>
-            <div className="details-grid">
+            <div className="details-grid2">
               {profileData.userType === 'CUSTOMER' ? (
                 <>
                   <ProfileField label="First Name" name="firstName" value={profileData.firstName} onChange={handleProfileChange} isEditing={isEditing} />
@@ -244,14 +244,14 @@ const Profile = () => {
               <>
                 <hr className="divider" />
                 <h3>Contact Person</h3>
-                <div className="details-grid">
+                <div className="details-grid2">
                   <ProfileField label="First Name" name="contactPersonFirstName" value={profileData.contactPersonFirstName} onChange={handleProfileChange} isEditing={isEditing} />
                   <ProfileField label="Last Name" name="contactPersonLastName" value={profileData.contactPersonLastName} onChange={handleProfileChange} isEditing={isEditing} />
                 </div>
                 
                 <hr className="divider" />
                 <h3>Address</h3>
-                <div className="details-grid">
+                <div className="details-grid2">
                   <ProfileField label="Street Name" name="streetName" value={profileData.streetName} onChange={handleProfileChange} isEditing={isEditing} />
                   <ProfileField label="City" name="city" value={profileData.city} onChange={handleProfileChange} isEditing={isEditing} />
                   <ProfileField label="State" name="state" value={profileData.state} onChange={handleProfileChange} isEditing={isEditing} />
@@ -260,7 +260,7 @@ const Profile = () => {
                 
                 <hr className="divider" />
                 <h3>Bank & Status</h3>
-                <div className="details-grid">
+                <div className="details-grid2">
                    <ProfileField label="Account Number" name="accountNo" value={profileData.accountNo} onChange={handleProfileChange} isEditing={isEditing} />
                    <ProfileField label="IFSC Code" name="ifscCode" value={profileData.ifscCode} onChange={handleProfileChange} isEditing={isEditing} />
                    <div className="form-group">
@@ -279,7 +279,7 @@ const Profile = () => {
                 <>
                   <hr className="divider" />
                   <h3>Emergency Contact</h3>
-                  <div className="details-grid">
+                  <div className="details-grid2">
                       <ProfileField label="First Name" name="emergencyContactFirstName" value={profileData.emergencyContactFirstName} onChange={handleProfileChange} isEditing={isEditing} />
                       <ProfileField label="Last Name" name="emergencyContactLastName" value={profileData.emergencyContactLastName} onChange={handleProfileChange} isEditing={isEditing} />
                       <ProfileField label="Phone Number" name="emergencyContactNo" value={profileData.emergencyContactNo} onChange={handleProfileChange} isEditing={isEditing} type="tel" />
@@ -309,7 +309,7 @@ const Profile = () => {
                </h2>
              </div>
              <form onSubmit={handlePasswordUpdate}>
-               <div className="details-grid">
+               <div className="details-grid2">
                  <div className="form-group full-width">
                    <label>Current Password</label>
                    <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} required />
