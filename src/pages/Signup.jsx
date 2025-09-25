@@ -5,7 +5,7 @@ import axios from "../utils/axios";
 import Inputbox from "../components/inputBox";
 
 const Signup = () => {
-  const [activeTab, setActiveTab] = useState("user");
+  const [activeTab, setActiveTab] = useState("CUSTOMER");
   const [formData, setFormData] = useState({
     // User data
     firstName: "",
@@ -108,7 +108,7 @@ const Signup = () => {
       const endpoint = "auth/signup";
 
       const data =
-        activeTab === "user"
+        activeTab === "CUSTOMER"
           ? {
               firstName: formData.firstName,
               lastName: formData.lastName,
@@ -117,7 +117,7 @@ const Signup = () => {
               password: formData.password,
               dateOfBirth: formData.dateOfBirth,
               gender: formData.gender,
-              userType: "CUSTOMER",
+              userType: activeTab,
               emergencyContactFirstName: formData.emergencyFirstName,
               emergencyContactLastName: formData.emergencyLastName,
               emergencyContactNo: formData.emergencyPhone,
@@ -126,7 +126,7 @@ const Signup = () => {
               email: formData.vendorEmail,
               phone: formData.vendorPhone,
               password: formData.password,
-              userType: "VENDOR",
+              userType: activeTab,
               vendorName: formData.vendorName,
               serviceType: formData.serviceType.toUpperCase(),
               contactPersonFirstName: formData.contactPersonFirstName,
@@ -156,16 +156,16 @@ const Signup = () => {
       <div className="signup-form-wrapper">
         <div className="tab-container">
           <button
-            className={`tab-button ${activeTab === "user" ? "active" : ""}`}
-            onClick={() => setActiveTab("user")}
+            className={`tab-button ${activeTab === "CUSTOMER" ? "active" : ""}`}
+            onClick={() => setActiveTab("CUSTOMER")}
           >
-            User Signup
+            User
           </button>
           <button
             className={`tab-button ${activeTab === "vendor" ? "active" : ""}`}
             onClick={() => setActiveTab("vendor")}
           >
-            Vendor Signup
+            Vendor
           </button>
         </div>
 
@@ -173,13 +173,13 @@ const Signup = () => {
           <h2>Create Your Account</h2>
           <p>
             Join us to{" "}
-            {activeTab === "user"
+            {activeTab === "CUSTOMER"
               ? "start your next adventure"
               : "become a service provider"}
             .
           </p>
 
-          {activeTab === "user" ? (
+          {activeTab === "CUSTOMER" ? (
             <>
               <fieldset className="form-section">
                 <legend>Personal Details</legend>
