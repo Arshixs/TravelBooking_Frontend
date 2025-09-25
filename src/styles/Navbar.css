@@ -26,8 +26,6 @@
   transition: all 0.3s ease;
 }
 
-
-
 .navbar-account {
   position: relative;
   display: flex;
@@ -129,16 +127,16 @@
   .navbar {
     padding: 0.75rem 1rem;
   }
-  
+
   .navbar-title a {
     font-size: 1.5rem;
   }
-  
+
   .account-logo {
     width: 35px;
     height: 35px;
   }
-  
+
   .dropdown-menu {
     min-width: 130px;
     margin-right: -10px;
@@ -149,17 +147,16 @@
   .navbar {
     padding: 0.5rem 0.75rem;
   }
-  
+
   .navbar-title a {
     font-size: 1.3rem;
   }
-  
+
   .dropdown-menu a {
     padding: 0.6rem 0.8rem;
     font-size: 0.9rem;
   }
 }
-
 
 @keyframes navbarSlideDown {
   from {
@@ -170,7 +167,42 @@
   }
 }
 
+.user-greeting {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #555;
+  font-weight: 500;
+  border-bottom: 1px solid #f0f0f0;
+  font-style: italic;
+  cursor: default;
+}
 
+.logout-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  outline: inherit;
+
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #ed3f27 0%, #ed3f27 100%);
+  color: white;
+}
 
 /* Fix for potential overflow issues
 * {

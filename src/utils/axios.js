@@ -2,13 +2,33 @@ import axiosLib from "axios";
 import toast from "react-hot-toast";
 
 const axios = axiosLib.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL + "/api/v1",
+  baseURL: import.meta.env.VITE_BACKEND_URL + "api/",
   timeout: 180000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+// ========================================================
+// == ADD THIS REQUEST INTERCEPTOR BLOCK ==
+// This runs BEFORE each request is sent
+// ========================================================
+axios.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      // If the token exists, add it to the Authorization header
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+// ========================================================
+
+// Your existing response interceptor (no changes needed here)
 axios.interceptors.response.use(
   (response) => {
     return response;
