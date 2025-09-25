@@ -49,17 +49,17 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       setProfileData({
-        firstName: user.data.firstName || "",
-        lastName: user.data.lastName || "",
+        firstName: user.data.first_name || "",
+        lastName: user.data.last_name || "",
         phone: user.data.phone || "",
         email: user.data.email || "",
-        dateOfBirth: user.data.dateOfBirth
-          ? user.dateOfBirth.split("T")[0]
+        dateOfBirth: user.data.date_of_birth
+          ? user.data.date_of_birth.split("T")[0]
           : "",
         gender: user.data.gender || "",
-        emergencyContactFirstName: user.data.emergencyContactFirstName || "",
-        emergencyContactLastName: user.data.emergencyContactLastName || "",
-        emergencyContactNo: user.data.emergencyContactNo || "",
+        emergencyContactFirstName: user.data.emergency_contact_first_name || "",
+        emergencyContactLastName: user.data.emergency_contact_last_name || "",
+        emergencyContactNo: user.data.emergency_contact_no || "",
       });
 
       console.log(profileData);
@@ -91,7 +91,19 @@ const Profile = () => {
   const handleProfileSave = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put("auth/profile", profileData);
+      const dataToSend = {
+        first_name: profileData.firstName,
+        last_name: profileData.lastName,
+        phone: profileData.phone,
+        email: profileData.email,
+        date_of_birth: profileData.dateOfBirth,
+        gender: profileData.gender,
+        emergency_contact_first_name: profileData.emergencyContactFirstName,
+        emergency_contact_last_name: profileData.emergencyContactLastName,
+        emergency_contact_no: profileData.emergencyContactNo,
+      };
+
+      const response = await axios.put("auth/profile", dataToSend);
       if (response.status === 200) {
         alert("Profile updated successfully!");
         setIsEditing(false);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
-import Inputbox from "../components/inputBox"; // Make sure to import it
+import Inputbox from "../components/inputBox";
 
 const Signup = () => {
   const [activeTab, setActiveTab] = useState("user");
@@ -112,31 +112,32 @@ const Signup = () => {
           ? {
               firstName: formData.firstName,
               lastName: formData.lastName,
-              phone: formData.phone,
               email: formData.email,
+              phone: formData.phone,
               password: formData.password,
               dateOfBirth: formData.dateOfBirth,
               gender: formData.gender,
-              emergencyFirstName: formData.emergencyFirstName,
-              emergencyLastName: formData.emergencyLastName,
-              emergencyPhone: formData.emergencyPhone,
               userType: "CUSTOMER",
+              emergencyContactFirstName: formData.emergencyFirstName,
+              emergencyContactLastName: formData.emergencyLastName,
+              emergencyContactNo: formData.emergencyPhone,
             }
           : {
-              vendorName: formData.vendorName,
-              serviceType: formData.serviceType,
-              contactPersonFirstName: formData.contactPersonFirstName,
-              contactPersonLastName: formData.contactPersonLastName,
               email: formData.vendorEmail,
               phone: formData.vendorPhone,
-              streetName: formData.streetName,
+              password: formData.password,
+              userType: "VENDOR",
+              vendorName: formData.vendorName,
+              serviceType: formData.serviceType.toUpperCase(),
+              contactPersonFirstName: formData.contactPersonFirstName,
+              contactPersonLastName: formData.contactPersonLastName,
+              street_name: formData.streetName,
               city: formData.city,
               state: formData.state,
               pin: formData.pin,
-              accountNo: formData.accountNo,
-              ifscCode: formData.ifscCode,
-              password: formData.password,
-              userType: "VENDOR",
+              amt_due: "0", // You might want to set this as a default
+              account_no: formData.accountNo,
+              ifsc_code: formData.ifscCode,
             };
 
       const response = await axios.post(endpoint, JSON.stringify(data));
