@@ -38,7 +38,7 @@
   min-height: 100vh;
   background: #fdf4e3;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  padding-top: 40px;
+  /* padding-top: 40px; */
   padding-bottom: 60px;
 }
 
@@ -48,7 +48,7 @@
   color: white;
   text-align: center;
   padding: 60px 20px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   position: relative;
   overflow: hidden;
 }
@@ -537,34 +537,6 @@
   }
 }
 
-/* Dark mode support (optional) */
-@media (prefers-color-scheme: dark) {
-  .profile-page {
-    background: #1a1a1a;
-    color: #fff;
-  }
-  
-  .profile-card {
-    background: #2d2d2d;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  }
-  
-  .form-group input,
-  .form-group select {
-    background: #3d3d3d;
-    border-color: #555;
-    color: #fff;
-  }
-  
-  .form-group p {
-    color: #e0e0e0;
-  }
-  
-  .card-header {
-    background: linear-gradient(135deg, #2d2d2d 0%, #3d3d3d 100%);
-    border-bottom-color: #555;
-  }
-}
 
 /* Print styles */
 @media print {
