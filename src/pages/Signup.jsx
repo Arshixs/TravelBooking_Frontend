@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import "../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
-import Inputbox from "../components/inputBox"; // Make sure to import it
+import Inputbox from "../components/inputBox";
 
 const Signup = () => {
-  const [activeTab, setActiveTab] = useState("user");
+  const [activeTab, setActiveTab] = useState("CUSTOMER");
   const [formData, setFormData] = useState({
     // User data
     firstName: "",
@@ -105,38 +105,39 @@ const Signup = () => {
       return;
     }
     try {
-      const endpoint =
-        activeTab === "user" ? "auth/signup" : "auth/vendor/signup";
+      const endpoint = "auth/signup";
+
       const data =
-        activeTab === "user"
+        activeTab === "CUSTOMER"
           ? {
               firstName: formData.firstName,
               lastName: formData.lastName,
-              phone: formData.phone,
               email: formData.email,
+              phone: formData.phone,
               password: formData.password,
               dateOfBirth: formData.dateOfBirth,
               gender: formData.gender,
-              emergencyFirstName: formData.emergencyFirstName,
-              emergencyLastName: formData.emergencyLastName,
-              emergencyPhone: formData.emergencyPhone,
-              userType: "CUSTOMER"
+              userType: activeTab,
+              emergencyContactFirstName: formData.emergencyFirstName,
+              emergencyContactLastName: formData.emergencyLastName,
+              emergencyContactNo: formData.emergencyPhone,
             }
           : {
-              vendorName: formData.vendorName,
-              serviceType: formData.serviceType,
-              contactPersonFirstName: formData.contactPersonFirstName,
-              contactPersonLastName: formData.contactPersonLastName,
               email: formData.vendorEmail,
               phone: formData.vendorPhone,
-              streetName: formData.streetName,
+              password: formData.password,
+              userType: activeTab,
+              vendorName: formData.vendorName,
+              serviceType: formData.serviceType.toUpperCase(),
+              contactPersonFirstName: formData.contactPersonFirstName,
+              contactPersonLastName: formData.contactPersonLastName,
+              street_name: formData.streetName,
               city: formData.city,
               state: formData.state,
               pin: formData.pin,
-              accountNo: formData.accountNo,
-              ifscCode: formData.ifscCode,
-              password: formData.password,
-              userType: "VENDOR"
+              amt_due: "0", // You might want to set this as a default
+              account_no: formData.accountNo,
+              ifsc_code: formData.ifscCode,
             };
 
       const response = await axios.post(endpoint, JSON.stringify(data));
@@ -155,16 +156,16 @@ const Signup = () => {
       <div className="signup-form-wrapper">
         <div className="tab-container">
           <button
-            className={`tab-button ${activeTab === "user" ? "active" : ""}`}
-            onClick={() => setActiveTab("user")}
+            className={`tab-button ${activeTab === "CUSTOMER" ? "active" : ""}`}
+            onClick={() => setActiveTab("CUSTOMER")}
           >
-            User Signup
+            User
           </button>
           <button
             className={`tab-button ${activeTab === "vendor" ? "active" : ""}`}
             onClick={() => setActiveTab("vendor")}
           >
-            Vendor Signup
+            Vendor
           </button>
         </div>
 
@@ -172,13 +173,13 @@ const Signup = () => {
           <h2>Create Your Account</h2>
           <p>
             Join us to{" "}
-            {activeTab === "user"
+            {activeTab === "CUSTOMER"
               ? "start your next adventure"
               : "become a service provider"}
             .
           </p>
 
-          {activeTab === "user" ? (
+          {activeTab === "CUSTOMER" ? (
             <>
               <fieldset className="form-section">
                 <legend>Personal Details</legend>

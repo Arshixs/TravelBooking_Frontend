@@ -10,8 +10,8 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    userType: "CUSTOMER",
   });
+  const [activeTab, setActiveTab] = useState("CUSTOMER");
   const { user, setUser, isAuthenticated, setIsAuthenticated } = useUser();
   const navigate = useNavigate();
 
@@ -27,7 +27,10 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("auth/login", JSON.stringify(formData));
+      const response = await axios.post(
+        "auth/login",
+        JSON.stringify({ ...formData, userType: activeTab })
+      );
 
       // Check for the success flag from your backend's response structure
       if (response.data.success && response.status === 200) {
@@ -63,6 +66,20 @@ const LoginPage = () => {
   return (
     <div className="login-page-container">
       <div className="login-form-wrapper">
+        <div className="tab-container">
+          <button
+            className={`tab-button ${activeTab === "CUSTOMER" ? "active" : ""}`}
+            onClick={() => setActiveTab("CUSTOMER")}
+          >
+            User
+          </button>
+          <button
+            className={`tab-button ${activeTab === "VENDOR" ? "active" : ""}`}
+            onClick={() => setActiveTab("VENDOR")}
+          >
+            Vendor
+          </button>
+        </div>
         <form className="login-form" onSubmit={handleLogin}>
           <h2>Welcome Back!</h2>
 
