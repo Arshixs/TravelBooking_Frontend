@@ -9,7 +9,8 @@ import { UserProvider } from "./context/context";
 import Layout from "./layout/Layout";
 import TourPackages from "./pages/TourPackage";
 import StaffLogin from "./pages/StaffLogin";
-
+import ProtectedRoute from "./pages/ProtectedRoute";
+import AdminDashboard from "./pages/AdminDashboard";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -36,17 +37,25 @@ export const router = createBrowserRouter([
         element: <Profile />,
       },
       {
+        path: "/admin/dashboard",
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "TourPackages",
         element: <TourPackages />,
       },
       {
         path: "explore",
-        element: <ExplorePackages />
+        element: <ExplorePackages />,
       },
       {
         path: "/staff/login",
-        element: <StaffLogin />
-      }
+        element: <StaffLogin />,
+      },
     ],
   },
 ]);

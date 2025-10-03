@@ -27,7 +27,6 @@ const Navbar = () => {
     window.location.href = "/";
   };
 
-   //console.log(user.data.vendor_name);
   useEffect(() => {
     function handleClickOutside(event) {
       if (accountRef.current && !accountRef.current.contains(event.target)) {
@@ -55,7 +54,7 @@ const Navbar = () => {
           <div className="account-logo">
             <img
               className="profile-img"
-              src="src\assets\user.png"
+              src="src/assets/user.png"
               alt="Profile"
             />
           </div>
@@ -63,6 +62,10 @@ const Navbar = () => {
       </nav>
     );
   }
+
+  // Check if user is admin
+  const isAdmin =
+    user?.data?.userType === "STAFF" && user?.data?.role === "admin";
 
   return (
     <nav className="navbar">
@@ -82,7 +85,7 @@ const Navbar = () => {
         <div className="account-logo" onClick={toggleDropdown}>
           <img
             className="profile-img"
-            src="src\assets\user.png"
+            src="src/assets/user.png"
             alt="Profile"
           />
         </div>
@@ -91,17 +94,14 @@ const Navbar = () => {
             {accessToken ? (
               // Show authenticated user options
               <>
-                {/* <li>
-                  <span className="user-greeting">
-                    Hello, {user?.name || user?.email || "User"}!
-                  </span>
-                </li> */}
                 <li>
                   <a href="/profile">Profile</a>
                 </li>
-                {/* <li>
-                  <a href="/dashboard">Dashboard</a>
-                </li> */}
+                {isAdmin && (
+                  <li>
+                    <a href="/admin/dashboard">Admin Dashboard</a>
+                  </li>
+                )}
                 <li>
                   <button onClick={handleLogout} className="logout-btn">
                     Logout
