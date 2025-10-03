@@ -32,6 +32,11 @@
   align-items: center;
 }
 
+.navbar-welcome-text{
+  color:white;
+  font-family: Roboto,sans-serif;
+  padding-right:10px;
+}
 .account-logo {
   width: 40px;
   height: 40px;

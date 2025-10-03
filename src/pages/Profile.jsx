@@ -23,7 +23,8 @@ const LockIcon = () => (
 const Profile = () => {
   const { user, isAuthenticated } = useUser();
   const [isEditing, setIsEditing] = useState(false);
-  const [isPasswordSectionVisible, setIsPasswordSectionVisible] = useState(false);
+  const [isPasswordSectionVisible, setIsPasswordSectionVisible] =
+    useState(false);
 
   // A single state object to hold all possible profile data
   const [profileData, setProfileData] = useState({});
@@ -34,12 +35,17 @@ const Profile = () => {
     confirmPassword: "",
   });
 
+  const VendorStatusList = ["AVAILABLE", "UNAVAILABLE", "MAINTENANCE BREAK"];
+
   const passwordCardRef = useRef(null);
 
   // Maps API data (snake_case) to our state (camelCase) for both user types
   useEffect(() => {
     if (user && user.data) {
+      
+      
       const userData = user.data;
+      console.log("USerdata" ,userData);
       const commonData = {
         email: userData.email || "",
         phone: userData.phone || "",
@@ -60,20 +66,35 @@ const Profile = () => {
           accountNo: userData.account_no || "",
           ifscCode: userData.ifsc_code || "",
           amtDue: userData.amt_due || 0,
-          status: userData.status || "INACTIVE",
+          status: userData.status || "AVAILABLE",
         };
+      }
+      else if(userData.userType==="STAFF"){
+        specificData = {
+          firstName: userData?.first_name,
+          lastName: userData?.last_name,
+          salary: userData?.salary,
+          joining_date: userData?.joining_date,
+          role: userData?.role,
+          employee_code:userData?.employee_code,
+        };
+        
       } else {
         specificData = {
           firstName: userData.first_name || "",
           lastName: userData.last_name || "",
-          dateOfBirth: userData.date_of_birth ? userData.date_of_birth.split("T")[0] : "",
+          dateOfBirth: userData.date_of_birth
+            ? userData.date_of_birth.split("T")[0]
+            : "",
           gender: userData.gender || "",
-          emergencyContactFirstName: userData.emergency_contact_first_name || "",
+          emergencyContactFirstName:
+            userData.emergency_contact_first_name || "",
           emergencyContactLastName: userData.emergency_contact_last_name || "",
           emergencyContactNo: userData.emergency_contact_no || "",
         };
       }
       setProfileData({ ...commonData, ...specificData });
+      console.log("PROFILEDATA:",{...profileData});
     }
   }, [user]);
 
@@ -107,17 +128,27 @@ const Profile = () => {
         phone: profileData.phone,
       };
 
-      if (profileData.userType === 'VENDOR') {
+     // console.log(profileData);
+      if (profileData.userType === "VENDOR") {
         Object.assign(dataToSend, {
-          vendor_name: profileData.vendorName,
-          contact_person_first_name: profileData.contactPersonFirstName,
-          contact_person_last_name: profileData.contactPersonLastName,
+          vendorName: profileData.vendorName,
+          contactPersonFirstName: profileData.contactPersonFirstName,
+          contactPersonLastName: profileData.contactPersonLastName,
           street_name: profileData.streetName,
           city: profileData.city,
           state: profileData.state,
+          status: profileData.status,
+          phone: profileData.phone,
           pin: profileData.pin,
           account_no: profileData.accountNo,
           ifsc_code: profileData.ifscCode,
+        });
+      }
+      else if(profileData.userType==="STAFF"){
+        Object.assign(dataToSend, {
+          firstName: profileData.firstName,
+          lastName: profileData.lastName,
+         
         });
       } else {
         Object.assign(dataToSend, {
@@ -131,10 +162,19 @@ const Profile = () => {
         });
       }
 
-      const response = await axios.put("auth/profile", dataToSend);
+      const user = JSON.parse(localStorage.getItem("user"));
+      //console.log(localStorage.getItem("user"));
+      const response = await axios.put(
+        `auth/profile/${user.userId}`,
+        dataToSend
+      );
+
+      console.log("DATA TO SEND ", dataToSend);
+      console.log("RESPONSE ", response);
+      
 
       if (response.status === 200) {
-        alert("Profile updated successfully!");
+        alert("Profile updated successfully!\n Refresh page if you don't see updated info.");
         setIsEditing(false);
       }
     } catch (err) {
@@ -150,14 +190,21 @@ const Profile = () => {
       return;
     }
     try {
-      const response = await axios.post("auth/change-password", {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const userId=user.userId;
+      const response = await axios.post(`auth/change-password/${userId}`, {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
+        confirmPassword: passwordData.confirmPassword
       });
 
       if (response.status === 200) {
         alert("Password updated successfully!");
-        setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        setPasswordData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
         setIsPasswordSectionVisible(false);
       }
     } catch (err) {
@@ -182,19 +229,29 @@ const Profile = () => {
     <div className="profile-page">
       <section className="profile-header">
         <h1>My Account</h1>
-        <p>View and manage your {profileData.userType?.toLowerCase()} details and security settings.</p>
+        <p>
+          View and manage your {profileData.userType?.toLowerCase()} details and
+          security settings.
+        </p>
       </section>
 
       <div className="profile-container container">
         <div className="profile-card">
           <div className="card-header">
             <h2>
-              <div className="card-icon"><UserIcon /></div>
-              {profileData.userType === 'VENDOR' ? 'Vendor Information' : 'Personal Details'}
+              <div className="card-icon">
+                <UserIcon />
+              </div>
+              {profileData.userType === "VENDOR"
+                ? "Vendor Information"
+                : "Personal Details"}
             </h2>
             <div className="card-header-actions">
               {!isEditing && !isPasswordSectionVisible && (
-                <button className="btn-link" onClick={() => setIsPasswordSectionVisible(true)}>
+                <button
+                  className="btn-link"
+                  onClick={() => setIsPasswordSectionVisible(true)}
+                >
                   Change Password
                 </button>
               )}
@@ -205,91 +262,270 @@ const Profile = () => {
               )}
             </div>
           </div>
-          
+
           <form onSubmit={handleProfileSave}>
             <div className="details-grid">
-              {profileData.userType === 'CUSTOMER' ? (
+              {profileData.userType === "STAFF" && (
+                <ProfileField
+                  label="Employee Code"
+                  name="employee_code"
+                  value={profileData.employee_code}
+                  onChange={handleProfileChange}
+                  isEditing={isEditing}
+                  isEditable={false}
+                />
+              )}
+              {profileData.userType === "CUSTOMER" ||
+              profileData.userType === "STAFF" ? (
                 <>
-                  <ProfileField label="First Name" name="firstName" value={profileData.firstName} onChange={handleProfileChange} isEditing={isEditing} />
-                  <ProfileField label="Last Name" name="lastName" value={profileData.lastName} onChange={handleProfileChange} isEditing={isEditing} />
+                  <ProfileField
+                    label="First Name"
+                    name="firstName"
+                    value={profileData.firstName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="Last Name"
+                    name="lastName"
+                    value={profileData.lastName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
                 </>
               ) : (
-                 <>
-                   <ProfileField label="Firm Name" name="vendorName" value={profileData.vendorName} onChange={handleProfileChange} isEditing={isEditing} />
-                   <ProfileField label="Service Type" name="serviceType" value={profileData.serviceType} isEditing={isEditing} isEditable={false} />
-                 </>
-              )}
-              <ProfileField label="Email Address" name="email" value={profileData.email} isEditing={isEditing} isEditable={false} />
-              <ProfileField label="Phone Number" name="phone" value={profileData.phone} onChange={handleProfileChange} isEditing={isEditing} type="tel" />
-              
-              {profileData.userType === 'CUSTOMER' && (
                 <>
-                  <ProfileField label="Date of Birth" name="dateOfBirth" value={profileData.dateOfBirth} onChange={handleProfileChange} isEditing={isEditing} type="date" />
+                  <ProfileField
+                    label="Firm Name"
+                    name="vendorName"
+                    value={profileData.vendorName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="Service Type"
+                    name="serviceType"
+                    value={profileData.serviceType}
+                    isEditing={isEditing}
+                    isEditable={false}
+                  />
+                </>
+              )}
+              <ProfileField
+                label="Email Address"
+                name="email"
+                value={profileData.email}
+                isEditing={isEditing}
+                isEditable={false}
+              />
+              <ProfileField
+                label="Phone Number"
+                name="phone"
+                value={profileData.phone}
+                onChange={handleProfileChange}
+                isEditing={isEditing}
+                type="tel"
+              />
+
+              {profileData.userType === "CUSTOMER" && (
+                <>
+                  <ProfileField
+                    label="Date of Birth"
+                    name="dateOfBirth"
+                    value={profileData.dateOfBirth}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                    type="date"
+                  />
                   <div className="form-group">
                     <label>Gender</label>
                     {isEditing ? (
-                      <select name="gender" value={profileData.gender || ''} onChange={handleProfileChange}>
+                      <select
+                        name="gender"
+                        value={profileData.gender || ""}
+                        onChange={handleProfileChange}
+                      >
                         <option value="">Select...</option>
                         <option value="Female">Female</option>
                         <option value="Male">Male</option>
                         <option value="Other">Other</option>
                       </select>
-                    ) : (<p>{profileData.gender || 'Not set'}</p>)}
+                    ) : (
+                      <p>{profileData.gender || "Not set"}</p>
+                    )}
                   </div>
                 </>
               )}
             </div>
 
-            {profileData.userType === 'VENDOR' && (
+            {profileData.userType === "VENDOR" && (
               <>
                 <hr className="divider" />
                 <h3>Contact Person</h3>
                 <div className="details-grid">
-                  <ProfileField label="First Name" name="contactPersonFirstName" value={profileData.contactPersonFirstName} onChange={handleProfileChange} isEditing={isEditing} />
-                  <ProfileField label="Last Name" name="contactPersonLastName" value={profileData.contactPersonLastName} onChange={handleProfileChange} isEditing={isEditing} />
+                  <ProfileField
+                    label="First Name"
+                    name="contactPersonFirstName"
+                    value={profileData.contactPersonFirstName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="Last Name"
+                    name="contactPersonLastName"
+                    value={profileData.contactPersonLastName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
                 </div>
-                
+
                 <hr className="divider" />
                 <h3>Address</h3>
                 <div className="details-grid">
-                  <ProfileField label="Street Name" name="streetName" value={profileData.streetName} onChange={handleProfileChange} isEditing={isEditing} />
-                  <ProfileField label="City" name="city" value={profileData.city} onChange={handleProfileChange} isEditing={isEditing} />
-                  <ProfileField label="State" name="state" value={profileData.state} onChange={handleProfileChange} isEditing={isEditing} />
-                  <ProfileField label="PIN Code" name="pin" value={profileData.pin} onChange={handleProfileChange} isEditing={isEditing} />
+                  <ProfileField
+                    label="Street Name"
+                    name="streetName"
+                    value={profileData.streetName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="City"
+                    name="city"
+                    value={profileData.city}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="State"
+                    name="state"
+                    value={profileData.state}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="PIN Code"
+                    name="pin"
+                    value={profileData.pin}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
                 </div>
-                
+
                 <hr className="divider" />
                 <h3>Bank & Status</h3>
                 <div className="details-grid">
-                   <ProfileField label="Account Number" name="accountNo" value={profileData.accountNo} onChange={handleProfileChange} isEditing={isEditing} />
-                   <ProfileField label="IFSC Code" name="ifscCode" value={profileData.ifscCode} onChange={handleProfileChange} isEditing={isEditing} />
-                   <div className="form-group">
-                      <label>Status</label>
-                      <p><span className={`status-badge ${profileData.status?.toLowerCase()}`}>{profileData.status}</span></p>
-                   </div>
-                   <div className="form-group">
-                      <label>Amount Due</label>
-                      <p className="amount">₹{profileData.amtDue}</p>
-                   </div>
+                  <ProfileField
+                    label="Account Number"
+                    name="accountNo"
+                    value={profileData.accountNo}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="IFSC Code"
+                    name="ifscCode"
+                    value={profileData.ifscCode}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <div className="form-group">
+                    <label>Status</label>
+
+                    {isEditing ? (
+                      <select
+                        name="status"
+                        value={profileData.status || ""}
+                        onChange={handleProfileChange}
+                      >
+                        <option value="">Select...</option>
+                        <option value="AVAILABLE">AVAILABLE</option>
+                        <option value="UNAVAILABLE">UNAVAILABLE</option>
+                        <option value="MAINTENANCE">MAINTENANCE</option>
+                      </select>
+                    ) : (
+                      <p>{profileData.status || "AVAILABLE"}</p>
+                    )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>Amount Due</label>
+                    <p className="amount">₹{profileData.amtDue}</p>
+                  </div>
                 </div>
               </>
             )}
 
-            {profileData.userType === 'CUSTOMER' && (
-                <>
-                  <hr className="divider" />
-                  <h3>Emergency Contact</h3>
-                  <div className="details-grid">
-                      <ProfileField label="First Name" name="emergencyContactFirstName" value={profileData.emergencyContactFirstName} onChange={handleProfileChange} isEditing={isEditing} />
-                      <ProfileField label="Last Name" name="emergencyContactLastName" value={profileData.emergencyContactLastName} onChange={handleProfileChange} isEditing={isEditing} />
-                      <ProfileField label="Phone Number" name="emergencyContactNo" value={profileData.emergencyContactNo} onChange={handleProfileChange} isEditing={isEditing} type="tel" />
-                  </div>
-                </>
+            {profileData.userType === "CUSTOMER" && (
+              <>
+                <hr className="divider" />
+                <h3>Emergency Contact</h3>
+                <div className="details-grid">
+                  <ProfileField
+                    label="First Name"
+                    name="emergencyContactFirstName"
+                    value={profileData.emergencyContactFirstName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="Last Name"
+                    name="emergencyContactLastName"
+                    value={profileData.emergencyContactLastName}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                  />
+                  <ProfileField
+                    label="Phone Number"
+                    name="emergencyContactNo"
+                    value={profileData.emergencyContactNo}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                    type="tel"
+                  />
+                </div>
+              </>
             )}
 
+            {profileData.userType === "STAFF" && (
+              <>
+                <hr className="divider" />
+                <h3>Employee Details</h3>
+                <div className="details-grid">
+                  <ProfileField
+                    label="Role"
+                    name="role"
+                    value={profileData.role}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                    isEditable={false}
+                  />
+                  <ProfileField
+                    label="Joining Date"
+                    name="joining_date"
+                    value={profileData.joining_date}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                    isEditable={false}
+                  />
+                  <ProfileField
+                    label="Salary"
+                    name="salary"
+                    value={profileData.salary}
+                    onChange={handleProfileChange}
+                    isEditing={isEditing}
+                    isEditable={false}
+                  />
+                </div>
+              </>
+            )}
             {isEditing && (
               <div className="form-actions">
-                <button type="button" className="btn-secondary" onClick={() => setIsEditing(false)}>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => setIsEditing(false)}
+                >
                   Cancel
                 </button>
                 <button type="submit" className="btn-primary">
@@ -299,40 +535,64 @@ const Profile = () => {
             )}
           </form>
         </div>
-        
+
         {isPasswordSectionVisible && (
-           <div className="profile-card" ref={passwordCardRef}>
-             <div className="card-header">
-               <h2>
-                 <div className="card-icon"><LockIcon /></div>
-                 Change Password
-               </h2>
-             </div>
-             <form onSubmit={handlePasswordUpdate}>
-               <div className="details-grid">
-                 <div className="form-group full-width">
-                   <label>Current Password</label>
-                   <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} required />
-                 </div>
-                 <div className="form-group">
-                   <label>New Password</label>
-                   <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} required />
-                 </div>
-                 <div className="form-group">
-                   <label>Confirm New Password</label>
-                   <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordChange} required />
-                 </div>
-               </div>
-               <div className="form-actions">
-                 <button type="button" className="btn-secondary" onClick={() => setIsPasswordSectionVisible(false)}>
-                   Cancel
-                 </button>
-                 <button type="submit" className="btn-primary">
-                   Update Password
-                 </button>
-               </div>
-             </form>
-           </div>
+          <div className="profile-card" ref={passwordCardRef}>
+            <div className="card-header">
+              <h2>
+                <div className="card-icon">
+                  <LockIcon />
+                </div>
+                Change Password
+              </h2>
+            </div>
+            <form onSubmit={handlePasswordUpdate}>
+              <div className="details-grid">
+                <div className="form-group full-width">
+                  <label>Current Password</label>
+                  <input
+                    type="password"
+                    name="currentPassword"
+                    value={passwordData.currentPassword}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>New Password</label>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Confirm New Password</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => setIsPasswordSectionVisible(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn-primary">
+                  Update Password
+                </button>
+              </div>
+            </form>
+          </div>
         )}
       </div>
     </div>

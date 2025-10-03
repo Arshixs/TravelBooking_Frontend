@@ -8,6 +8,7 @@ import ExplorePackages from "./pages/ExplorePackages";
 import { UserProvider } from "./context/context";
 import Layout from "./layout/Layout";
 import TourPackages from "./pages/TourPackage";
+import StaffLogin from "./pages/StaffLogin";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "explore",
         element: <ExplorePackages />
+      },
+      {
+        path: "/staff/login",
+        element: <StaffLogin />
       }
     ],
   },

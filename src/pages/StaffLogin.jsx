@@ -5,7 +5,7 @@ import axios from "../utils/axios";
 import Inputbox from "../components/inputBox";
 import { useUser } from "../context/context";
 
-const LoginPage = () => {
+const StaffLogin = () => {
   // Use a single state object for the form data
   const [formData, setFormData] = useState({
     email: "",
@@ -29,7 +29,7 @@ const LoginPage = () => {
     try {
       const response = await axios.post(
         "auth/login",
-        JSON.stringify({ ...formData, userType: activeTab })
+        JSON.stringify({ ...formData, userType: "STAFF" })
       );
 
       // Check for the success flag from your backend's response structure
@@ -37,7 +37,7 @@ const LoginPage = () => {
         // FIX 1: Access the nested 'data' object
         const responseData = response.data.data;
         console.log(responseData);
-        const { accessToken, refreshToken, userType, userId, email } =
+        const { accessToken, refreshToken, userType, userId, email} =
           responseData;
 
         localStorage.setItem("accessToken", accessToken);
@@ -46,12 +46,12 @@ const LoginPage = () => {
         // FIX 2: Use JSON.stringify() to store the user object
         localStorage.setItem(
           "user",
-          JSON.stringify({ userType, userId, email })
+          JSON.stringify({ userType, userId, email})
         );
 
         alert("Login successful");
         setIsAuthenticated(true);
-        navigate("/profile");
+        navigate("/");
       } else {
         // Handle cases where the API call was successful but login failed (e.g., wrong password)
         alert(response.data.message || "Login failed!");
@@ -67,18 +67,7 @@ const LoginPage = () => {
     <div className="login-page-container">
       <div className="login-form-wrapper">
         <div className="tab-container">
-          <button
-            className={`tab-button ${activeTab === "CUSTOMER" ? "active" : ""}`}
-            onClick={() => setActiveTab("CUSTOMER")}
-          >
-            User
-          </button>
-          <button
-            className={`tab-button ${activeTab === "VENDOR" ? "active" : ""}`}
-            onClick={() => setActiveTab("VENDOR")}
-          >
-            Vendor
-          </button>
+          
         </div>
         <form className="login-form" onSubmit={handleLogin}>
           <h2>Welcome Back!</h2>
@@ -104,18 +93,18 @@ const LoginPage = () => {
           <button type="submit" className="login-btn">
             Sign In
           </button>
-          <div className="form-footer">
+          {/* <div className="form-footer">
             <p id="nowrap-text">
               Don't have an account?<Link to="/signup">Sign Up</Link>{" "}
             </p>
             <p id="nowrap-text">
               Employee at TravelPro? <Link to="/staff/login">Log In</Link>
             </p>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default StaffLogin;

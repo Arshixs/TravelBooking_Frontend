@@ -16,6 +16,8 @@ const Navbar = () => {
   const handleLogout = () => {
     // Remove token from localStorage
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    localStorage.removeItem("refreshToken");
     // Clear user state
     setUser(null);
     // Close dropdown
@@ -25,6 +27,7 @@ const Navbar = () => {
     window.location.href = "/";
   };
 
+   //console.log(user.data.vendor_name);
   useEffect(() => {
     function handleClickOutside(event) {
       if (accountRef.current && !accountRef.current.contains(event.target)) {
@@ -67,6 +70,15 @@ const Navbar = () => {
         <a href="/">TravelPro</a>
       </div>
       <div className="navbar-account" ref={accountRef}>
+        {user && (
+          <span className="navbar-welcome-text">
+            Hi{" "}
+            {user?.data.userType === "VENDOR"
+              ? user?.data.vendor_name
+              : user?.data.first_name}
+          </span>
+        )}
+
         <div className="account-logo" onClick={toggleDropdown}>
           <img
             className="profile-img"
@@ -79,17 +91,17 @@ const Navbar = () => {
             {accessToken ? (
               // Show authenticated user options
               <>
-                <li>
+                {/* <li>
                   <span className="user-greeting">
                     Hello, {user?.name || user?.email || "User"}!
                   </span>
-                </li>
+                </li> */}
                 <li>
                   <a href="/profile">Profile</a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="/dashboard">Dashboard</a>
-                </li>
+                </li> */}
                 <li>
                   <button onClick={handleLogout} className="logout-btn">
                     Logout

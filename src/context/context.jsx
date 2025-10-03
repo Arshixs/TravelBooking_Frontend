@@ -21,8 +21,11 @@ export const UserProvider = ({ children }) => {
 
       if (accessToken) {
         try {
+          const user = JSON.parse(localStorage.getItem("user"));
+          //console.log(localStorage.getItem("user"));
+      
           // Use a relative path to work correctly with your axios baseURL
-          const res = await axios.get("auth/profile", {
+          const res = await axios.get(`auth/profile/${user.userId}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
 
@@ -38,9 +41,9 @@ export const UserProvider = ({ children }) => {
         } catch (error) {
           console.error("Error fetching user:", error);
           // FIX: Clean up and set auth state to false on error (e.g., expired token)
-          localStorage.removeItem("accessToken");
-          setUser(null);
-          setIsAuthenticated(false);
+          //localStorage.removeItem("accessToken");
+          // setUser(null);
+          // setIsAuthenticated(false);
         }
       } else {
         // FIX: If no token, we are definitively not authenticated.

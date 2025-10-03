@@ -52,7 +52,9 @@ const Signup = () => {
     }
 
     if (formData.password) {
-      const isValid = validatePassword(formData.password);
+      const isValid = true;
+
+     // const isValid = validatePassword(formData.password);
       setPasswordValid(isValid);
       if (!isValid) {
         const requirements = [

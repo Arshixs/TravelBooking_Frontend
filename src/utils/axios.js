@@ -59,6 +59,7 @@ axios.interceptors.response.use(
             return Promise.reject(error);
           }
         } else {
+          console.log("FROM AXIOS INTERCEPTOR")
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           window.location.href = "/login";
