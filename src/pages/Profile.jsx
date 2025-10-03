@@ -21,7 +21,7 @@ const LockIcon = () => (
 );
 
 const Profile = () => {
-  const { user, isAuthenticated } = useUser();
+  const { user, isAuthenticated,setUser } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [isPasswordSectionVisible, setIsPasswordSectionVisible] =
     useState(false);
@@ -152,13 +152,13 @@ const Profile = () => {
         });
       } else {
         Object.assign(dataToSend, {
-          first_name: profileData.firstName,
-          last_name: profileData.lastName,
-          date_of_birth: profileData.dateOfBirth,
+          firstName: profileData.firstName,
+          lastName: profileData.lastName,
+          dateOfBirth: profileData.dateOfBirth,
           gender: profileData.gender,
-          emergency_contact_first_name: profileData.emergencyContactFirstName,
-          emergency_contact_last_name: profileData.emergencyContactLastName,
-          emergency_contact_no: profileData.emergencyContactNo,
+          emergencyContactFirstName: profileData.emergencyContactFirstName,
+          emergencyContactLastName: profileData.emergencyContactLastName,
+          emergencyContactNo: profileData.emergencyContactNo,
         });
       }
 
@@ -169,12 +169,16 @@ const Profile = () => {
         dataToSend
       );
 
+
+      
       console.log("DATA TO SEND ", dataToSend);
       console.log("RESPONSE ", response);
       
 
       if (response.status === 200) {
         alert("Profile updated successfully!\n Refresh page if you don't see updated info.");
+        setUser(response.data.data);
+        window.location.href="/profile";
         setIsEditing(false);
       }
     } catch (err) {
