@@ -303,6 +303,11 @@
   color: white;
 }
 
+.badge-package {
+  background:#000000;
+  color:white;
+}
+
 /* Action Buttons */
 .btn-action-admin {
   padding: 8px 16px;

@@ -331,12 +331,12 @@ const AdminDashboard = () => {
                               className={`badge badge-role ${
                                 member.role === "admin"
                                   ? "badge-admin"
-                                  : "badge-staff"
+                                  : member.role==="PackageManager"? "badge-package" :"badge-staff"
                               }`}
                             >
                               {member.role === "PackageManager"
                                 ? "Package Manager"
-                                : "Blog Writer"}
+                                : member.role ==="admin" ? "Admin" : "Blog Writer"}
                             </span>
                           </td>
                           <td>
