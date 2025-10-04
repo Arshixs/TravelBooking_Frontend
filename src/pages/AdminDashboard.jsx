@@ -346,7 +346,7 @@ const AdminDashboard = () => {
                           <td>
 
                           {member.staff_id!==JSON.parse(localStorage.getItem("user")).userId ? <button
-                              className="btn-action btn-edit-action"
+                              className="btn-action-admin btn-edit-action-admin"
                               onClick={() => handleEditStaff(member.staff_id)}
                             >
                               <svg

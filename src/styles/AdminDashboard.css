@@ -304,7 +304,7 @@
 }
 
 /* Action Buttons */
-.btn-action {
+.btn-action-admin {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
@@ -317,17 +317,17 @@
   gap: 6px;
 }
 
-.btn-action svg {
+.btn-action-admin svg {
   width: 16px;
   height: 16px;
 }
 
-.btn-edit-action {
+.btn-edit-action-admin {
   background: #134686;
   color: white;
 }
 
-.btn-edit-action:hover {
+.btn-edit-action-admin:hover {
   background: #0d3461;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(19, 70, 134, 0.3);
