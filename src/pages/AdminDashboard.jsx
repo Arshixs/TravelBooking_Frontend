@@ -138,7 +138,12 @@ const AdminDashboard = () => {
     } finally {
       setLoading(false);
     }
+
+
   };
+
+  //console.log(JSON.parse(localStorage.getItem("user")).userId);
+  //console.log(user);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -339,7 +344,8 @@ const AdminDashboard = () => {
                           </td>
                           <td className="amount">₹{member.salary}</td>
                           <td>
-                            <button
+
+                          {member.staff_id!==JSON.parse(localStorage.getItem("user")).userId ? <button
                               className="btn-action btn-edit-action"
                               onClick={() => handleEditStaff(member.staff_id)}
                             >
@@ -353,7 +359,8 @@ const AdminDashboard = () => {
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                               </svg>
                               Edit
-                            </button>
+                            </button>: <button>{" "}</button> }
+                            
                           </td>
                         </tr>
                       ))
@@ -495,7 +502,7 @@ const AdminDashboard = () => {
                       onChange={handleInputChange}
                       required
                       min="0"
-                      step="0.01"
+                      
                     />
                   </div>
                 </div>

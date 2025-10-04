@@ -51,6 +51,7 @@ const LoginPage = () => {
 
         alert("Login successful");
         setIsAuthenticated(true);
+        window.location.href="/profile";
         navigate("/profile");
       } else {
         // Handle cases where the API call was successful but login failed (e.g., wrong password)
