@@ -11,6 +11,10 @@ import TourPackages from "./pages/TourPackage";
 import StaffLogin from "./pages/StaffLogin";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
+import VendorDashboard from "./pages/VendorDashboard";
+import VendorGuidesPage from "./pages/VendorGuidesPage";
+import VendorTransportPage from "./pages/VendorTransportPage";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -41,6 +45,30 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRole="admin">
             <AdminDashboard />
+          </ProtectedRoute>
+        ),
+      },
+      // {
+      //   path: "/vendor/dashboard",
+      //   element: (
+      //     <ProtectedRoute requiredUserType="VENDOR">
+      //       <VendorDashboard />
+      //     </ProtectedRoute>
+      //   ),
+      // },
+      {
+        path: "/vendor/guides",
+        element: (
+          <ProtectedRoute requiredUserType="VENDOR" requiredServiceType="Guide_Provider">
+            <VendorGuidesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/vendor/transports",
+        element: (
+          <ProtectedRoute requiredUserType="VENDOR" requiredServiceType="Transport_Provider">
+            <VendorTransportPage />
           </ProtectedRoute>
         ),
       },

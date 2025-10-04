@@ -67,6 +67,10 @@ const Navbar = () => {
   const isAdmin =
     user?.data?.userType === "STAFF" && user?.data?.role === "admin";
 
+  // Check if user is vendor
+  const isVendor = user?.data?.userType === "VENDOR";
+  const serviceType = user?.data?.service_type;
+
   return (
     <nav className="navbar">
       <div className="navbar-title">
@@ -101,6 +105,23 @@ const Navbar = () => {
                   <li>
                     <a href="/admin/dashboard">Admin Dashboard</a>
                   </li>
+                )}
+                {isVendor && (
+                  <>
+                    {/* <li>
+                      <a href="/vendor/dashboard">Vendor Dashboard</a>
+                    </li> */}
+                    {serviceType && serviceType === "Guide_Provider" && (
+                      <li>
+                        <a href="/vendor/guides">Manage Guides</a>
+                      </li>
+                    )}
+                    {serviceType && serviceType === "Transport_Provider" && (
+                      <li>
+                        <a href="/vendor/transports">Manage Transports</a>
+                      </li>
+                    )}
+                  </>
                 )}
                 <li>
                   <button onClick={handleLogout} className="logout-btn">

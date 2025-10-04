@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useUser } from "../context/context";
 
-const ProtectedRoute = ({ children, requiredRole }) => {
+const ProtectedRoute = ({ children, requiredRole, requiredUserType, requiredServiceType}) => {
   const { user, isAuthenticated } = useUser();
 
-  // Show loading state while authentication is being checked
+  // Show loading state while checking authentication
   if (isAuthenticated === null) {
     return (
       <div
@@ -14,48 +14,145 @@ const ProtectedRoute = ({ children, requiredRole }) => {
           justifyContent: "center",
           alignItems: "center",
           minHeight: "100vh",
-          background: "#fdf4e3",
+          fontSize: "1.2rem",
+          color: "#134686",
         }}
       >
-        <div
-          style={{
-            textAlign: "center",
-            color: "#134686",
-          }}
-        >
+        <div>
           <div
             style={{
+              border: "4px solid #f3f3f3",
+              borderTop: "4px solid #134686",
+              borderRadius: "50%",
               width: "50px",
               height: "50px",
-              border: "4px solid #f0f0f0",
-              borderTop: "4px solid #ed3f27",
-              borderRadius: "50%",
-              margin: "0 auto 20px",
               animation: "spin 1s linear infinite",
+              margin: "0 auto 1rem",
             }}
           ></div>
-          <p>Loading...</p>
+          Loading...
         </div>
       </div>
     );
   }
 
   // Redirect to login if not authenticated
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
   }
 
-  // Check if user type is STAFF
-  if (user?.data?.userType !== "STAFF") {
-    return <Navigate to="/" replace />;
+  // Check for required role (for staff)
+  if (requiredRole) {
+    const userRole = user?.data?.role;
+    if (userRole !== requiredRole) {
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+            fontSize: "1.5rem",
+            color: "#dc3545",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
+          <h2>Access Denied</h2>
+          <p>You do not have permission to access this page.</p>
+          <a
+            href="/"
+            style={{
+              padding: "0.75rem 1.5rem",
+              background: "#134686",
+              color: "white",
+              textDecoration: "none",
+              borderRadius: "8px",
+            }}
+          >
+            Go to Home
+          </a>
+        </div>
+      );
+    }
   }
 
-  // Check if specific role is required (e.g., "admin")
-  if (requiredRole && user?.data?.role !== requiredRole) {
-    return <Navigate to="/" replace />;
+  // Check for required user type (for vendor/customer)
+  if (requiredUserType) {
+    const userType = user?.data?.userType;
+    if (userType !== requiredUserType) {
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+            fontSize: "1.5rem",
+            color: "#dc3545",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
+          <h2>Access Denied</h2>
+          <p>
+            This page is only accessible to {requiredUserType.toLowerCase()}s.
+          </p>
+          <a
+            href="/"
+            style={{
+              padding: "0.75rem 1.5rem",
+              background: "#134686",
+              color: "white",
+              textDecoration: "none",
+              borderRadius: "8px",
+            }}
+          >
+            Go to Home
+          </a>
+        </div>
+      );
+    }
   }
 
-  // User is authenticated and has correct role
+  if(requiredServiceType){
+    const serviceType=user?.data?.service_type;
+    if (serviceType !== requiredServiceType) {
+      return (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+            fontSize: "1.5rem",
+            color: "#dc3545",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
+          <h2>Access Denied</h2>
+          <p>
+            This page is only accessible to {requiredServiceType.toLowerCase()}s.
+          </p>
+          <a
+            href="/"
+            style={{
+              padding: "0.75rem 1.5rem",
+              background: "#134686",
+              color: "white",
+              textDecoration: "none",
+              borderRadius: "8px",
+            }}
+          >
+            Go to Home
+          </a>
+        </div>
+      );
+    }
+
+  }
+  // If all checks pass, render the protected component
   return children;
 };
 
