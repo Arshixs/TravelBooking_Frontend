@@ -1,0 +1,122 @@
+.blog-detail-page {
+  background-color: #f9f9f9;
+  padding: 3rem 1rem;
+}
+
+.post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 2rem 3rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.post-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1.5rem;
+}
+
+.post-title {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  color: #222;
+}
+
+.post-meta {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.post-featured-image {
+  margin-bottom: 2rem;
+}
+
+.post-featured-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.post-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+/* Basic styling for content coming from a rich text editor */
+.post-content h2 {
+  font-size: 1.8rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+.post-content h3 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+.post-content p {
+  margin-bottom: 1.5rem;
+}
+.post-content a {
+  color: var(--primary-color, #007bff);
+  text-decoration: none;
+}
+.post-content a:hover {
+  text-decoration: underline;
+}
+.post-content ul, .post-content ol {
+  padding-left: 2rem;
+  margin-bottom: 1.5rem;
+}
+.post-content blockquote {
+  border-left: 4px solid #ddd;
+  padding-left: 1rem;
+  margin: 2rem 0;
+  color: #555;
+  font-style: italic;
+}
+
+.back-to-blog {
+  margin-top: 3rem;
+  text-align: center;
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+}
+
+.back-to-blog .btn-secondary {
+  /* Layout and Spacing */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem; /* Space between icon and text */
+  padding: 0.75rem 1.5rem;
+  
+  /* Appearance */
+  background-color: #f0f2f5;
+  color: #333;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+
+  /* Effects */
+  transition: all 0.2s ease-in-out;
+}
+
+/* Icon styling */
+.back-to-blog .btn-secondary svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Hover effect */
+.back-to-blog .btn-secondary:hover {
+  background-color: #134686;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
