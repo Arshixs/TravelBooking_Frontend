@@ -14,6 +14,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import VendorDashboard from "./pages/VendorDashboard";
 import VendorGuidesPage from "./pages/VendorGuidesPage";
 import VendorTransportPage from "./pages/VendorTransportPage";
+import ManageBlogs from "./pages/ManageBlogs";
+import BlogPage from "./pages/BlogPage";
+import BlogPostDetail from "./pages/BlogPostDetail";
 
 export const router = createBrowserRouter([
   {
@@ -84,6 +87,22 @@ export const router = createBrowserRouter([
         path: "/staff/login",
         element: <StaffLogin />,
       },
+      {
+        path: "/staff/blogs",
+        element:(
+          <ProtectedRoute requiredUserType="STAFF" requiredRole="ContentWriter">
+            <ManageBlogs />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/blogs",
+        element: <BlogPage />,
+      },
+      {
+        path: "/blogs/:id",
+        element: <BlogPostDetail />,
+      }
     ],
   },
 ]);
