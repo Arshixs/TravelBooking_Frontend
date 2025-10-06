@@ -3,16 +3,19 @@ import "../styles/AdminDashboard.css";
 import axios from "../utils/axios";
 import { useUser } from "../context/context";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("vendors");
   const [vendors, setVendors] = useState([]);
   const [staff, setStaff] = useState([]);
+  const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("create"); // 'create' or 'edit'
   const [selectedItem, setSelectedItem] = useState(null);
   const { user } = useUser();
+  const navigate = useNavigate();
 
   // Form states for staff
   const [staffForm, setStaffForm] = useState({
@@ -30,6 +33,8 @@ const AdminDashboard = () => {
       fetchVendors();
     } else if (activeTab === "staff") {
       fetchStaff();
+    } else if (activeTab === "packages") {
+      fetchPackages();
     }
   }, [activeTab]);
 
@@ -61,6 +66,26 @@ const AdminDashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchPackages = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("/packages/");
+      if (response.data.success) {
+        console.log(response);
+        setPackages(response.data.data);
+      }
+    } catch (error) {
+      console.log("Error fetching Packages: ", error);
+      toast.error("Failed to fetch packages");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePackageView = (slug) => {
+    navigate(`/package/${slug}`);
   };
 
   const handleCreateStaff = () => {
@@ -138,8 +163,6 @@ const AdminDashboard = () => {
     } finally {
       setLoading(false);
     }
-
-
   };
 
   //console.log(JSON.parse(localStorage.getItem("user")).userId);
@@ -196,6 +219,23 @@ const AdminDashboard = () => {
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
           Staff
+        </button>
+        <button
+          className={`tab-btn ${activeTab === "packages" ? "active" : ""}`}
+          onClick={() => setActiveTab("packages")}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          Packages
         </button>
       </div>
 
@@ -274,6 +314,100 @@ const AdminDashboard = () => {
           </div>
         )}
 
+        {activeTab === "packages" && (
+          <div className="content-section">
+            <div className="section-header">
+              <h2>Package Management</h2>
+            </div>
+
+            {loading ? (
+              <div className="loading-state">
+                <div className="spinner"></div>
+                <p>Loading packages...</p>
+              </div>
+            ) : (
+              <div className="data-table-container">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Package Name</th>
+                      <th>Tour Type</th>
+                      <th>Duration</th>
+                      <th>Capacity</th>
+                      <th>Price</th>
+                      <th>Status</th>
+                      <th>Rating</th>
+                      <th>Created At</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {packages.length > 0 ? (
+                      packages.map((pkg) => (
+                        <tr key={pkg.packageId}>
+                          <td>{pkg.packageId}</td>
+                          <td className="vendor-name">{pkg.name}</td>
+                          <td>
+                            <span className="badge badge-service">
+                              {pkg.tour_type}
+                            </span>
+                          </td>
+                          <td>{pkg.duration_days} days</td>
+                          <td>{pkg.max_capacity}</td>
+                          <td className="amount">₹{pkg.price}</td>
+                          <td>
+                            <span
+                              className={`badge badge-status ${
+                                pkg.status === "ACTIVE"
+                                  ? "badge-active"
+                                  : pkg.status === "UPCOMING"
+                                  ? "badge-inactive"
+                                  : "badge-finished"
+                              }`}
+                            >
+                              {pkg.status}
+                            </span>
+                          </td>
+                          <td>{pkg.avg_rating > 0 ? pkg.avg_rating : "N/A"}</td>
+                          <td>
+                            {new Date(pkg.created_at).toLocaleDateString()}
+                          </td>
+                          <td>
+                            {
+                              <button
+                                className="btn-action-admin btn-edit-action-admin"
+                                onClick={() => handlePackageView(pkg.slug)}
+                              >
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                >
+                                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                  <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                View
+                              </button>
+                            }
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="9" className="no-data">
+                          No packages found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === "staff" && (
           <div className="content-section">
             <div className="section-header">
@@ -331,36 +465,45 @@ const AdminDashboard = () => {
                               className={`badge badge-role ${
                                 member.role === "admin"
                                   ? "badge-admin"
-                                  : member.role==="PackageManager"? "badge-package" :"badge-staff"
+                                  : member.role === "PackageManager"
+                                  ? "badge-package"
+                                  : "badge-staff"
                               }`}
                             >
                               {member.role === "PackageManager"
                                 ? "Package Manager"
-                                : member.role ==="admin" ? "Admin" : "Blog Writer"}
+                                : member.role === "admin"
+                                ? "Admin"
+                                : "Blog Writer"}
                             </span>
                           </td>
                           <td>
                             {new Date(member.joining_date).toLocaleDateString()}
                           </td>
-                          <td className="amount">₹{Math.round(member.salary)}</td>
+                          <td className="amount">
+                            ₹{Math.round(member.salary)}
+                          </td>
                           <td>
-
-                          {member.staff_id!==JSON.parse(localStorage.getItem("user")).userId ? <button
-                              className="btn-action-admin btn-edit-action-admin"
-                              onClick={() => handleEditStaff(member.staff_id)}
-                            >
-                              <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
+                            {member.staff_id !==
+                            JSON.parse(localStorage.getItem("user")).userId ? (
+                              <button
+                                className="btn-action-admin btn-edit-action-admin"
+                                onClick={() => handleEditStaff(member.staff_id)}
                               >
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                              </svg>
-                              Edit
-                            </button>: <button>{" "}</button> }
-                            
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                >
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Edit
+                              </button>
+                            ) : (
+                              <button> </button>
+                            )}
                           </td>
                         </tr>
                       ))
@@ -422,17 +565,19 @@ const AdminDashboard = () => {
                 </div>
                 {modalMode === "create"}
                 <div className="form-row">
-                  {modalMode === "create" && <div className="form-group">
-                    <label htmlFor="last_name">Employee Code *</label>
-                    <input
-                      type="text"
-                      id="employee_code"
-                      name="employee_code"
-                      value={staffForm.employee_code}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>}
+                  {modalMode === "create" && (
+                    <div className="form-group">
+                      <label htmlFor="last_name">Employee Code *</label>
+                      <input
+                        type="text"
+                        id="employee_code"
+                        name="employee_code"
+                        value={staffForm.employee_code}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  )}
                   <div className="form-group">
                     <label htmlFor="phone">Phone *</label>
                     <input
@@ -502,7 +647,6 @@ const AdminDashboard = () => {
                       onChange={handleInputChange}
                       required
                       min="0"
-                      
                     />
                   </div>
                 </div>
