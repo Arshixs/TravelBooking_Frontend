@@ -516,7 +516,7 @@ const Profile = () => {
                   <ProfileField
                     label="Salary"
                     name="salary"
-                    value={profileData.salary}
+                    value={Math.round(profileData.salary)}
                     onChange={handleProfileChange}
                     isEditing={isEditing}
                     isEditable={false}

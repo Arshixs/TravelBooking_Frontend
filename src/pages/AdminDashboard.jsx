@@ -342,7 +342,7 @@ const AdminDashboard = () => {
                           <td>
                             {new Date(member.joining_date).toLocaleDateString()}
                           </td>
-                          <td className="amount">₹{member.salary}</td>
+                          <td className="amount">₹{Math.round(member.salary)}</td>
                           <td>
 
                           {member.staff_id!==JSON.parse(localStorage.getItem("user")).userId ? <button
