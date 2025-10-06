@@ -120,8 +120,14 @@ const Navbar = () => {
                         <a href="/staff/blogs">Manage Blogs</a>
                       </li>
                     )}
-
-                    
+                  </>
+                )}
+                {isVendor && (
+                  <>
+                    <li>
+                      <a href="/vendor/contact">Manage Contacts</a>
+                    </li>
+                    {/* ...existing guide/transport links... */}
                   </>
                 )}
                 {isVendor && (

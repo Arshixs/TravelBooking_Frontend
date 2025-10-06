@@ -17,6 +17,7 @@ import VendorTransportPage from "./pages/VendorTransportPage";
 import ManageBlogs from "./pages/ManageBlogs";
 import BlogPage from "./pages/BlogPage";
 import BlogPostDetail from "./pages/BlogPostDetail";
+import VendorContactsPage from "./pages/VendorContactsPage";
 
 export const router = createBrowserRouter([
   {
@@ -102,6 +103,10 @@ export const router = createBrowserRouter([
       {
         path: "/blogs/:id",
         element: <BlogPostDetail />,
+      },
+      {
+        path:"/vendor/contact",
+        element: <VendorContactsPage/>
       }
     ],
   },
