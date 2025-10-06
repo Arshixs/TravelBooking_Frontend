@@ -64,11 +64,17 @@ const Navbar = () => {
   }
 
   // Check if user is admin
-  const isAdmin =
-    user?.data?.userType === "STAFF" && user?.data?.role === "admin";
+
+  
+  const isStaff = user?.data?.userType ==="STAFF";
+  const isAdmin = isStaff && user?.data?.role === "admin";
 
   // Check if user is vendor
   const isVendor = user?.data?.userType === "VENDOR";
+
+  const isContentWriter = isStaff && user?.data?.role === "ContentWriter";
+  const isPackageManager = isStaff && user?.data?.role === "PackageManager";
+  //console.log(user.data.role);
   const serviceType = user?.data?.service_type;
 
   return (
@@ -101,10 +107,22 @@ const Navbar = () => {
                 <li>
                   <a href="/profile">Profile</a>
                 </li>
-                {isAdmin && (
-                  <li>
-                    <a href="/admin/dashboard">Admin Dashboard</a>
-                  </li>
+                {isStaff && (
+                  <>
+                    {isAdmin && (
+                      <li>
+                        <a href="/admin/dashboard">Admin Dashboard</a>
+                      </li>
+                    )}
+
+                    {isContentWriter && (
+                      <li>
+                        <a href="/staff/blogs">Manage Blogs</a>
+                      </li>
+                    )}
+
+                    
+                  </>
                 )}
                 {isVendor && (
                   <>

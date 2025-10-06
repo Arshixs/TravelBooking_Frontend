@@ -489,7 +489,7 @@ const AdminDashboard = () => {
                       <option value="">Select Role</option>
                       <option value="admin">Admin</option>
                       <option value="PackageManager">Package Manager</option>
-                      <option value="BlogWriter">Blog Writer</option>
+                      <option value="ContentWriter">Blog Writer</option>
                     </select>
                   </div>
                   <div className="form-group">
