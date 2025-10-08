@@ -1,0 +1,298 @@
+/* Scoped all button classes to .hotel-form-page to avoid global conflicts */
+/* new themed styles for HotelCreate page */
+.hotel-form-page {
+  background: #fff;
+}
+
+.hotel-form-hero {
+  background: linear-gradient(135deg, #134686 0%, #1a5ba3 100%);
+  color: #fff;
+  padding: 48px 0;
+  margin-bottom: 24px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.hotel-form-hero h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.hotel-form-hero .subtitle {
+  opacity: 0.95;
+}
+
+.hotel-form-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 48px;
+}
+
+.hotel-form-card,
+.hotel-json-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e7eaf3;
+  box-shadow: 0 10px 30px rgba(19, 70, 134, 0.06);
+}
+
+.hotel-form-card {
+  padding: 24px;
+}
+
+.hotel-json-card {
+  padding: 16px;
+}
+
+.hotel-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccd3de;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #134686;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(19, 70, 134, 0.1);
+}
+
+.input-group--full {
+  grid-column: 1 / -1;
+}
+
+.input-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ccd3de;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  resize: vertical;
+}
+
+.input-group textarea:focus {
+  outline: none;
+  border-color: #134686;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(19, 70, 134, 0.1);
+}
+
+.amenities {
+  grid-column: 1 / -1;
+  border: 1px dashed #c2ccda;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.amenities legend {
+  padding: 0 6px;
+  font-weight: 700;
+  color: #134686;
+}
+
+.amenities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 8px;
+}
+
+.amenity {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f3f6fb;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Scoped button styles to prevent conflicts on /hotels pages */
+.hotel-form-page .btn-primary {
+  background: #ed3f27;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hotel-form-page .btn-primary:hover {
+  background: #d63520;
+  transform: translateY(-1px);
+}
+
+/* Added outline variant for btn-primary */
+.hotel-form-page .btn-primary.btn-outline {
+  background: transparent;
+  color: #ed3f27;
+  border: 2px solid #ed3f27;
+  padding: 10px 16px;
+}
+.hotel-form-page .btn-primary.btn-outline:hover {
+  background: #fef2f1;
+}
+
+/* Updated btn-secondary to be outline blue button */
+.hotel-form-page .btn-secondary {
+  background: transparent;
+  color: #134686;
+  border: 2px solid #134686;
+  padding: 10px 16px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hotel-form-page .btn-secondary:hover {
+  background: #e6effa;
+}
+
+.form-message {
+  margin-top: 12px;
+  color: #134686;
+  font-weight: 600;
+}
+
+.json-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.json-header h3 {
+  color: #134686;
+  font-size: 1.1rem;
+  margin: 0;
+}
+.json-header .hint {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.json-preview {
+  margin: 0;
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border: 1px solid #1f2937;
+}
+
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.side-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e7eaf3;
+  box-shadow: 0 10px 30px rgba(19, 70, 134, 0.06);
+  padding: 16px;
+}
+
+.side-card h3 {
+  margin: 0 0 8px 0;
+  color: #134686;
+  font-size: 1.1rem;
+}
+
+.tips-list {
+  padding-left: 18px;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  color: #0f172a;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  font-weight: 600;
+  color: #134686;
+}
+
+.breadcrumbs a {
+  color: #134686;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbs .current {
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .hotel-form-section {
+    grid-template-columns: 1fr;
+  }
+  .side-column {
+    margin-top: 8px;
+  }
+}
+
+/* Added contact-row styling for proper alignment */
+.contact-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.contact-row input {
+  flex: 1;
+}
+
+.contact-row button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
