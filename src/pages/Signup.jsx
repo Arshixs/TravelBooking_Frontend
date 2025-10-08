@@ -3,6 +3,7 @@ import "../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
 import Inputbox from "../components/inputBox";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const [activeTab, setActiveTab] = useState("CUSTOMER");
@@ -54,7 +55,7 @@ const Signup = () => {
     if (formData.password) {
       const isValid = true;
 
-     // const isValid = validatePassword(formData.password);
+      // const isValid = validatePassword(formData.password);
       setPasswordValid(isValid);
       if (!isValid) {
         const requirements = [
@@ -145,11 +146,14 @@ const Signup = () => {
       const response = await axios.post(endpoint, JSON.stringify(data));
       console.log(response);
       if (response.status === 200) {
-        alert("Account created successfully!.");
+        // alert("Account created successfully!.");
+        // alert("Account created successfully!.");
+        toast.success("Blog post created successfully!");
         navigate("/login");
       }
     } catch (error) {
-      alert(error?.response?.data?.message || "Something went wrong!");
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+      //   alert(error?.response?.data?.message || "Something went wrong!");
     }
   };
 
