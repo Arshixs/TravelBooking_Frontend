@@ -18,6 +18,7 @@ import ManageBlogs from "./pages/ManageBlogs";
 import BlogPage from "./pages/BlogPage";
 import BlogPostDetail from "./pages/BlogPostDetail";
 import PackagePage from "./pages/PackagePage";
+import VendorContactsPage from "./pages/VendorContactsPage";
 
 export const router = createBrowserRouter([
   {
@@ -118,6 +119,10 @@ export const router = createBrowserRouter([
         path: "/package/:slug",
         element: <PackagePage />,
       },
+      {
+        path:"/vendor/contact",
+        element: <VendorContactsPage/>
+      }
     ],
   },
 ]);
