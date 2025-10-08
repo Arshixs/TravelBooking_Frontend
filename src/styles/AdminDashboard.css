@@ -304,8 +304,8 @@
 }
 
 .badge-package {
-  background:#000000;
-  color:white;
+  background: #000000;
+  color: white;
 }
 
 /* Action Buttons */
@@ -453,11 +453,11 @@
 
 .modal-footer {
   padding: 20px 30px;
-  border-top: 2px solid #f0f0f0;
+  /* border-top: 2px solid #f0f0f0; */
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 15px;
-  background: #fafafa;
+  /* background: #fafafa; */
 }
 
 .btn-primary {
@@ -681,4 +681,47 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* --- Tab Navigation --- */
+.modal-tabs {
+  display: flex;
+  /* [CHANGED] Use a softer background to match the header */
+  background: var(--bg-light-cream);
+  /* [CHANGED] Keep the border but make it slightly softer */
+  border-bottom: 1px solid #eaeaea;
+  /* [CHANGED] Increase horizontal padding for better spacing */
+  padding: 0 20px;
+  /* [NEW] Add a subtle shadow for depth and separation */
+  box-shadow: 0 4px 12px -2px rgba(19, 70, 134, 0.08);
+  /* [NEW] Ensure the shadow renders correctly above the content */
+  position: relative;
+  z-index: 1;
+}
+
+.tab {
+  flex: 1;
+  padding: 16px 20px;
+  border: none;
+  background-color: transparent;
+  color: var(--text-light);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  /* [CHANGED] Make the transparent border slightly thicker for better alignment */
+  border-bottom: 4px solid transparent;
+  transition: all 0.3s ease;
+  /* [NEW] Center the text within the tab */
+  text-align: center;
+}
+
+.tab:hover {
+  color: var(--primary-blue);
+  background: #fff; /* [NEW] Add a subtle background on hover */
+}
+
+.tab.active {
+  color: var(--accent-red);
+  /* [CHANGED] Use a thicker border for the active state to match */
+  border-bottom-color: var(--accent-red);
 }
