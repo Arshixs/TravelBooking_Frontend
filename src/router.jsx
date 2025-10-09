@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "packages",
+        path: "admin/packages",
         element: (
           <ProtectedRoute requiredRole="admin">
             <TourPackages />
