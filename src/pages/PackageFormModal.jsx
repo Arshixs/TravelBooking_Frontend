@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../utils/axios";
 import toast from "react-hot-toast";
+import "../styles/PackageFormModal.css"; // Imports the CSS file
 
 const PackageFormModal = ({ packageData, onClose, onSave }) => {
   const [loading, setLoading] = useState(false);
@@ -36,9 +37,10 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
         name: packageData.name || "",
         tour_type: packageData.tour_type || "",
         image_url: packageData.image_url || "",
-        duration_days: packageData.duration_days || "",
-        price: packageData.price || "",
-        max_capacity: packageData.max_capacity || "",
+        // Ensure numeric fields are converted, though they will be strings in the input value
+        duration_days: String(packageData.duration_days) || "",
+        price: String(packageData.price) || "",
+        max_capacity: String(packageData.max_capacity) || "",
         itinerary_summary: packageData.itinerary_summary || "",
         status: packageData.status || "UPCOMING",
       });
@@ -99,6 +101,7 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
     try {
       if (editingItem) {
         const response = await axios.put(
+          // Ensure packageData.slug and item_id are correct identifiers for the PUT endpoint
           `packages/${packageData.slug}/${editingItem.item_id}`,
           itineraryForm
         );
@@ -111,10 +114,11 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
       } else {
         const response = await axios.post("packages/itinerary", {
           ...itineraryForm,
+          // Assuming packageData.packageId is the correct ID to link the itinerary item
           package_id: packageData.packageId,
         });
-        console.log(response);
         toast.success("Itinerary item added successfully");
+        // Ensure the newly added item has a unique key/ID from the backend response
         setItineraryItems([...itineraryItems, response.data.data]);
       }
       resetItineraryForm();
@@ -134,6 +138,7 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
 
     setLoading(true);
     try {
+      // Endpoint is assumed to be `packages/:slug/:itemId`
       await axios.delete(`packages/${packageData.slug}/${itemId}`);
       toast.success("Itinerary item deleted successfully");
       setItineraryItems(
@@ -159,7 +164,7 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
     try {
       await axios.delete(`packages/${packageData.slug}`);
       toast.success("Package deleted successfully");
-      onSave();
+      onSave(); // Close modal and refresh parent list
     } catch (error) {
       console.error("Error deleting package:", error);
       toast.error("Failed to delete package");
@@ -173,6 +178,7 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
     setItineraryForm({
       day_number: item.day_number,
       duration: item.duration,
+      // Slice date-time to fit HTML datetime-local input format (YYYY-MM-DDThh:mm)
       start_time: item.start_time?.slice(0, 16) || "",
       end_time: item.end_time?.slice(0, 16) || "",
       title: item.title,
@@ -201,67 +207,55 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
   };
 
   return (
-    <div style={styles.overlay}>
-      {" "}
-      <div style={styles.modal}>
-        {" "}
-        <div style={styles.header}>
-          {" "}
-          <h2 style={styles.title}>
-            {packageData ? "Edit Package" : "Create New Package"}{" "}
-          </h2>{" "}
-          <button style={styles.closeBtn} onClick={onClose}>
-            ×{" "}
-          </button>{" "}
-        </div>{" "}
-        <div style={styles.tabs}>
-          {" "}
+    <div className="overlay">
+      <div className="modal">
+        <div className="header">
+          <h2 className="title">
+            {packageData ? "Edit Package" : "Create New Package"}
+          </h2>
+          <button className="closeBtn" onClick={onClose}>
+            &times;
+          </button>
+        </div>
+
+        <div className="tabs">
           <button
-            style={{
-              ...styles.tab,
-              ...(activeTab === "package" && styles.tabActive),
-            }}
+            className={`tab ${activeTab === "package" ? "tabActive" : ""}`}
             onClick={() => setActiveTab("package")}
           >
-            Package Details{" "}
-          </button>{" "}
+            Package Details
+          </button>
+
           {packageData && (
             <button
-              style={{
-                ...styles.tab,
-                ...(activeTab === "itinerary" && styles.tabActive),
-              }}
+              className={`tab ${activeTab === "itinerary" ? "tabActive" : ""}`}
               onClick={() => setActiveTab("itinerary")}
             >
-              Itinerary ({itineraryItems.length}){" "}
+              Itinerary ({itineraryItems.length})
             </button>
-          )}{" "}
-        </div>{" "}
-        <div style={styles.content}>
-          {" "}
+          )}
+        </div>
+
+        <div className="content">
           {activeTab === "package" ? (
             <form onSubmit={handlePackageSubmit}>
-              {" "}
-              <div style={styles.formRow}>
-                {" "}
-                <div style={styles.formGroup}>
-                  {" "}
-                  <label style={styles.label}>Package Name *</label>{" "}
+              <div className="formRow">
+                <div className="formGroup">
+                  <label className="label">Package Name *</label>
                   <input
-                    style={styles.input}
+                    className="input"
                     type="text"
                     value={packageForm.name}
                     onChange={(e) =>
                       setPackageForm({ ...packageForm, name: e.target.value })
                     }
                     required
-                  />{" "}
-                </div>{" "}
-                <div style={styles.formGroup}>
-                  {" "}
-                  <label style={styles.label}>Tour Type *</label>{" "}
+                  />
+                </div>
+                <div className="formGroup">
+                  <label className="label">Tour Type *</label>
                   <select
-                    style={styles.input}
+                    className="input"
                     value={packageForm.tour_type}
                     onChange={(e) =>
                       setPackageForm({
@@ -272,20 +266,19 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                     required
                   >
                     <option value="">Select Type</option>
-                    <option value="Adventure">Adventure</option>{" "}
+                    <option value="Adventure">Adventure</option>
                     <option value="Cultural">Cultural</option>
                     <option value="Leisure">Leisure</option>
-                    <option value="Wildlife">Wildlife</option>{" "}
-                  </select>{" "}
-                </div>{" "}
-              </div>{" "}
-              <div style={styles.formRow}>
-                {" "}
-                <div style={styles.formGroup}>
-                  {" "}
-                  <label style={styles.label}>Duration (Days) *</label>{" "}
+                    <option value="Wildlife">Wildlife</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="formRow">
+                <div className="formGroup">
+                  <label className="label">Duration (Days) *</label>
                   <input
-                    style={styles.input}
+                    className="input"
                     type="number"
                     min="1"
                     value={packageForm.duration_days}
@@ -296,13 +289,12 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                       })
                     }
                     required
-                  />{" "}
-                </div>{" "}
-                <div style={styles.formGroup}>
-                  {" "}
-                  <label style={styles.label}>Price (₹) *</label>{" "}
+                  />
+                </div>
+                <div className="formGroup">
+                  <label className="label">Price (₹) *</label>
                   <input
-                    style={styles.input}
+                    className="input"
                     type="number"
                     min="0"
                     value={packageForm.price}
@@ -310,16 +302,15 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                       setPackageForm({ ...packageForm, price: e.target.value })
                     }
                     required
-                  />{" "}
-                </div>{" "}
-              </div>{" "}
-              <div style={styles.formRow}>
-                {" "}
-                <div style={styles.formGroup}>
-                  {" "}
-                  <label style={styles.label}>Max Capacity *</label>{" "}
+                  />
+                </div>
+              </div>
+
+              <div className="formRow">
+                <div className="formGroup">
+                  <label className="label">Max Capacity *</label>
                   <input
-                    style={styles.input}
+                    className="input"
                     type="number"
                     min="1"
                     value={packageForm.max_capacity}
@@ -330,29 +321,29 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                       })
                     }
                     required
-                  />{" "}
-                </div>{" "}
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Status *</label>{" "}
+                  />
+                </div>
+                <div className="formGroup">
+                  <label className="label">Status *</label>
                   <select
-                    style={styles.input}
+                    className="input"
                     value={packageForm.status}
                     onChange={(e) =>
                       setPackageForm({ ...packageForm, status: e.target.value })
                     }
                     required
                   >
-                    {" "}
                     <option value="UPCOMING">Upcoming</option>
-                    <option value="ONGOING">Ongoing</option>
-                    <option value="FINISHED">Finished</option>{" "}
-                  </select>{" "}
-                </div>{" "}
-              </div>{" "}
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Image URL *</label>{" "}
+                    <option value="ACTIVE">Active</option>
+                    <option value="FINISHED">Finished</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="formGroup">
+                <label className="label">Image URL *</label>
                 <input
-                  style={styles.input}
+                  className="input"
                   type="url"
                   value={packageForm.image_url}
                   onChange={(e) =>
@@ -362,13 +353,14 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                     })
                   }
                   required
-                />{" "}
-              </div>{" "}
-              <div style={styles.formGroup}>
-                {" "}
-                <label style={styles.label}>Itinerary Summary *</label>{" "}
+                />
+              </div>
+
+              <div className="formGroup">
+                <label className="label">Itinerary Summary *</label>
                 <textarea
-                  style={{ ...styles.input, ...styles.textarea }}
+                  // Use both input and textarea classes for combined base/resize styles
+                  className="input textarea"
                   value={packageForm.itinerary_summary}
                   onChange={(e) =>
                     setPackageForm({
@@ -378,61 +370,55 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                   }
                   required
                   rows="4"
-                />{" "}
-              </div>{" "}
-              <div style={styles.footer}>
-                {" "}
+                />
+              </div>
+
+              <div className="footer">
                 {packageData && (
                   <button
                     type="button"
-                    style={styles.btnDelete}
+                    className="btnDelete"
                     onClick={handleDeletePackage}
                     disabled={loading}
                   >
-                    Delete Package{" "}
+                    Delete Package
                   </button>
-                )}{" "}
+                )}
                 <div
                   style={{ display: "flex", gap: "10px", marginLeft: "auto" }}
                 >
-                  {" "}
                   <button
                     type="button"
-                    style={styles.btnSecondary}
+                    className="btnSecondary"
                     onClick={onClose}
                   >
-                    Cancel{" "}
-                  </button>{" "}
+                    Cancel
+                  </button>
                   <button
                     type="submit"
-                    style={styles.btnPrimary}
+                    className="btnPrimary"
                     disabled={loading}
                   >
-                    {" "}
                     {loading
                       ? "Saving..."
                       : packageData
                       ? "Update Package"
-                      : "Create Package"}{" "}
-                  </button>{" "}
-                </div>{" "}
-              </div>{" "}
+                      : "Create Package"}
+                  </button>
+                </div>
+              </div>
             </form>
           ) : (
             <div>
-              {" "}
               <form
                 onSubmit={handleItinerarySubmit}
-                style={{ marginBottom: "20px" }}
+                style={{ marginBottom: "20px" }} // Keep simple inline styles for layout/margins
               >
-                {" "}
-                <div style={styles.formRow}>
-                  {" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>Day Number *</label>{" "}
+                <div className="formRow">
+                  <div className="formGroup">
+                    <label className="label">Day Number *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="number"
                       min="1"
                       value={itineraryForm.day_number}
@@ -443,15 +429,12 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>
-                      Duration (minutes) *
-                    </label>{" "}
+                    />
+                  </div>
+                  <div className="formGroup">
+                    <label className="label">Duration (minutes) *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="number"
                       min="1"
                       value={itineraryForm.duration}
@@ -462,16 +445,15 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                </div>{" "}
-                <div style={styles.formRow}>
-                  {" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>Start Time *</label>{" "}
+                    />
+                  </div>
+                </div>
+
+                <div className="formRow">
+                  <div className="formGroup">
+                    <label className="label">Start Time *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="datetime-local"
                       value={itineraryForm.start_time}
                       onChange={(e) =>
@@ -481,13 +463,12 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>End Time *</label>{" "}
+                    />
+                  </div>
+                  <div className="formGroup">
+                    <label className="label">End Time *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="datetime-local"
                       value={itineraryForm.end_time}
                       onChange={(e) =>
@@ -497,13 +478,14 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                </div>{" "}
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Title *</label>{" "}
+                    />
+                  </div>
+                </div>
+
+                <div className="formGroup">
+                  <label className="label">Title *</label>
                   <input
-                    style={styles.input}
+                    className="input"
                     type="text"
                     value={itineraryForm.title}
                     onChange={(e) =>
@@ -513,13 +495,13 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                       })
                     }
                     required
-                  />{" "}
-                </div>{" "}
-                <div style={styles.formGroup}>
-                  {" "}
-                  <label style={styles.label}>Description *</label>{" "}
+                  />
+                </div>
+
+                <div className="formGroup">
+                  <label className="label">Description *</label>
                   <textarea
-                    style={{ ...styles.input, ...styles.textarea }}
+                    className="input textarea"
                     value={itineraryForm.description}
                     onChange={(e) =>
                       setItineraryForm({
@@ -529,15 +511,14 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                     }
                     required
                     rows="3"
-                  />{" "}
-                </div>{" "}
-                <div style={styles.formRow}>
-                  {" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>Street Name *</label>{" "}
+                  />
+                </div>
+
+                <div className="formRow">
+                  <div className="formGroup">
+                    <label className="label">Street Name *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="text"
                       value={itineraryForm.street_name}
                       onChange={(e) =>
@@ -547,13 +528,12 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>City *</label>{" "}
+                    />
+                  </div>
+                  <div className="formGroup">
+                    <label className="label">City *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="text"
                       value={itineraryForm.city}
                       onChange={(e) =>
@@ -563,16 +543,15 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                </div>{" "}
-                <div style={styles.formRow}>
-                  {" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>State *</label>{" "}
+                    />
+                  </div>
+                </div>
+
+                <div className="formRow">
+                  <div className="formGroup">
+                    <label className="label">State *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="text"
                       value={itineraryForm.state}
                       onChange={(e) =>
@@ -582,13 +561,12 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                  <div style={styles.formGroup}>
-                    {" "}
-                    <label style={styles.label}>PIN Code *</label>{" "}
+                    />
+                  </div>
+                  <div className="formGroup">
+                    <label className="label">PIN Code *</label>
                     <input
-                      style={styles.input}
+                      className="input"
                       type="text"
                       value={itineraryForm.pin}
                       onChange={(e) =>
@@ -598,39 +576,38 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                         })
                       }
                       required
-                    />{" "}
-                  </div>{" "}
-                </div>{" "}
+                    />
+                  </div>
+                </div>
+
                 <div style={{ display: "flex", gap: "10px" }}>
-                  {" "}
                   {editingItem && (
                     <button
                       type="button"
-                      style={styles.btnSecondary}
+                      className="btnSecondary"
                       onClick={resetItineraryForm}
                     >
-                      Cancel Edit{" "}
+                      Cancel Edit
                     </button>
-                  )}{" "}
+                  )}
                   <button
                     type="submit"
-                    style={styles.btnPrimary}
+                    className="btnPrimary"
                     disabled={loading}
                   >
-                    {" "}
                     {loading
                       ? "Saving..."
                       : editingItem
                       ? "Update Item"
-                      : "Add Item"}{" "}
-                  </button>{" "}
-                </div>{" "}
-              </form>{" "}
-              <div style={styles.itineraryList}>
-                {" "}
+                      : "Add Item"}
+                  </button>
+                </div>
+              </form>
+
+              <div className="itineraryList">
                 <h3 style={{ margin: "0 0 15px 0", color: "#134686" }}>
-                  Itinerary Items{" "}
-                </h3>{" "}
+                  Itinerary Items
+                </h3>
                 {itineraryItems.length === 0 ? (
                   <p
                     style={{
@@ -639,43 +616,39 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                       padding: "20px",
                     }}
                   >
-                    No itinerary items yet. Add your first item above.{" "}
+                    No itinerary items yet. Add your first item above.
                   </p>
                 ) : (
                   itineraryItems
                     .sort((a, b) => a.day_number - b.day_number)
                     .map((item) => (
-                      <div key={item.item_id} style={styles.itineraryCard}>
-                        {" "}
-                        <div style={styles.itineraryHeader}>
-                          {" "}
+                      <div key={item.item_id} className="itineraryCard">
+                        <div className="itineraryHeader">
                           <div>
-                            {" "}
-                            <span style={styles.dayBadge}>
-                              Day {item.day_number}{" "}
-                            </span>{" "}
+                            <span className="dayBadge">
+                              Day {item.day_number}
+                            </span>
                             <h4 style={{ margin: "5px 0", color: "#134686" }}>
-                              {item.title}{" "}
-                            </h4>{" "}
-                          </div>{" "}
+                              {item.title}
+                            </h4>
+                          </div>
                           <div style={{ display: "flex", gap: "8px" }}>
-                            {" "}
                             <button
-                              style={styles.btnIconEdit}
+                              className="btnIconEdit"
                               onClick={() => handleEditItinerary(item)}
                             >
-                              Edit{" "}
-                            </button>{" "}
+                              Edit
+                            </button>
                             <button
-                              style={styles.btnIconDelete}
+                              className="btnIconDelete"
                               onClick={() =>
                                 handleDeleteItinerary(item.item_id)
                               }
                             >
-                              Delete{" "}
-                            </button>{" "}
-                          </div>{" "}
-                        </div>{" "}
+                              Delete
+                            </button>
+                          </div>
+                        </div>
                         <p
                           style={{
                             margin: "8px 0",
@@ -683,219 +656,25 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                             fontSize: "14px",
                           }}
                         >
-                          {item.description}{" "}
-                        </p>{" "}
+                          {item.description}
+                        </p>
                         <div style={{ fontSize: "13px", color: "#777" }}>
-                          {" "}
                           <div>
-                            {item.city}, {item.state} - {item.pin}{" "}
-                          </div>{" "}
-                          <div>Duration: {item.duration} minutes</div>{" "}
-                        </div>{" "}
+                            {item.city}, {item.state} - {item.pin}
+                          </div>
+                          <div>Duration: {item.duration} minutes</div>
+                        </div>
                       </div>
                     ))
-                )}{" "}
-              </div>{" "}
+                )}
+              </div>
             </div>
-          )}{" "}
-        </div>{" "}
-      </div>{" "}
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-const styles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-    padding: "20px",
-  },
-  modal: {
-    backgroundColor: "#FDF4E3",
-    borderRadius: "8px",
-    width: "100%",
-    maxWidth: "900px",
-    maxHeight: "90vh",
-    display: "flex",
-    flexDirection: "column",
-    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
-  },
-  header: {
-    padding: "20px 24px",
-    borderBottom: "2px solid #134686",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#FDF4E3",
-  },
-  title: {
-    margin: 0,
-    color: "#134686",
-    fontSize: "24px",
-    fontWeight: "600",
-  },
-  closeBtn: {
-    background: "none",
-    border: "none",
-    fontSize: "32px",
-    color: "#134686",
-    cursor: "pointer",
-    padding: "0",
-    width: "32px",
-    height: "32px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    lineHeight: "1",
-  },
-  tabs: {
-    display: "flex",
-    backgroundColor: "#FDF4E3",
-    borderBottom: "1px solid #ddd",
-  },
-  tab: {
-    flex: 1,
-    padding: "12px 20px",
-    border: "none",
-    backgroundColor: "transparent",
-    color: "#666",
-    fontSize: "15px",
-    fontWeight: "500",
-    cursor: "pointer",
-    borderBottom: "3px solid transparent",
-    transition: "all 0.2s",
-  },
-  tabActive: {
-    color: "#134686",
-    borderBottomColor: "#134686",
-  },
-  content: {
-    padding: "24px",
-    overflowY: "auto",
-    flex: 1,
-  },
-  formRow: {
-    display: "flex",
-    gap: "16px",
-    marginBottom: "16px",
-  },
-  formGroup: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-  },
-  label: {
-    fontSize: "14px",
-    fontWeight: "500",
-    color: "#134686",
-    marginBottom: "6px",
-  },
-  input: {
-    padding: "10px 12px",
-    border: "2px solid #134686",
-    borderRadius: "4px",
-    fontSize: "14px",
-    backgroundColor: "#fff",
-    color: "#333",
-    outline: "none",
-  },
-  textarea: {
-    resize: "vertical",
-    fontFamily: "inherit",
-    minHeight: "80px",
-  },
-  footer: {
-    display: "flex",
-    gap: "12px",
-    marginTop: "24px",
-    paddingTop: "20px",
-    borderTop: "1px solid #ddd",
-  },
-  btnPrimary: {
-    padding: "10px 24px",
-    backgroundColor: "#134686",
-    color: "#FDF4E3",
-    border: "none",
-    borderRadius: "4px",
-    fontSize: "15px",
-    fontWeight: "500",
-    cursor: "pointer",
-    transition: "background-color 0.2s",
-  },
-  btnSecondary: {
-    padding: "10px 24px",
-    backgroundColor: "transparent",
-    color: "#134686",
-    border: "2px solid #134686",
-    borderRadius: "4px",
-    fontSize: "15px",
-    fontWeight: "500",
-    cursor: "pointer",
-    transition: "all 0.2s",
-  },
-  btnDelete: {
-    padding: "10px 24px",
-    backgroundColor: "#ED3F27",
-    color: "#FDF4E3",
-    border: "none",
-    borderRadius: "4px",
-    fontSize: "15px",
-    fontWeight: "500",
-    cursor: "pointer",
-  },
-  itineraryList: {
-    marginTop: "20px",
-    paddingTop: "20px",
-    borderTop: "2px solid #ddd",
-  },
-  itineraryCard: {
-    backgroundColor: "#fff",
-    border: "2px solid #134686",
-    borderRadius: "4px",
-    padding: "16px",
-    marginBottom: "12px",
-  },
-  itineraryHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: "10px",
-  },
-  dayBadge: {
-    display: "inline-block",
-    backgroundColor: "#FEB21A",
-    color: "#134686",
-    padding: "4px 10px",
-    borderRadius: "4px",
-    fontSize: "12px",
-    fontWeight: "600",
-  },
-  btnIconEdit: {
-    padding: "6px 12px",
-    backgroundColor: "#134686",
-    color: "#FDF4E3",
-    border: "none",
-    borderRadius: "4px",
-    fontSize: "13px",
-    cursor: "pointer",
-  },
-  btnIconDelete: {
-    padding: "6px 12px",
-    backgroundColor: "#ED3F27",
-    color: "#FDF4E3",
-    border: "none",
-    borderRadius: "4px",
-    fontSize: "13px",
-    cursor: "pointer",
-  },
-};
-
+// REMOVE THE STYLES OBJECT
 export default PackageFormModal;
