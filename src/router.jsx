@@ -25,6 +25,9 @@ import RoomCreate from "./pages/RoomCreate";
 import HotelUpdate from "./pages/HotelUpdate";
 import RoomUpdate from "./pages/RoomUpdate";
 import HotelDetails from "./pages/HotelDetails";
+import CustomerSupportTickets from "./pages/CustomerSupportTickets";
+import ManageSupportTickets from "./pages/ManageSupportTickets";
+import TicketDetailPage from "./pages/TicketDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -152,7 +155,44 @@ export const router = createBrowserRouter([
       {
         path: "hotels/:id", // Added route for hotel details
         element: <HotelDetails />,
+      },
+
+      {
+        path: "/support/tickets",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <CustomerSupportTickets />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/support/tickets/:id",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <TicketDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/staff/support-tickets",
+        element: (
+          <ProtectedRoute requiredUserType="STAFF">
+            <ManageSupportTickets />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/staff/support-tickets/:id",
+        element: (
+          <ProtectedRoute requiredUserType="STAFF" requiredRole= "CustomerCare">
+            <TicketDetailPage />
+          </ProtectedRoute>
+        ),
       }
+
     ],
   },
 ]);
