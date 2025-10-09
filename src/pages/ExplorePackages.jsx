@@ -1,71 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import PackageCard from '../components/PackageCard';
 import '../styles/ExplorePackages.css';
+import axios from 'axios';
 
-// --- Sample Data ---
-const packagesData = [
-    {
-        id: 1,
-        name: "Majestic Himalayan Trek",
-        type: "Adventure",
-        duration: 10,
-        capacity: 15,
-        rating: 4.8,
-        price: 1200,
-        description: "A challenging trek through the stunning peaks and valleys. Experience the Himalayas with professional guides.",
-        link: "/packages/himalayan-trek-1",
-        image: "https://i.imgur.com/2Y4p5v6.png" // AI-Inspired: Icy blue mountain peak
-    },
-    {
-        id: 2,
-        name: "Historic Parisian Culture",
-        type: "Culture",
-        duration: 5,
-        capacity: 25,
-        rating: 4.5,
-        price: 850,
-        description: "Explore the art, history, and cuisine of Paris. Visit iconic landmarks and enjoy local wine tasting.",
-        link: "/packages/paris-culture-2",
-        image: "https://i.imgur.com/x07Z5V2.png" // AI-Inspired: Sunset on a European historical city street
-    },
-    {
-        id: 3,
-        name: "Tropical Coastal Retreat",
-        type: "Relaxation",
-        duration: 7,
-        capacity: 10,
-        rating: 4.9,
-        price: 950,
-        description: "Seven days of pure relaxation on a secluded beach. Yoga, spa treatments, and gourmet seafood included.",
-        link: "/packages/coastal-relax-3",
-        image: "https://i.imgur.com/Y3gQ3Jq.png" // AI-Inspired: White sand beach with turquoise water
-    },
-    {
-        id: 4,
-        name: "Lush Amazon Wildlife Safari",
-        type: "Wildlife",
-        duration: 14,
-        capacity: 8,
-        rating: 4.7,
-        price: 2500,
-        description: "An immersive exploration deep into the Amazon rainforest, observing unique flora and fauna with expert biologists.",
-        link: "/packages/amazon-safari-4",
-        image: "https://i.imgur.com/W2d3sH8.png" // AI-Inspired: Dense, foggy green rainforest canopy
-    },
-];
+// Fetch packages data from backend API
+const fetchPackages = async () => {
+    try {
+        const response = await axios.get('packages/');
+        console.log("Hello from fetchPackages");
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching packages:', error);
+        return [];
+    }
+};
 
 const ExplorePackages = () => {
+    console.log('ExplorePackages Component Rendered');
     const [filterType, setFilterType] = useState('All');
-    const [filteredPackages, setFilteredPackages] = useState(packagesData);
+    const [packagesData, setPackagesData] = useState([]);
+    const [filteredPackages, setFilteredPackages] = useState([]);
 
     useEffect(() => {
+        // Fetch packages on mount
+        fetchPackages().then(data => {
+            const safeData = Array.isArray(data) ? data : [];
+            setPackagesData(safeData);
+            setFilteredPackages(safeData);
+        });
+    }, []);
+
+    useEffect(() => {
+        console.log('Filter Type Changed:', filterType);
         if (filterType === 'All') {
+            console.log(packagesData);
             setFilteredPackages(packagesData);
         } else {
             const newFiltered = packagesData.filter(pkg => pkg.type === filterType);
             setFilteredPackages(newFiltered);
         }
-    }, [filterType]);
+    }, [filterType, packagesData]);
 
     const handleCardClick = (link) => {
         // Placeholder for React Router navigation
@@ -90,7 +65,7 @@ const ExplorePackages = () => {
                         <select 
                             id="type-filter" 
                             value={filterType} 
-                            onChange={(e) => setFilterType(e.target.value)}
+                            onChange={(e) => { console.log(e.target.value); setFilterType(e.target.value)}}
                         >
                             <option value="All">All Packages</option>
                             <option value="Adventure">Adventure</option>
@@ -119,7 +94,7 @@ const ExplorePackages = () => {
                         ))
                     ) : (
                         <p className="no-packages">
-                            No packages of type **{filterType}** found.
+                            No packages of type <b>{filterType}</b> found.
                         </p>
                     )}
                 </section>
