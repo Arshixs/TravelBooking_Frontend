@@ -198,14 +198,14 @@
 /* ========================================
    PACKAGES GRID (FLEXBOX)
    ======================================== */
-.packages-grid {
+.explore-packages-grid {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
 }
 
-.packages-grid > * {
+.explore-packages-grid > * {
     flex: 1 1 calc(33.333% - 1.4rem);
     min-width: 300px;
     max-width: 100%;
@@ -326,7 +326,7 @@
         flex: 0 0 auto;
     }
 
-    .packages-grid > * {
+    .explore-packages-grid > * {
         flex: 1 1 calc(50% - 1rem);
         min-width: 280px;
     }
@@ -349,11 +349,11 @@
         padding: 2rem 1rem;
     }
 
-    .packages-grid {
+    .explore-packages-grid {
         gap: 1.5rem;
     }
 
-    .packages-grid > * {
+    .explore-packages-grid > * {
         flex: 1 1 100%;
         min-width: 100%;
     }

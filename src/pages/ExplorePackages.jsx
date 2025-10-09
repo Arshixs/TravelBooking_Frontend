@@ -124,7 +124,7 @@ const ExplorePackages = () => {
         <p>Curated travel packages to make your dreams come true</p>
       </header>
 
-      <main className="content-area container">
+      <main className="content-area">
         {/* Filter Section */}
         <aside className="filter-section">
           <div className="filter-header">
@@ -206,7 +206,7 @@ const ExplorePackages = () => {
         </aside>
 
         {/* Package Cards Container */}
-        <section className="packages-grid">
+        <section className="explore-packages-grid">
           {filteredPackages.length > 0 ? (
             filteredPackages.map((pkg) => (
               <PackageCard
