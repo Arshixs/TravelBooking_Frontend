@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
         try {
           const user = JSON.parse(localStorage.getItem("user"));
           //console.log(localStorage.getItem("user"));
-      
+
           // Use a relative path to work correctly with your axios baseURL
           const res = await axios.get(`auth/profile/${user.userId}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
@@ -35,10 +35,17 @@ export const UserProvider = ({ children }) => {
           } else {
             // This case is unlikely if the API is consistent, but good to have
             localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
             setUser(null);
             setIsAuthenticated(false);
           }
         } catch (error) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
+          setUser(null);
+          setIsAuthenticated(false);
           console.error("Error fetching user:", error);
           // FIX: Clean up and set auth state to false on error (e.g., expired token)
           //localStorage.removeItem("accessToken");

@@ -17,7 +17,17 @@ import VendorTransportPage from "./pages/VendorTransportPage";
 import ManageBlogs from "./pages/ManageBlogs";
 import BlogPage from "./pages/BlogPage";
 import BlogPostDetail from "./pages/BlogPostDetail";
+import PackagePage from "./pages/PackagePage";
 import VendorContactsPage from "./pages/VendorContactsPage";
+import Hotels from "./pages/Hotels";
+import HotelCreate from "./pages/HotelCreate";
+import RoomCreate from "./pages/RoomCreate";
+import HotelUpdate from "./pages/HotelUpdate";
+import RoomUpdate from "./pages/RoomUpdate";
+import HotelDetails from "./pages/HotelDetails";
+import CustomerSupportTickets from "./pages/CustomerSupportTickets";
+import ManageSupportTickets from "./pages/ManageSupportTickets";
+import TicketDetailPage from "./pages/TicketDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -63,7 +73,10 @@ export const router = createBrowserRouter([
       {
         path: "/vendor/guides",
         element: (
-          <ProtectedRoute requiredUserType="VENDOR" requiredServiceType="Guide_Provider">
+          <ProtectedRoute
+            requiredUserType="VENDOR"
+            requiredServiceType="Guide_Provider"
+          >
             <VendorGuidesPage />
           </ProtectedRoute>
         ),
@@ -71,14 +84,21 @@ export const router = createBrowserRouter([
       {
         path: "/vendor/transports",
         element: (
-          <ProtectedRoute requiredUserType="VENDOR" requiredServiceType="Transport_Provider">
+          <ProtectedRoute
+            requiredUserType="VENDOR"
+            requiredServiceType="Transport_Provider"
+          >
             <VendorTransportPage />
           </ProtectedRoute>
         ),
       },
       {
-        path: "TourPackages",
-        element: <TourPackages />,
+        path: "admin/packages",
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <TourPackages />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "explore",
@@ -90,7 +110,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/staff/blogs",
-        element:(
+        element: (
           <ProtectedRoute requiredUserType="STAFF" requiredRole="ContentWriter">
             <ManageBlogs />
           </ProtectedRoute>
@@ -105,9 +125,74 @@ export const router = createBrowserRouter([
         element: <BlogPostDetail />,
       },
       {
+        path: "/package/:slug",
+        element: <PackagePage />,
+      },
+      {
         path:"/vendor/contact",
         element: <VendorContactsPage/>
+      },
+      {
+        path: "hotels", // new Hotels route
+        element: <Hotels />,
+      },
+      {
+        path: "hotels/create", // new route for creating hotels
+        element: <HotelCreate />,
+      },
+      {
+        path: "hotels/edit/:id", // Added route for updating hotels
+        element: <HotelUpdate />,
+      },
+      {
+        path: "hotels/:id/rooms/create",
+        element: <RoomCreate />,
+      },
+      {
+        path: "hotels/:id/rooms/edit", // Added route for updating rooms
+        element: <RoomUpdate />,
+      },
+      {
+        path: "hotels/:id", // Added route for hotel details
+        element: <HotelDetails />,
+      },
+
+      {
+        path: "/support/tickets",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <CustomerSupportTickets />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/support/tickets/:id",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <TicketDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/staff/support-tickets",
+        element: (
+          <ProtectedRoute requiredUserType="STAFF">
+            <ManageSupportTickets />
+          </ProtectedRoute>
+        ),
+      },
+
+      {
+        path: "/staff/support-tickets/:id",
+        element: (
+          <ProtectedRoute requiredUserType="STAFF" requiredRole= "CustomerCare">
+            <TicketDetailPage />
+          </ProtectedRoute>
+        ),
       }
+
     ],
   },
 ]);
