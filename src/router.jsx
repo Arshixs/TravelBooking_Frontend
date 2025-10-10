@@ -178,7 +178,7 @@ export const router = createBrowserRouter([
       {
         path: "/staff/support-tickets",
         element: (
-          <ProtectedRoute requiredUserType="STAFF">
+          <ProtectedRoute requiredUserType="STAFF" requiredRole= "CustomerCare">
             <ManageSupportTickets />
           </ProtectedRoute>
         ),
