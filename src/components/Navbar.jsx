@@ -145,6 +145,11 @@ const Navbar = () => {
                         <a href="/vendor/transports">Manage Transports</a>
                       </li>
                     )}
+                    {serviceType && serviceType === "Hotel_Provider" && (
+                      <li>
+                        <a href="/vendor/hotels">Manage Hotels</a>
+                      </li>
+                    )}
                   </>
                 )}
                 <li>
