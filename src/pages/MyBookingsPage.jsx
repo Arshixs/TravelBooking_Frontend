@@ -9,7 +9,7 @@ const MyBookingsPage = () => {
   const { isAuthenticated } = useUser();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("CONFIRMED");
 
   useEffect(() => {
     if (!isAuthenticated) {

@@ -4,6 +4,7 @@ import ReviewCard from "../components/ReviewCard"
 import "../styles/HotelDetails.css"
 import axios from "../utils/axios";
 
+import { Link, useNavigate } from "react-router-dom";
 const HotelDetails = () => {
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
@@ -14,6 +15,8 @@ const HotelDetails = () => {
     useEffect(() => {
         fetchHotelData()
     }, [id])
+
+    const navigate = useNavigate();
 
     const fetchHotelData = async () => {
     setLoading(true)
@@ -39,11 +42,14 @@ const HotelDetails = () => {
 
 
     const handleBookRoom = (room) => {
-    if (room.number_of_rooms_available === 0) {
-        alert("Sorry, this room is fully booked!")
-        return
-    }
+    // if (room.number_of_rooms_available === 0) {
+    //     alert("Sorry, this room is fully booked!")
+    //     return
+    const hotelId=room.hotel_id;;
+    const roomId=room.room_id;
+    // }
         // Navigate to booking page or call booking API
+      navigate(`/hotels/${hotelId}/rooms/${roomId}/book`);
         console.log("Booking room:", room)
         alert(`Booking ${room.type} room (${room.room_id})`)
     }
@@ -179,19 +185,19 @@ const HotelDetails = () => {
                     <span className="price-value">₹{room.cost_per_night.toLocaleString()}</span>
                   </div>
 
-                  {room.number_of_rooms_available > 0 ? (
+                  {/* {room.number_of_rooms_available == 0 ? ( */}
                     <div className="room-actions">
                       <span className="availability-badge available">{room.number_of_rooms_available} available</span>
                       <button className="btn-book" onClick={() => handleBookRoom(room)}>
                         Book Now
                       </button>
                     </div>
-                  ) : (
+                  {/* ) : (
                     <div className="room-actions">
                       <span className="availability-badge unavailable">Not Available</span>
                       <div className="unavailable-message">Please check back later</div>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </article>
             ))}

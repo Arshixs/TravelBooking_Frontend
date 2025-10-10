@@ -26,6 +26,10 @@ import ManageSupportTickets from "./pages/ManageSupportTickets";
 import TicketDetailPage from "./pages/TicketDetailPage";
 import VendorHotelsPage from "./pages/VendorHotelsPage";
 import VendorRoomPage from "./pages/VendorRoomPage";
+import HotelBookingPage from "./pages/HotelBookingPage";
+import MyBookingsPage from "./pages/MyBookingsPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import PaymentFailurePage from "./pages/PaymentFailurePage";
 
 export const router = createBrowserRouter([
   {
@@ -149,18 +153,33 @@ export const router = createBrowserRouter([
         element: <PackagePage />,
       },
       {
-        path:"/vendor/contact",
-        element: <VendorContactsPage/>
+        path: "/vendor/contact",
+        element: <VendorContactsPage />,
       },
       {
-        path: "hotels", // new Hotels route
+        path: "hotels",
         element: <Hotels />,
       },
       {
-        path: "hotels/:id", // Added route for hotel details
+        path: "hotels/:id",
         element: <HotelDetails />,
       },
-
+      {
+        path: "hotels/:hotelId/rooms/:roomId/book",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <HotelBookingPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/bookings/hotels/my",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <MyBookingsPage />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "/support/tickets",
         element: (
@@ -169,7 +188,6 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-
       {
         path: "/support/tickets/:id",
         element: (
@@ -178,40 +196,38 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-
       {
         path: "/staff/support-tickets",
         element: (
-          <ProtectedRoute requiredUserType="STAFF" requiredRole= "CustomerCare">
+          <ProtectedRoute requiredUserType="STAFF" requiredRole="CustomerCare">
             <ManageSupportTickets />
           </ProtectedRoute>
         ),
       },
-
       {
         path: "/staff/support-tickets/:id",
         element: (
-          <ProtectedRoute requiredUserType="STAFF" requiredRole= "CustomerCare">
+          <ProtectedRoute requiredUserType="STAFF" requiredRole="CustomerCare">
             <TicketDetailPage />
           </ProtectedRoute>
         ),
-      },{
-        path:"/bookings/payments/success",
-        element:(
-          <ProtectedRoute>
-            <PaymentSuccessPage/>
-          </ProtectedRoute>
-        )
       },
       {
-        path:"/bookings/payments/failure",
-        element:(
+        path: "/bookings/payment/success",
+        element: (
           <ProtectedRoute>
-            <PaymentFailurePage/>
+            <PaymentSuccessPage />
           </ProtectedRoute>
-        )
-      }
-
+        ),
+      },
+      {
+        path: "/bookings/payment/failure",
+        element: (
+          <ProtectedRoute>
+            <PaymentFailurePage />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

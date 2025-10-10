@@ -15,7 +15,7 @@ const PaymentSuccessPage = () => {
 
   const confirmPayment = async () => {
     try {
-      const sessionId = searchParams.get("session_id");
+      const sessionId = sessionStorage.getItem("session_id");
       const bookingId = sessionStorage.getItem("pendingBookingId");
       const amount = sessionStorage.getItem("bookingAmount");
 
@@ -26,6 +26,11 @@ const PaymentSuccessPage = () => {
       }
 
       const token = localStorage.getItem("accessToken");
+      console.log(
+        parseInt(bookingId),
+         sessionId,
+        parseFloat(amount),
+      )
 
       await axios.post(
         "/payments/confirm",

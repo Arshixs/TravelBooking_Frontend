@@ -100,7 +100,7 @@ const HotelBookingPage = () => {
         {
           check_in_date: formData.check_in_date,
           check_out_date: formData.check_out_date,
-          no_of_rooms: formData.no_of_rooms,
+          required_rooms: formData.no_of_rooms,
           hotel_id: parseInt(hotelId),
           room_id: parseInt(roomId),
         },
@@ -164,6 +164,7 @@ const HotelBookingPage = () => {
       // Store booking ID for payment confirmation
       sessionStorage.setItem("pendingBookingId", booking.booking_id);
       sessionStorage.setItem("bookingAmount", booking.cost);
+      sessionStorage.setItem("session_id",checkoutResponse.data.sessionId);
 
       // Redirect to Stripe
       window.location.href = checkoutResponse.data.sessionUrl;
@@ -270,10 +271,10 @@ const HotelBookingPage = () => {
                     value={formData.no_of_rooms}
                     onChange={handleInputChange}
                     min="1"
-                    max={room.total_rooms}
+                    // max={room.total_rooms}
                     required
                   />
-                  <small>Available: {room.total_rooms} rooms</small>
+                  {/* <small>Available: {room.total_rooms} rooms</small> */}
                 </div>
 
                 <div className="form-group">
