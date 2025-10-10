@@ -195,6 +195,21 @@ export const router = createBrowserRouter([
             <TicketDetailPage />
           </ProtectedRoute>
         ),
+      },{
+        path:"/bookings/payments/success",
+        element:(
+          <ProtectedRoute>
+            <PaymentSuccessPage/>
+          </ProtectedRoute>
+        )
+      },
+      {
+        path:"/bookings/payments/failure",
+        element:(
+          <ProtectedRoute>
+            <PaymentFailurePage/>
+          </ProtectedRoute>
+        )
       }
 
     ],
