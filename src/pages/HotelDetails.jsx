@@ -50,8 +50,8 @@ const HotelDetails = () => {
     // }
         // Navigate to booking page or call booking API
       navigate(`/hotels/${hotelId}/rooms/${roomId}/book`);
-        console.log("Booking room:", room)
-        alert(`Booking ${room.type} room (${room.room_id})`)
+        //console.log("Booking room:", room)
+        //alert(`Booking ${room.type} room (${room.room_id})`)
     }
 
   if (loading) {
@@ -157,10 +157,10 @@ const HotelDetails = () => {
           <div className="rooms-grid">
             {rooms.map((room) => (
               <article key={room.room_id} className="room-card">
-                <div className="room-header">
+                {/* <div className="room-header">
                   <h3>{room.type}</h3>
                   <span className="room-id">Room {room.room_id}</span>
-                </div>
+                </div> */}
 
                 <div className="room-details">
                   <div className="room-detail-item">
@@ -169,7 +169,7 @@ const HotelDetails = () => {
                   </div>
                   <div className="room-detail-item">
                     <span className="detail-icon">👥</span>
-                    <span>Max {room.max_capacity} guests</span>
+                    <span>Max {room.max_capacity} guests in one room</span>
                   </div>
                   {room.balcony_available && (
                     <div className="room-detail-item">
@@ -187,7 +187,7 @@ const HotelDetails = () => {
 
                   {/* {room.number_of_rooms_available == 0 ? ( */}
                     <div className="room-actions">
-                      <span className="availability-badge available">{room.number_of_rooms_available} available</span>
+                      {/* <span className="availability-badge available">{room.number_of_rooms_available} available</span> */}
                       <button className="btn-book" onClick={() => handleBookRoom(room)}>
                         Book Now
                       </button>

@@ -91,6 +91,11 @@ const HotelBookingPage = () => {
       alert("Please select both check-in and check-out dates");
       return;
     }
+    
+    if (formData.guest_count > room.max_capacity * formData.no_of_rooms) {
+      alert("Guest count is too much!");
+      return;
+    }
 
     setCheckingAvailability(true);
     try {
@@ -129,6 +134,11 @@ const HotelBookingPage = () => {
 
     if (!isAvailable) {
       alert("Rooms are not available for selected dates");
+      return;
+    }
+
+    if(formData.guest_count>room.max_capacity * formData.no_of_rooms){
+      alert("Guest count is too much!");
       return;
     }
 
@@ -223,10 +233,10 @@ const HotelBookingPage = () => {
                 <h3>{room.type} Room</h3>
                 <div className="room-features">
                   <span>🛏️ {room.bed_type}</span>
-                  <span>👥 Max {room.max_capacity} guests</span>
+                  <span>👥 Max {room.max_capacity} guests in one room</span>
                   {room.balcony_available && <span>🌅 Balcony</span>}
                 </div>
-                <p className="room-price">₹{room.cost_per_night} per night</p>
+                <p className="room-price">Room Price: ₹{room.cost_per_night} per night</p>
               </div>
             </div>
 
@@ -286,11 +296,11 @@ const HotelBookingPage = () => {
                     value={formData.guest_count}
                     onChange={handleInputChange}
                     min="1"
-                    max={room.max_capacity * formData.no_of_rooms}
+                    //max={room.max_capacity * formData.no_of_rooms}
                     required
                   />
                   <small>
-                    Max: {room.max_capacity * formData.no_of_rooms} guests
+                    Max: {room.max_capacity * formData.no_of_rooms} guests allowed
                   </small>
                 </div>
               </div>
