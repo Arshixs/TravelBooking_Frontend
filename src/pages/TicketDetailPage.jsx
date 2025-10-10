@@ -93,6 +93,7 @@ const TicketDetailPage = () => {
 
     
     const isStaff = user?.data?.userType === 'STAFF';
+    const isTicketActive = ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED';
 
 
     return (
@@ -146,7 +147,9 @@ const TicketDetailPage = () => {
                         <p>{ticket.ticket_description}</p>
                     </div>
                 </div>
-                {responses.map(res => (
+                {responses
+                .filter(res => isStaff || res.is_customer_visible)
+                .map(res => (
                     <div key={res.response_id} className={`message ${res.sender.includes('Staff') ? 'staff-message' : 'customer-message'} ${!res.is_customer_visible ? 'internal-note' : ''}`}>
                         <div className="message-header">
                             <span className="sender">{res.sender}</span>
@@ -172,7 +175,7 @@ const TicketDetailPage = () => {
             )}
             
             {/* --- CHECK THIS CONDITION: Reply form for Staff --- */}
-            {isStaff && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && (
+            {isTicketActive && (
                  <div className="reply-form-container">
                     <h3>Post a Reply</h3>
                     <form onSubmit={handlePostReply}>
@@ -184,15 +187,19 @@ const TicketDetailPage = () => {
                             required
                         />
                         <div className="reply-actions">
-                             <div className="visibility-toggle">
-                                <input 
-                                    type="checkbox" 
-                                    id="isPublicReply" 
-                                    checked={isPublicReply}
-                                    onChange={(e) => setIsPublicReply(e.target.checked)} 
-                                />
-                                <label htmlFor="isPublicReply">Visible to customer</label>
-                            </div>
+                            {isStaff ? (
+                                <div className="visibility-toggle">
+                                    <input 
+                                        type="checkbox" 
+                                        id="isPublicReply" 
+                                        checked={isPublicReply}
+                                        onChange={(e) => setIsPublicReply(e.target.checked)} 
+                                    />
+                                    <label htmlFor="isPublicReply">Visible to customer</label>
+                                </div>
+                            ) : (
+                                <span>&nbsp;</span> // Placeholder to keep button on the right
+                            )}
                             <button type="submit" className="btn-primary" disabled={isReplying}>
                                 {isReplying ? 'Posting...' : 'Post Reply'}
                             </button>

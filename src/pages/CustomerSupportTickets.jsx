@@ -88,7 +88,7 @@ const CustomerSupportTickets = () => {
                         </td>
                         <td>{formatDate(ticket.created_at)}</td>
                         <td>
-                          <Link to={`/support-tickets/${ticket.ticket_id}`} className="btn-action btn-view" title="View Details">
+                          <Link to={`/support/tickets/${ticket.ticket_id}`} className="btn-action btn-view" title="View Details">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                           </Link>
                         </td>
