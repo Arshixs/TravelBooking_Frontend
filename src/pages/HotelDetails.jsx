@@ -100,10 +100,9 @@ const HotelDetails = () => {
         //console.log("Booking room:", room)
         //alert(`Booking ${room.type} room (${room.room_id})`)
     }
-    // Navigate to booking page or call booking API
-    console.log("Booking room:", room)
-    alert(`Booking ${room.type} room (${room.room_id})`)
-  }
+      // Navigate to booking page or call booking API
+      console.log("Booking room:", room)
+      alert(`Booking ${room.type} room (${room.room_id})`)
 
   if (loading) {
     return (
@@ -122,10 +121,10 @@ const HotelDetails = () => {
           <div className="error-state">Hotel not found</div>
         </div>
       </main>
-    )
+    );
   }
 
-  const fullAddress = [hotel.street, hotel.city, hotel.state, hotel.pin].filter(Boolean).join(", ")
+  const fullAddress = [hotel.street, hotel.city, hotel.state, hotel.pin].filter(Boolean).join(", ");
 
   return (
     <main className="hotel-details-page">
