@@ -485,7 +485,7 @@ const AdminDashboard = () => {
                                 ? "Package Manager"
                                 : member.role === "admin"
                                 ? "Admin"
-                                : "Blog Writer"}
+                                :  member.role === "CustomerCare"?"Customer Care":  "Blog Writer"}
                             </span>
                           </td>
                           <td>
@@ -655,6 +655,7 @@ const AdminDashboard = () => {
                       <option value="admin">Admin</option>
                       <option value="PackageManager">Package Manager</option>
                       <option value="ContentWriter">Blog Writer</option>
+                      <option value="CustomerCare">Customer Care</option>
                     </select>
                   </div>
                   <div className="form-group">

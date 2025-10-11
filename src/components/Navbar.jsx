@@ -139,6 +139,9 @@ const Navbar = () => {
                     <li>
                       <a href="/bookings/hotels/my">View Hotel Bookings</a>
                     </li>
+                    <li>
+                      <a href="/support/tickets">Raise Issue</a>
+                    </li>
                   </>
                 )}
                 {isVendor && (

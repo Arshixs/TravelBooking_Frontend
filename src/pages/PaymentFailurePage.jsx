@@ -7,6 +7,7 @@ const PaymentFailurePage = () => {
 
   useEffect(() => {
     // Clear pending booking data
+    sessionStorage.removeItem("sessionId");
     sessionStorage.removeItem("pendingBookingId");
     sessionStorage.removeItem("bookingAmount");
   }, []);
@@ -34,9 +35,7 @@ const PaymentFailurePage = () => {
         </div>
 
         <div className="result-actions">
-          <button onClick={() => navigate("/hotels")} className="btn-primary">
-            Try Again
-          </button>
+
           <button
             onClick={() => navigate("/support/tickets")}
             className="btn-secondary"
