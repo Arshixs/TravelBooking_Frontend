@@ -566,7 +566,7 @@ const VendorHotelsPage = () => {
                   </div>
                 </div>
 
-                {/* <div className="form-row">
+                /* <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="total_rooms">Total Rooms *</label>
                     <input
@@ -732,7 +732,7 @@ const VendorHotelsPage = () => {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default VendorHotelsPage
