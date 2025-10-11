@@ -153,11 +153,11 @@ export const router = createBrowserRouter([
         element: <VendorContactsPage/>
       },
       {
-        path: "hotels", // new Hotels route
+        path: "/hotels", // new Hotels route
         element: <Hotels />,
       },
       {
-        path: "hotels/:id", // Added route for hotel details
+        path: "/hotels/:id", // Added route for hotel details
         element: <HotelDetails />,
       },
 

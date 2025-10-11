@@ -19,7 +19,7 @@ const VendorRoomPage = () => {
     bed_type: "",
     cost_per_night: "",
     max_capacity: "",
-    number_of_rooms_available: "",
+    total_rooms: "",
     balcony_available: false,
   })
 
@@ -30,7 +30,7 @@ const VendorRoomPage = () => {
       bed_type: "",
       cost_per_night: "",
       max_capacity: "",
-      number_of_rooms_available: "",
+      total_rooms: "",
       balcony_available: false,
     },
   ])
@@ -46,10 +46,11 @@ const VendorRoomPage = () => {
       const response = await axios.get(`/hotels/${hotelId}/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
+      console.log(response.data);
       setHotelInfo({
-        name: response.data.name,
-        city: response.data.city,
-        state: response.data.state,
+        name: response.data.hotel.name,
+        city: response.data.hotel.city,
+        state: response.data.hotel.state,
       })
       setRooms(response.data.rooms || [])
     } catch (error) {
@@ -69,7 +70,7 @@ const VendorRoomPage = () => {
         bed_type: "",
         cost_per_night: "",
         max_capacity: "",
-        number_of_rooms_available: "",
+        total_rooms: "",
         balcony_available: false,
       },
     ])
@@ -84,7 +85,7 @@ const VendorRoomPage = () => {
       bed_type: room.bed_type || "",
       cost_per_night: room.cost_per_night || "",
       max_capacity: room.max_capacity || "",
-      number_of_rooms_available: room.number_of_rooms_available || "",
+      total_rooms: room.total_rooms || "",
       balcony_available: room.balcony_available || false,
     })
     setSelectedRoom(room.room_id)
@@ -100,7 +101,7 @@ const VendorRoomPage = () => {
         bed_type: "",
         cost_per_night: "",
         max_capacity: "",
-        number_of_rooms_available: "",
+        total_rooms: "",
         balcony_available: false,
       },
     ])
@@ -135,7 +136,7 @@ const VendorRoomPage = () => {
           bed_type: room.bed_type.trim(),
           cost_per_night: Number(room.cost_per_night) || 0,
           max_capacity: Number(room.max_capacity) || 0,
-          number_of_rooms_available: Number(room.number_of_rooms_available) || 0,
+          total_rooms: Number(room.total_rooms) || 0,
           balcony_available: Boolean(room.balcony_available),
           rating: 0, // Set initial rating to 0
         }))
@@ -157,7 +158,7 @@ const VendorRoomPage = () => {
           bed_type: roomForm.bed_type.trim(),
           cost_per_night: Number(roomForm.cost_per_night) || 0,
           max_capacity: Number(roomForm.max_capacity) || 0,
-          number_of_rooms_available: Number(roomForm.number_of_rooms_available) || 0,
+          total_rooms: Number(roomForm.total_rooms) || 0,
           balcony_available: Boolean(roomForm.balcony_available),
         }
 
@@ -274,7 +275,7 @@ const VendorRoomPage = () => {
                         <td>₹{room.cost_per_night}</td>
                         <td>{room.max_capacity}</td>
                         {/* <td> */}
-                          {/* <span className="badge badge-service">{room.number_of_rooms_available}</span> */}
+                          {/* <span className="badge badge-service">{room.total_rooms}</span> */}
                         {/* </td> */}
                         <td>
                           <span className={`badge ${room.balcony_available ? "badge-active" : "badge-inactive"}`}>
@@ -406,12 +407,12 @@ const VendorRoomPage = () => {
 
                         <div className="form-row">
                           <div className="form-group">
-                            {/* <label htmlFor={`number_of_rooms_available-${index}`}>Rooms Available *</label>
+                            {/* <label htmlFor={`total_rooms-${index}`}>Rooms Available *</label>
                             <input
                               type="number"
-                              id={`number_of_rooms_available-${index}`}
-                              name="number_of_rooms_available"
-                              value={room.number_of_rooms_available}
+                              id={`total_rooms-${index}`}
+                              name="total_rooms"
+                              value={room.total_rooms}
                               onChange={(e) => handleMultipleRoomInputChange(index, e)}
                               placeholder="e.g., 5"
                               min="0"
@@ -504,12 +505,12 @@ const VendorRoomPage = () => {
                         />
                       </div>
                       <div className="form-group">
-                        {/* <label htmlFor="number_of_rooms_available">Rooms Available *</label>
+                        {/* <label htmlFor="total_rooms">Rooms Available *</label>
                         <input
                           type="number"
-                          id="number_of_rooms_available"
-                          name="number_of_rooms_available"
-                          value={roomForm.number_of_rooms_available}
+                          id="total_rooms"
+                          name="total_rooms"
+                          value={roomForm.total_rooms}
                           onChange={handleInputChange}
                           placeholder="e.g., 5"
                           min="0"

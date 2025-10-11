@@ -2,51 +2,99 @@ import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import ReviewCard from "../components/ReviewCard"
 import "../styles/HotelDetails.css"
-import axios from "../utils/axios";
+import axios from "../utils/axios"
 
 const HotelDetails = () => {
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
-    const [hotel, setHotel] = useState(null)
-    const [rooms, setRooms] = useState([])
-    const [reviews, setReviews] = useState([])
-    const [error, setError] = useState(null)
-    useEffect(() => {
-        fetchHotelData()
-    }, [id])
+  const [hotel, setHotel] = useState(null)
+  const [rooms, setRooms] = useState([])
+  const [reviews, setReviews] = useState([])
+  const [allEmails, setAllEmails] = useState([])
+  const [allPhones, setAllPhones] = useState([])
+  const [error, setError] = useState(null)
 
-    const fetchHotelData = async () => {
+  useEffect(() => {
+    fetchHotelData()
+  }, [id])
+
+  const fetchHotelData = async () => {
     setLoading(true)
     setError(null)
 
     try {
-        // 1. Fetch hotel details
-        const hotelResponse = await axios.get(`/hotels/${id}/`);
-        setHotel(hotelResponse.data.hotel) // ensure backend returns hotel object
-        setRooms(hotelResponse.data.rooms) // array of rooms
+      // 1. Fetch hotel details
+      const hotelResponse = await axios.get(`/hotels/${id}/`)
+      setHotel(hotelResponse.data.hotel) // ensure backend returns hotel object
+      setRooms(hotelResponse.data.rooms) // array of rooms
 
-        // 3. Fetch reviews for this hotel
-        // const reviewsResponse = await axios.get(`/hotels/${id}/reviews`)
-        // setReviews(reviewsResponse.data) // array of reviews
+      // Combine primary email with additional emails
+      const emailsToDisplay = []
+      const hotel = hotelResponse.data.hotel
+      if (hotel.primary_email) {
+        emailsToDisplay.push(hotel.primary_email)
+      }
 
+      // Fetch additional emails
+      try {
+        const emailsResponse = await axios.get(`/hotels/${id}/emails/`);
+        const emailsData = emailsResponse.data.data;
+        if (emailsData && Array.isArray(emailsData)) {
+          emailsData.forEach((emailObj) => {
+            if (emailObj.email && !emailsToDisplay.includes(emailObj.email)) {
+              emailsToDisplay.push(emailObj.email)
+            }
+          })
+        }
+      } catch (err) {
+        console.error("Failed to fetch additional emails:", err)
+      }
+
+      setAllEmails(emailsToDisplay)
+
+      // Combine primary phone with additional phones
+      const phonesToDisplay = []
+      if (hotel.primary_phone) {
+        phonesToDisplay.push(hotel.primary_phone)
+      }
+
+      // Fetch additional phones
+      try {
+        const phonesResponse = await axios.get(`/hotels/${id}/phones/`)
+        const phonesData = phonesResponse.data.data;
+        if (phonesData && Array.isArray(phonesData)) {
+          phonesData.forEach((phoneObj) => {
+            if (phoneObj.phone && !phonesToDisplay.includes(phoneObj.phone)) {
+              phonesToDisplay.push(phoneObj.phone)
+            }
+          })
+        }
+      } catch (err) {
+        console.error("Failed to fetch additional phones:", err)
+      }
+
+      setAllPhones(phonesToDisplay)
+
+      // 3. Fetch reviews for this hotel
+      // const reviewsResponse = await axios.get(`/hotels/${id}/reviews`)
+      // setReviews(reviewsResponse.data) // array of reviews
     } catch (err) {
-        console.error("Failed to load hotel data:", err)
-        setError("Failed to load hotel data. Please try again later.")
+      console.error("Failed to load hotel data:", err)
+      setError("Failed to load hotel data. Please try again later.")
     } finally {
-        setLoading(false)
+      setLoading(false)
     }
-    }
+  }
 
-
-    const handleBookRoom = (room) => {
-    if (room.number_of_rooms_available === 0) {
-        alert("Sorry, this room is fully booked!")
-        return
+  const handleBookRoom = (room) => {
+    if (room.total_rooms === 0) {
+      alert("Sorry, this room is fully booked!")
+      return
     }
-        // Navigate to booking page or call booking API
-        console.log("Booking room:", room)
-        alert(`Booking ${room.type} room (${room.room_id})`)
-    }
+    // Navigate to booking page or call booking API
+    console.log("Booking room:", room)
+    alert(`Booking ${room.type} room (${room.room_id})`)
+  }
 
   if (loading) {
     return (
@@ -73,7 +121,7 @@ const HotelDetails = () => {
   return (
     <main className="hotel-details-page">
       <section className="hotel-hero">
-        <img src={hotel.image || "/placeholder.svg"} alt={hotel.name} className="hotel-hero-image" />
+        <img src={hotel.image_url || "/placeholder.svg"} alt={hotel.name} className="hotel-hero-image" />
         <div className="hotel-hero-overlay">
           <div className="container">
             <h1>{hotel.name}</h1>
@@ -121,20 +169,20 @@ const HotelDetails = () => {
             <div className="contact-section">
               <h3>Contact Information</h3>
               <div className="contact-grid">
-                {hotel.emails && hotel.emails.length > 0 && (
+                {allEmails.length > 0 && (
                   <div className="contact-item">
                     <span className="contact-label">Email</span>
-                    {hotel.emails.map((email, idx) => (
+                    {allEmails.map((email, idx) => (
                       <a key={idx} href={`mailto:${email}`} className="contact-value">
                         {email}
                       </a>
                     ))}
                   </div>
                 )}
-                {hotel.phones && hotel.phones.length > 0 && (
+                {allPhones.length > 0 && (
                   <div className="contact-item">
                     <span className="contact-label">Phone</span>
-                    {hotel.phones.map((phone, idx) => (
+                    {allPhones.map((phone, idx) => (
                       <a key={idx} href={`tel:${phone}`} className="contact-value">
                         {phone}
                       </a>
@@ -179,9 +227,9 @@ const HotelDetails = () => {
                     <span className="price-value">₹{room.cost_per_night.toLocaleString()}</span>
                   </div>
 
-                  {room.number_of_rooms_available > 0 ? (
+                  {room.total_rooms > 0 ? (
                     <div className="room-actions">
-                      <span className="availability-badge available">{room.number_of_rooms_available} available</span>
+                      <span className="availability-badge available">{room.total_rooms} available</span>
                       <button className="btn-book" onClick={() => handleBookRoom(room)}>
                         Book Now
                       </button>

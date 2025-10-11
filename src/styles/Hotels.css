@@ -505,3 +505,328 @@
     padding: 40px 16px;
   }
 }
+
+/* Added new modern card styles for hotels with all information */
+.hotels-modern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+  margin-top: 30px;
+}
+
+.hotel-modern-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  box-shadow: 0 8px 24px rgba(19, 70, 134, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hotel-modern-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(19, 70, 134, 0.15);
+  border-color: #feb21a;
+}
+
+.hotel-modern-card-header {
+  position: relative;
+}
+
+.hotel-modern-card-image {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+}
+
+.hotel-modern-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.hotel-modern-card:hover .hotel-modern-card-image img {
+  transform: scale(1.05);
+}
+
+/* Larger rating display overlay */
+.hotel-rating-overlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hotel-stars-large {
+  color: #feb21a;
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.hotel-rating-large {
+  background: #134686;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+
+.hotel-modern-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+.hotel-modern-title {
+  margin: 0;
+  color: #134686;
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+.hotel-modern-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+/* Info rows with icons - keeping icons normal size */
+.hotel-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.hotel-info-icon {
+  width: 18px;
+  height: 18px;
+  color: #134686;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.hotel-info-text {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Blue View button */
+.btn-view-hotel {
+  background: #134686;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: auto;
+}
+
+.btn-view-hotel:hover {
+  background: #0d3461;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(19, 70, 134, 0.3);
+}
+
+/* New hero section styles for hotels */
+.hotels-hero {
+  background: linear-gradient(135deg, #134686 0%, #1a5ba8 40%, #2d7dd2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hotels-hero::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -5%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(254, 178, 26, 0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hotels-hero::after {
+  content: "";
+  position: absolute;
+  bottom: -20%;
+  left: -5%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hotels-hero h1,
+.hotels-hero .hero-subtitle {
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.hero-feature-item svg {
+  width: 24px;
+  height: 24px;
+  color: #feb21a;
+  flex-shrink: 0;
+}
+
+/* Why Book Section */
+.why-book-section {
+  padding: 80px 0;
+  background: #f8f9fa;
+}
+
+.why-book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.why-book-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(19, 70, 134, 0.08);
+  transition: all 0.3s ease;
+}
+
+.why-book-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(19, 70, 134, 0.12);
+}
+
+.why-book-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #134686 0%, #1a5ba8 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.why-book-icon svg {
+  width: 30px;
+  height: 30px;
+  color: #fff;
+}
+
+.why-book-card h3 {
+  color: #134686;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.why-book-card p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Loading and Error States */
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.error-state {
+  color: #ed3f27;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hotels-modern-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .hotel-modern-card-image {
+    height: 200px;
+  }
+
+  .hotel-stars-large {
+    font-size: 1.1rem;
+  }
+
+  .hotel-rating-large {
+    font-size: 0.95rem;
+  }
+
+  .hero-features-list {
+    gap: 12px;
+  }
+
+  .hero-feature-item {
+    font-size: 0.95rem;
+  }
+
+  .why-book-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hotel-modern-title {
+    font-size: 1.2rem;
+  }
+
+  .hotel-info-text {
+    font-size: 0.9rem;
+  }
+
+  .btn-view-hotel {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+}
