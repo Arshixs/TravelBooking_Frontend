@@ -68,6 +68,7 @@ const Navbar = () => {
   
   const isStaff = user?.data?.userType ==="STAFF";
   const isAdmin = isStaff && user?.data?.role === "admin";
+  const isCustomer = user?.data?.userType==="CUSTOMER";
 
   // Check if user is vendor
   const isVendor = user?.data?.userType === "VENDOR";
@@ -128,6 +129,19 @@ const Navbar = () => {
                       <a href="/vendor/contact">Manage Contacts</a>
                     </li>
                     {/* ...existing guide/transport links... */}
+                  </>
+                )}
+                {isCustomer && (
+                  <>
+                    <li>
+                      <a href="/hotels">View Hotels</a>
+                    </li>
+                    <li>
+                      <a href="/bookings/hotels/my">View Hotel Bookings</a>
+                    </li>
+                    <li>
+                      <a href="/support/tickets">Raise Issue</a>
+                    </li>
                   </>
                 )}
                 {isVendor && (

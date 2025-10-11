@@ -21,7 +21,7 @@ const VendorHotelsPage = () => {
     city: "",
     state: "",
     pin: "",
-    total_rooms: 1,
+    total_rooms: 0,
     primary_email: "",
     primary_phone: "",
     image_url: "",
@@ -58,7 +58,7 @@ const VendorHotelsPage = () => {
       city: "",
       state: "",
       pin: "",
-      total_rooms: 1,
+      total_rooms: 0,
       primary_email: "",
       primary_phone: "",
       image_url: "",
@@ -79,7 +79,7 @@ const VendorHotelsPage = () => {
         city: hotelData.city || "",
         state: hotelData.state || "",
         pin: hotelData.pin || "",
-        total_rooms: hotelData.total_rooms || 1,
+        total_rooms:hotelData.total_rooms || 0,
         primary_email: hotelData.primary_email || "",
         primary_phone: hotelData.primary_phone || "",
         image_url: hotelData.image_url || "",
@@ -105,7 +105,7 @@ const VendorHotelsPage = () => {
         city: hotelForm.city.trim(),
         state: hotelForm.state.trim(),
         pin: hotelForm.pin.trim(),
-        total_rooms: Number(hotelForm.total_rooms) || 0,
+        total_rooms:hotelForm.total_rooms.trim(),
         primary_email: hotelForm.primary_email.trim(),
         primary_phone: hotelForm.primary_phone.trim(),
         image_url: hotelForm.image_url.trim(),
@@ -566,7 +566,7 @@ const VendorHotelsPage = () => {
                   </div>
                 </div>
 
-                <div className="form-row">
+                {/* <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="total_rooms">Total Rooms *</label>
                     <input
