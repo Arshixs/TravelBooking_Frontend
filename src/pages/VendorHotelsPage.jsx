@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "../utils/axios";
-import toast from "react-hot-toast";
-import "../styles/VendorManagement.css";
+import { useNavigate } from "react-router-dom"
+import axios from "../utils/axios"
+import toast from "react-hot-toast"
+import "../styles/VendorManagement.css"
 
 const VendorHotelsPage = () => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [modalMode, setModalMode] = useState("create");
-  const [selectedHotel, setSelectedHotel] = useState(null);
-  const [detailsData, setDetailsData] = useState(null);
-  const navigate = useNavigate();
-  const vendorId = JSON.parse(localStorage.getItem("user")).userId;
-//   console.log(vendorId);
+  const [modalMode, setModalMode] = useState("create"); // "create" or "edit"
+  const [selectedHotel, setSelectedHotel] = useState(null)
+  const [detailsData, setDetailsData] = useState(null)
+  const navigate = useNavigate()
+  const {userId} = JSON.parse(localStorage.getItem("user"));
 
   const [hotelForm, setHotelForm] = useState({
     name: "",
@@ -25,10 +24,11 @@ const VendorHotelsPage = () => {
     total_rooms: 0,
     primary_email: "",
     primary_phone: "",
+    image_url: "",
   })
 
-  const [newEmail, setNewEmail] = useState("")
-  const [newPhone, setNewPhone] = useState("")
+  const [newEmail, setNewEmail] = useState("");
+  const [newPhone, setNewPhone] = useState("");
 
   useEffect(() => {
     fetchHotels()
@@ -37,22 +37,21 @@ const VendorHotelsPage = () => {
   const fetchHotels = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await axios.get(`/hotels/vendor/${vendorId}`, {
+      const token = localStorage.getItem("accessToken")
+      const response = await axios.get(`/hotels/vendor/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log(response.data);
-      setHotels(response.data.data || []);
+      })
+      setHotels(response.data.data || [])
     } catch (error) {
-      console.error("Error fetching hotels:", error);
-      toast.error("Failed to fetch hotels");    
+      console.error("Error fetching hotels:", error)
+      toast.error("Failed to fetch hotels")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   const handleCreateHotel = () => {
-    setModalMode("create");
+    setModalMode("create")
     setHotelForm({
       name: "",
       street: "",
@@ -62,8 +61,9 @@ const VendorHotelsPage = () => {
       total_rooms: 0,
       primary_email: "",
       primary_phone: "",
-    });
-    setShowModal(true); 
+      image_url: "",
+    })
+    setShowModal(true)
   }
 
   const handleEditHotel = async (hotelId) => {
@@ -72,7 +72,7 @@ const VendorHotelsPage = () => {
       const response = await axios.get(`/hotels/${hotelId}/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      const hotelData = response.data.hotel;
+      const hotelData = response.data.hotel
       setHotelForm({
         name: hotelData.name || "",
         street: hotelData.street || "",
@@ -82,6 +82,7 @@ const VendorHotelsPage = () => {
         total_rooms:hotelData.total_rooms || 0,
         primary_email: hotelData.primary_email || "",
         primary_phone: hotelData.primary_phone || "",
+        image_url: hotelData.image_url || "",
       })
       setSelectedHotel(hotelId)
       setModalMode("edit")
@@ -107,6 +108,7 @@ const VendorHotelsPage = () => {
         total_rooms:hotelForm.total_rooms.trim(),
         primary_email: hotelForm.primary_email.trim(),
         primary_phone: hotelForm.primary_phone.trim(),
+        image_url: hotelForm.image_url.trim(),
         ...(modalMode === "create" && { rating: 0 }),
       }
 
@@ -151,7 +153,7 @@ const VendorHotelsPage = () => {
     setLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await axios.delete(`/hotels/${hotelId}`, {
+      const response = await axios.delete(`/hotels/${hotelId}/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (response.status === 200 || response.status === 204) {
@@ -169,7 +171,7 @@ const VendorHotelsPage = () => {
   const handleViewDetails = async (hotelId) => {
     setLoading(true)
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken")
       const [hotelRes, emailsRes, phonesRes] = await Promise.all([
         axios.get(`/hotels/${hotelId}/`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -183,17 +185,17 @@ const VendorHotelsPage = () => {
             headers: { Authorization: `Bearer ${token}` },
           })
       ]);
-
-      const emails = emailsRes.data.data.map(email => email.email) || [];
-      const phones = phonesRes.data.data.map(phone => phone.phone) || [];
+      console.log(emailsRes.data.data);
+      const emails = emailsRes.data.data.map(obj => obj.email);
+      const phones = phonesRes.data.data.map(obj => obj.phone);
 
       setDetailsData({
         ...hotelRes.data.hotel,
-        emails: emails,
-        phones: phones,
+        emails: emails || [],
+        phones: phones || [],
       })
-      setSelectedHotel(hotelId);
-      setShowDetailsModal(true);
+      setSelectedHotel(hotelId)
+      setShowDetailsModal(true)
     } catch (error) {
       console.error("Error fetching hotel details:", error)
       toast.error("Failed to fetch hotel details")
@@ -203,7 +205,7 @@ const VendorHotelsPage = () => {
   }
 
   const handleViewRooms = (hotelId) => {
-    navigate(`/vendor/hotels/${hotelId}/rooms`)
+    navigate(`/vendor/hotels/${hotelId}/rooms`);
   }
 
   const handleInputChange = (e) => {
@@ -217,7 +219,9 @@ const VendorHotelsPage = () => {
             : Math.max(1, Number.parseInt(value, 10) || 1)
           : name === "pin"
             ? value.replace(/\D/g, "").slice(0, 6)
-            : value,
+            : name === "image_url"
+              ? value
+              : value,
     }))
   }
 
@@ -291,15 +295,15 @@ const VendorHotelsPage = () => {
 
   const handleDeletePhone = async (phone) => {
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken")
       await axios.delete(`/hotels/${selectedHotel}/phones/${phone}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      toast.success("Phone deleted successfully");
-      handleViewDetails(selectedHotel);
+      })
+      toast.success("Phone deleted successfully")
+      handleViewDetails(selectedHotel)
     } catch (error) {
-      console.error("Error deleting phone:", error);
-      toast.error("Failed to delete phone");
+      console.error("Error deleting phone:", error)
+      toast.error("Failed to delete phone")
     }
   }
 
@@ -336,6 +340,7 @@ const VendorHotelsPage = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
+                    <th>Image</th>
                     <th>Hotel Name</th>
                     <th>Location</th>
                     <th>Primary Contact</th>
@@ -349,6 +354,36 @@ const VendorHotelsPage = () => {
                     hotels.map((hotel) => (
                       <tr key={hotel.hotel_id}>
                         <td>{hotel.hotel_id}</td>
+                        <td>
+                          {hotel.image_url ? (
+                            <img
+                              src={hotel.image_url || "/placeholder.svg"}
+                              alt={hotel.name}
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                                objectFit: "cover",
+                                borderRadius: "8px",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                                backgroundColor: "#e9ecef",
+                                borderRadius: "8px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "12px",
+                                color: "#6c757d",
+                              }}
+                            >
+                              No Image
+                            </div>
+                          )}
+                        </td>
                         <td className="vendor-name">{hotel.name}</td>
                         <td>
                           <div className="contact-info">
@@ -361,7 +396,6 @@ const VendorHotelsPage = () => {
                         <td>
                           <div className="contact-info">
                             <div>{hotel.primary_email}</div>
-                            {/* {console.log(hotel.primary_phone)} */}
                             <div>{hotel.primary_phone}</div>
                           </div>
                         </td>
@@ -421,7 +455,7 @@ const VendorHotelsPage = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="no-data">
+                      <td colSpan="8" className="no-data">
                         No hotels found. Create your first hotel!
                       </td>
                     </tr>
@@ -545,7 +579,22 @@ const VendorHotelsPage = () => {
                       required
                     />
                   </div>
-                </div> */}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="image_url">Image URL</label>
+                  <input
+                    type="url"
+                    id="image_url"
+                    name="image_url"
+                    value={hotelForm.image_url}
+                    onChange={handleInputChange}
+                    placeholder="https://example.com/hotel-image.jpg"
+                  />
+                  <small style={{ color: "#6c757d", fontSize: "0.875rem", marginTop: "4px", display: "block" }}>
+                    Enter a valid image URL to display hotel image
+                  </small>
+                </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
@@ -570,6 +619,23 @@ const VendorHotelsPage = () => {
               </button>
             </div>
             <div className="modal-body">
+              {detailsData.image_url && (
+                <div className="details-section">
+                  <h3>Hotel Image</h3>
+                  <img
+                    src={detailsData.image_url || "/placeholder.svg"}
+                    alt={detailsData.name}
+                    style={{
+                      width: "100%",
+                      maxHeight: "400px",
+                      objectFit: "cover",
+                      borderRadius: "12px",
+                      marginBottom: "20px",
+                    }}
+                  />
+                </div>
+              )}
+
               <div className="details-section">
                 <h3>Basic Information</h3>
                 <div className="details-grid">
