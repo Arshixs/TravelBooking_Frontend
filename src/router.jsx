@@ -30,6 +30,7 @@ import HotelBookingPage from "./pages/HotelBookingPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentFailurePage from "./pages/PaymentFailurePage";
+import ManagePackages from "./pages/ManagePackages";
 
 export const router = createBrowserRouter([
   {
@@ -91,6 +92,17 @@ export const router = createBrowserRouter([
             requiredServiceType="Transport_Provider"
           >
             <VendorTransportPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/staff/packages",
+        element: (
+          <ProtectedRoute
+            requiredUserType="STAFF"
+            requiredRole="PackageManager"
+          >
+            <ManagePackages />
           </ProtectedRoute>
         ),
       },
