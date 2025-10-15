@@ -15,6 +15,7 @@ const HotelDetails = () => {
   const [allPhones, setAllPhones] = useState([])
   const [error, setError] = useState(null)
 
+  const navigate = useNavigate();
   useEffect(() => {
     fetchHotelData()
   }, [id])
@@ -99,10 +100,11 @@ const HotelDetails = () => {
       navigate(`/hotels/${hotelId}/rooms/${roomId}/book`);
         //console.log("Booking room:", room)
         //alert(`Booking ${room.type} room (${room.room_id})`)
-    }
+    
       // Navigate to booking page or call booking API
       console.log("Booking room:", room)
       alert(`Booking ${room.type} room (${room.room_id})`)
+    }
 
   if (loading) {
     return (

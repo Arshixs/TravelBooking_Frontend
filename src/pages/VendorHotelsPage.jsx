@@ -105,7 +105,7 @@ const VendorHotelsPage = () => {
         city: hotelForm.city.trim(),
         state: hotelForm.state.trim(),
         pin: hotelForm.pin.trim(),
-        total_rooms:hotelForm.total_rooms.trim(),
+        total_rooms:0,
         primary_email: hotelForm.primary_email.trim(),
         primary_phone: hotelForm.primary_phone.trim(),
         image_url: hotelForm.image_url.trim(),
@@ -566,7 +566,7 @@ const VendorHotelsPage = () => {
                   </div>
                 </div>
 
-                /* <div className="form-row">
+                {/* /* <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="total_rooms">Total Rooms *</label>
                     <input
@@ -579,7 +579,7 @@ const VendorHotelsPage = () => {
                       required
                     />
                   </div>
-                </div>
+                </div> */}
 
                 <div className="form-group">
                   <label htmlFor="image_url">Image URL</label>

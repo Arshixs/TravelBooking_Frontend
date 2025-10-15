@@ -264,6 +264,114 @@
   }
 }
 
+/* Search Container Styles */
+.search-container {
+  margin: 30px 0 20px 0;
+  padding: 0;
+}
+
+.search-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  width: 20px;
+  height: 20px;
+  color: #134686;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 48px 14px 48px;
+  border: 2px solid #134686;
+  border-radius: 999px;
+  font-size: 1rem;
+  color: #134686;
+  background: #fff;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+}
+
+.search-input:focus {
+  border-color: #feb21a;
+  box-shadow: 0 0 0 3px rgba(254, 178, 26, 0.1);
+}
+
+.search-input:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.search-clear-btn:hover {
+  background: #f3f4f6;
+  color: #134686;
+}
+
+.search-clear-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.search-submit-btn {
+  padding: 14px 32px;
+  background: #134686;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.search-submit-btn:hover:not(:disabled) {
+  background: #0d3461;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(19, 70, 134, 0.3);
+}
+
+.search-submit-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 /* Add city filter styles */
 .city-filter-container {
   margin: 30px 0;
@@ -417,6 +525,12 @@
   }
   .city-filter-buttons {
     justify-content: center;
+  }
+  .search-form {
+    flex-direction: column;
+  }
+  .search-submit-btn {
+    width: 100%;
   }
 }
 
@@ -827,6 +941,16 @@
 
   .btn-view-hotel {
     padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+    padding: 12px 40px 12px 44px;
+  }
+
+  .search-submit-btn {
+    padding: 12px 24px;
     font-size: 0.95rem;
   }
 }
