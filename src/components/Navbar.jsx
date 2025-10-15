@@ -65,13 +65,14 @@ const Navbar = () => {
 
   // Check if user is admin
 
-  
-  const isStaff = user?.data?.userType ==="STAFF";
+  const isStaff = user?.data?.userType === "STAFF";
   const isAdmin = isStaff && user?.data?.role === "admin";
-  const isCustomer = user?.data?.userType==="CUSTOMER";
+  const isCustomer = user?.data?.userType === "CUSTOMER";
 
   // Check if user is vendor
   const isVendor = user?.data?.userType === "VENDOR";
+
+  console.log(user?.data?.role);
 
   const isContentWriter = isStaff && user?.data?.role === "ContentWriter";
   const isPackageManager = isStaff && user?.data?.role === "PackageManager";
@@ -119,6 +120,11 @@ const Navbar = () => {
                     {isContentWriter && (
                       <li>
                         <a href="/staff/blogs">Manage Blogs</a>
+                      </li>
+                    )}
+                    {isPackageManager && (
+                      <li>
+                        <a href="/staff/packages">Manage Packages</a>
                       </li>
                     )}
                   </>
