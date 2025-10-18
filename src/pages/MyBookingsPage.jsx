@@ -44,10 +44,10 @@ const MyBookingsPage = () => {
     switch (status) {
       case "CONFIRMED":
         return "status-confirmed";
-      case "PENDING":
-        return "status-pending";
-      case "CANCELLED":
-        return "status-cancelled";
+      case "FINISHED":
+        return "status-finished";
+      // case "CANCELLED":
+      //   return "status-cancelled";
       default:
         return "";
     }
@@ -99,20 +99,20 @@ const MyBookingsPage = () => {
           </button>
           <button
             className={
-              filter === "PENDING" ? "filter-btn active" : "filter-btn"
+              filter === "FINISHED" ? "filter-btn active" : "filter-btn"
             }
-            onClick={() => setFilter("PENDING")}
+            onClick={() => setFilter("FINISHED")}
           >
-            Pending
+            Finished
           </button>
-          <button
+          {/* <button
             className={
               filter === "CANCELLED" ? "filter-btn active" : "filter-btn"
             }
             onClick={() => setFilter("CANCELLED")}
           >
             Cancelled
-          </button>
+          </button> */}
         </div>
 
         {bookings.length === 0 ? (

@@ -148,6 +148,9 @@ const Navbar = () => {
                     <li>
                       <a href="/support/tickets">Raise Issue</a>
                     </li>
+                    <li>
+                      <a href="/blogs">Read blogs</a>
+                    </li>
                   </>
                 )}
                 {isVendor && (
