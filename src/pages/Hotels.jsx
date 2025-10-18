@@ -16,6 +16,12 @@ const Hotels = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
+  // 🔹 NEW: Autocomplete states
+  const [autocompleteSuggestions, setAutocompleteSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+  // 🔹 Initial fetch of all hotels
   useEffect(() => {
     const fetchHotels = async () => {
       setLoading(true);
@@ -26,12 +32,10 @@ const Hotels = () => {
             "Content-Type": "application/json",
           },
         });
-        console.log(response.data.data);
         setHotels(response.data.data);
       } catch (err) {
         console.error("Error fetching hotels:", err);
         setError("Failed to load hotels.");
-        //toast.error("Failed to load hotels");
       } finally {
         setLoading(false);
       }
@@ -40,30 +44,95 @@ const Hotels = () => {
     fetchHotels();
   }, []);
 
-  const cities = useMemo(() => {
-    const uniqueCities = [...new Set(hotels.map((h) => h.city))].sort();
-    return ["All", ...uniqueCities];
-  }, [hotels]);
+  // 🔹 NEW: Handle autocomplete search
+  const handleAutocompleteSearch = async (value) => {
 
-  const filteredHotels = useMemo(() => {
-    if (selectedCity === "All") return hotels;
-    return hotels.filter((h) => h.city === selectedCity);
-  }, [selectedCity, hotels]);
+    setSearchQuery(value);
+    setHighlightedIndex(-1);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-
-    if (!searchQuery.trim()) {
-      toast.error("Please enter a city name");
+    if (value.trim().length === 0) {
+      setAutocompleteSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
 
+    try {
+      const response = await axios.get("/hotels/autocomplete/cities", {
+        params: { q: value.trim() },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.data.data && response.data.data.length > 0) {
+        setAutocompleteSuggestions(response.data.data);
+        setShowSuggestions(true);
+      } else {
+        setAutocompleteSuggestions([]);
+        setShowSuggestions(false);
+      }
+    } catch (err) {
+      console.error("Error fetching autocomplete suggestions:", err);
+      setAutocompleteSuggestions([]);
+    }
+  };
+
+  // 🔹 NEW: Handle suggestion selection
+  const handleSuggestionClick = (city) => {
+    setSearchQuery(city);
+    // console.log("HEYY");
+    // console.log(searchQuery);
+    setShowSuggestions(false);
+    performSearch(city);
+  };
+
+  // 🔹 NEW: Handle keyboard navigation
+  const handleKeyDown = (e) => {
+    if (!showSuggestions || autocompleteSuggestions.length === 0) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSearch(e);
+      }
+      return;
+    }
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev < autocompleteSuggestions.length - 1 ? prev + 1 : 0
+        );
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev > 0 ? prev - 1 : autocompleteSuggestions.length - 1
+        );
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (highlightedIndex >= 0) {
+          handleSuggestionClick(autocompleteSuggestions[highlightedIndex]);
+        } else {
+          handleSearch(e);
+        }
+        break;
+      case "Escape":
+        setShowSuggestions(false);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 🔹 Helper function to perform search
+  const performSearch = async (cityName) => {
     setIsSearching(true);
     setError(null);
-    setSelectedCity("All"); // Reset filter when searching
+    setSelectedCity("All");
 
     try {
-      const response = await axios.get(`/hotels/?city=${searchQuery.trim()}`, {
+      const response = await axios.get(`/hotels/?city=${cityName.trim()}`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -71,18 +140,15 @@ const Hotels = () => {
 
       if (response.data.data && response.data.data.length > 0) {
         setHotels(response.data.data);
-        // toast.success(
-        //   `Found ${response.data.length} hotel(s) in ${searchQuery}`
-        // );
       } else {
         setHotels([]);
-        //toast.info(`No hotels found in ${searchQuery}`);
+        toast.info(`No hotels found in ${cityName}`);
       }
     } catch (err) {
       console.error("Error searching hotels:", err);
       if (err.response?.status === 404) {
         setHotels([]);
-        toast.info(`No hotels found in ${searchQuery}`);
+        toast.info(`No hotels found in ${cityName}`);
       } else {
         setError("Failed to search hotels.");
         toast.error("Failed to search hotels");
@@ -92,9 +158,22 @@ const Hotels = () => {
     }
   };
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    if (!searchQuery.trim()) {
+      toast.error("Please enter a city name");
+      return;
+    }
+
+    performSearch(searchQuery);
+  };
+
   const handleClearSearch = async () => {
     setSearchQuery("");
     setSelectedCity("All");
+    setShowSuggestions(false);
+    setAutocompleteSuggestions([]);
     setLoading(true);
     setError(null);
 
@@ -105,11 +184,9 @@ const Hotels = () => {
         },
       });
       setHotels(response.data.data);
-      //toast.success("Showing all hotels");
     } catch (err) {
       console.error("Error fetching hotels:", err);
       setError("Failed to load hotels.");
-      //toast.error("Failed to load hotels");
     } finally {
       setLoading(false);
     }
@@ -123,6 +200,16 @@ const Hotels = () => {
     }
     navigate(`/hotels/${hotelId}`);
   };
+
+  const cities = useMemo(() => {
+    const uniqueCities = [...new Set(hotels.map((h) => h.city))].sort();
+    return ["All", ...uniqueCities];
+  }, [hotels]);
+
+  const filteredHotels = useMemo(() => {
+    if (selectedCity === "All") return hotels;
+    return hotels.filter((h) => h.city === selectedCity);
+  }, [selectedCity, hotels]);
 
   const renderStars = (value) => {
     const full = Math.floor(value || 0);
@@ -222,47 +309,93 @@ const Hotels = () => {
             </p>
           </div>
 
-          {/* Search Bar */}
+          {/* 🔹 Search Bar with Autocomplete */}
           <div className="search-container">
             <form onSubmit={handleSearch} className="search-form">
-              <div className="search-input-wrapper">
-                <svg
-                  className="search-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="Search hotels by city (e.g., Jaipur, Mumbai, Delhi...)"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  disabled={isSearching}
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    className="search-clear-btn"
-                    onClick={handleClearSearch}
-                    aria-label="Clear search"
+              <div className="search-wrapper">
+                <div className="search-input-wrapper">
+                  <svg
+                    className="search-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                  <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Search hotels by city (e.g., Jaipur, Mumbai, Delhi...)"
+                    value={searchQuery}
+                    onChange={(e) => handleAutocompleteSearch(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    onFocus={() => {
+                      if (
+                        searchQuery.trim() &&
+                        autocompleteSuggestions.length > 0
+                      ) {
+                        setShowSuggestions(true);
+                      }
+                    }}
+                    onBlur={() => {
+                      setTimeout(() => setShowSuggestions(false), 200);
+                    }}
+                    disabled={isSearching}
+                    autoComplete="off"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      className="search-clear-btn"
+                      onClick={handleClearSearch}
+                      aria-label="Clear search"
                     >
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </button>
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* 🔹 Autocomplete Suggestions Dropdown */}
+                {showSuggestions && autocompleteSuggestions.length > 0 && (
+                  <div className="autocomplete-dropdown">
+                    <ul className="autocomplete-list">
+                      {autocompleteSuggestions.map((suggestion, index) => (
+                        <li
+                          key={index}
+                          className={`autocomplete-item ${
+                            index === highlightedIndex ? "highlighted" : ""
+                          }`}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          //onMouseEnter={() => setHighlightedIndex(index)}
+                        >
+                          <svg
+                            className="autocomplete-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                          </svg>
+                          <span>{suggestion}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </div>
+
               <button
                 type="submit"
                 className="search-submit-btn"
@@ -295,6 +428,7 @@ const Hotels = () => {
 
           {loading && (
             <div className="loading-state">
+              <div className="spinner"></div>
               <p>Loading hotels...</p>
             </div>
           )}
@@ -315,13 +449,13 @@ const Hotels = () => {
               >
                 <div className="hotel-modern-card-header">
                   <div className="hotel-modern-card-image">
-                    
                     <img
                       src={
                         hotel.image_url ||
                         "/placeholder.svg?height=200&width=350"
                       }
                       alt={`${hotel.name}`}
+                      loading="lazy"
                     />
                     <div className="hotel-rating-overlay">
                       {renderStars(hotel.rating)}
@@ -417,6 +551,15 @@ const Hotels = () => {
 
           {filteredHotels.length === 0 && !loading && (
             <div className="no-results">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
               <p>
                 No hotels found{" "}
                 {selectedCity !== "All" ? `in ${selectedCity}` : ""}.{" "}
