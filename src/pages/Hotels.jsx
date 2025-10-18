@@ -63,14 +63,14 @@ const Hotels = () => {
     setSelectedCity("All"); // Reset filter when searching
 
     try {
-      const response = await axios.get(`/hotels/${searchQuery.trim()}`, {
+      const response = await axios.get(`/hotels/?city=${searchQuery.trim()}`, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      if (response.data && response.data.length > 0) {
-        setHotels(response.data);
+      if (response.data.data && response.data.data.length > 0) {
+        setHotels(response.data.data);
         // toast.success(
         //   `Found ${response.data.length} hotel(s) in ${searchQuery}`
         // );
