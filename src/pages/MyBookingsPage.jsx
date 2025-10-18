@@ -32,6 +32,14 @@ const MyBookingsPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      response.data.data.sort((a, b) => {
+        // Convert date strings to Date objects for accurate comparison
+        const dateA = new Date(a.booking_date);
+        const dateB = new Date(b.booking_date);
+
+        // For reverse order, subtract A from B
+        return dateB.getTime() - dateA.getTime();
+      });
       setBookings(response.data.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
