@@ -1,16 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "../utils/axios";
 import toast from "react-hot-toast";
-import "../styles/PackageFormModal.css"; // Reusing the same CSS
+import "../styles/PackageFormModal.css";
 
-const CloseIcon = () => <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
+const CloseIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    stroke="currentColor"
+    strokeWidth="2"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
 
 const BlogFormModal = ({ postData, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    featuredImage: "",
+    featuredImage: null,
+    existingImageUrl: "",
   });
+  const [imagePreview, setImagePreview] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -18,10 +34,18 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
       setFormData({
         title: postData.title || "",
         content: postData.content || "",
-        featuredImage: postData.featuredImage || "",
+        featuredImage: null,
+        existingImageUrl: postData.featuredImage || "",
       });
+      setImagePreview(postData.featuredImage || "");
     } else {
-      setFormData({ title: "", content: "", featuredImage: "" });
+      setFormData({
+        title: "",
+        content: "",
+        featuredImage: null,
+        existingImageUrl: "",
+      });
+      setImagePreview("");
     }
   }, [postData]);
 
@@ -30,26 +54,82 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please select a valid image file");
+        return;
+      }
+
+      // Validate file size (e.g., max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size should not exceed 5MB");
+        return;
+      }
+
+      setFormData((prev) => ({ ...prev, featuredImage: file }));
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData((prev) => ({
+      ...prev,
+      featuredImage: null,
+      existingImageUrl: "",
+    }));
+    setImagePreview("");
+    // Reset file input
+    const fileInput = document.getElementById("featuredImage");
+    if (fileInput) fileInput.value = "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("content", formData.content);
+
+      if (formData.featuredImage) {
+        formDataToSend.append("featuredImage", formData.featuredImage);
+      } else if (formData.existingImageUrl) {
+        formDataToSend.append("existingImageUrl", formData.existingImageUrl);
+      }
+
       if (postData) {
         // Update existing post
-        await axios.put(`/blogs/update/${postData.blog_id}`, formData);
+        await axios.put(`/blogs/update/${postData.blog_id}`, formDataToSend, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         toast.success("Blog post updated successfully!");
       } else {
         // Create new post
-        await axios.post("/blogs/add", formData);
+        await axios.post("/blogs/add", formDataToSend, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         toast.success("Blog post created successfully!");
       }
       onSave();
     } catch (error) {
-      toast.error("Failed to save blog post.");
+      toast.error(error.response?.data || "Failed to save blog post.");
       console.error(error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -79,16 +159,61 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
               </div>
 
               <div className="input-group full-width">
-                <label htmlFor="featuredImage">Featured Image URL</label>
+                <label htmlFor="featuredImage">Featured Image</label>
                 <input
-                  type="url"
+                  type="file"
                   id="featuredImage"
                   name="featuredImage"
-                  value={formData.featuredImage}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.jpg"
+                  accept="image/*"
+                  onChange={handleImageChange}
                 />
+                <small
+                  style={{ color: "#666", marginTop: "4px", display: "block" }}
+                >
+                  Maximum file size: 5MB. Supported formats: JPG, PNG, GIF, WebP
+                </small>
               </div>
+
+              {imagePreview && (
+                <div className="input-group full-width">
+                  <label>Image Preview</label>
+                  <div
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "200px",
+                        borderRadius: "8px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      style={{
+                        position: "absolute",
+                        top: "8px",
+                        right: "8px",
+                        background: "rgba(255, 0, 0, 0.8)",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "30px",
+                        height: "30px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <div className="input-group full-width">
                 <label htmlFor="content">Content</label>

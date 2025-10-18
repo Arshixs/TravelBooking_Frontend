@@ -52,7 +52,7 @@ const BlogPage = () => {
                 <article className="blog-card">
                   <div className="card-image-container">
                     <img
-                      src={post.featuredImage || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&h=400&fit=crop'}
+                      src={post.featured_image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&h=400&fit=crop'}
                       alt={post.title}
                       className="card-image"
                     />

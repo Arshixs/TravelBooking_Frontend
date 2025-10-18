@@ -68,7 +68,7 @@ const BlogPostDetail = () => {
 
         <div className="post-featured-image">
           <img 
-            src={post.featuredImage || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=600&fit=crop'} 
+            src={post.featured_image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=600&fit=crop'} 
             alt={post.title} 
           />
         </div>
