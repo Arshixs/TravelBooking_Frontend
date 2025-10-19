@@ -54,14 +54,45 @@ const TagIcon = () => (
   </svg>
 );
 
+const MapPinIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="18"
+    height="18"
+    stroke="currentColor"
+    strokeWidth="2"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+    <circle cx="12" cy="10" r="3"></circle>
+  </svg>
+);
+
+const BedIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="18"
+    height="18"
+    stroke="currentColor"
+    strokeWidth="2"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M2 4v16"></path>
+    <path d="M2 8h18a2 2 0 0 1 2 2v10"></path>
+    <path d="M2 17h20"></path>
+    <path d="M6 8V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path>
+  </svg>
+);
+
 const PackagePage = () => {
   const { slug } = useParams();
   const [packageData, setPackageData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-  // --- REAL API CALL ---
-  // Uncomment this and remove the mock data above to use a live endpoint
   useEffect(() => {
     const fetchPackage = async () => {
       setLoading(true);
@@ -79,6 +110,35 @@ const PackagePage = () => {
     fetchPackage();
   }, [slug]);
 
+  // Group hotel rooms by hotel
+  const groupHotelsByHotel = (hotelRooms) => {
+    const grouped = {};
+    hotelRooms.forEach((item) => {
+      if (!grouped[item.hotel_id]) {
+        grouped[item.hotel_id] = {
+          hotel_id: item.hotel_id,
+          hotel_name: item.hotel_name,
+          hotel_street: item.hotel_street,
+          hotel_city: item.hotel_city,
+          hotel_state: item.hotel_state,
+          hotel_pin: item.hotel_pin,
+          hotel_rating: item.hotel_rating,
+          hotel_image_url: item.hotel_image_url || "https://placehold.co/600x400/134686/FFFFFF?text=Hotel",
+          rooms: [],
+        };
+      }
+      grouped[item.hotel_id].rooms.push({
+        room_id: item.room_id,
+        room_type: item.room_type,
+        room_bed_type: item.room_bed_type,
+        room_max_capacity: item.room_max_capacity,
+        room_cost_per_night: item.room_cost_per_night,
+        room_balcony_available: item.room_balcony_available,
+      });
+    });
+    return Object.values(grouped);
+  };
+
   if (loading) {
     return <div className="loading-state">Loading Package...</div>;
   }
@@ -86,6 +146,8 @@ const PackagePage = () => {
   if (!packageData) {
     return <div className="error-state">Package not found.</div>;
   }
+
+  const hotels = groupHotelsByHotel(packageData.hotel_rooms || []);
 
   return (
     <div className="package-page">
@@ -108,8 +170,9 @@ const PackagePage = () => {
       {/* --- Main Content --- */}
       <main className="container package-main">
         <div className="package-layout">
-          {/* --- Left Column: Itinerary --- */}
+          {/* --- Left Column: Itinerary & Hotels --- */}
           <div className="package-itinerary">
+            {/* Daily Itinerary */}
             <h2 className="section-title">Daily Itinerary</h2>
             <div className="timeline">
               {packageData.itinerary.map((item, index) => (
@@ -124,6 +187,54 @@ const PackagePage = () => {
                 </div>
               ))}
             </div>
+
+            {/* Hotels Section */}
+            {hotels.length > 0 && (
+              <div className="hotels-section">
+                <h2 className="section-title">Accommodation</h2>
+                <div className="hotels-grid">
+                  {hotels.map((hotel) => (
+                    <div key={hotel.hotel_id} className="hotel-card">
+                      <div className="hotel-image">
+                        <img src={hotel.hotel_image_url} alt={hotel.hotel_name} />
+                        <div className="hotel-rating-badge">
+                          ★ {hotel.hotel_rating}
+                        </div>
+                      </div>
+                      <div className="hotel-details">
+                        <h3 className="hotel-name">{hotel.hotel_name}</h3>
+                        <div className="hotel-location">
+                          <MapPinIcon />
+                          <span>
+                            {hotel.hotel_city}, {hotel.hotel_state}
+                          </span>
+                        </div>
+                        <div className="hotel-rooms">
+                          {hotel.rooms.map((room) => (
+                            <div key={room.room_id} className="room-info">
+                              <div className="room-header">
+                                <BedIcon />
+                                <span className="room-type">{room.room_type}</span>
+                              </div>
+                              <div className="room-details-grid">
+                                <span>{room.room_bed_type} Bed</span>
+                                <span>Up to {room.room_max_capacity} guests</span>
+                                {room.room_balcony_available && (
+                                  <span className="balcony-tag">Balcony</span>
+                                )}
+                              </div>
+                              <div className="room-price">
+                                ₹{room.room_cost_per_night.toLocaleString("en-IN")} / night
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* --- Right Column: Booking Card --- */}
