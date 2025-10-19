@@ -16,8 +16,9 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
     itinerary_summary: "",
     status: "UPCOMING",
   });
+  // This state now holds itinerary items for both new and existing packages
   const [itineraryItems, setItineraryItems] = useState([]);
-  const [editingItem, setEditingItem] = useState(null);
+  const [editingItem, setEditingItem] = useState(null); // Can be an item from DB or local state
   const [itineraryForm, setItineraryForm] = useState({
     day_number: "",
     duration: "",
@@ -52,9 +53,9 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
     }
   }, [packageData]);
 
-  const fetchItinerary = async (packageId) => {
+  const fetchItinerary = async (packageSlug) => {
     try {
-      const response = await axios.get(`packages/${packageId}`);
+      const response = await axios.get(`packages/${packageSlug}`);
       if (response.data.success && response.data.data.itinerary) {
         setItineraryItems(response.data.data.itinerary);
       }
@@ -63,23 +64,62 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
     }
   };
 
+  // Main submission handler
+  // Main submission handler
   const handlePackageSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      let response;
+      // --- Prepare Package Data with Correct Types ---
+      // We do this for both 'create' and 'update'
+      const packageDataForAPI = {
+        ...packageForm,
+        duration_days: Number(packageForm.duration_days),
+        price: Number(packageForm.price),
+        max_capacity: Number(packageForm.max_capacity),
+      };
+
       if (packageData) {
-        response = await axios.put(
-          `/packages/${packageData.slug}`,
-          packageForm
-        );
+        // --- UPDATE LOGIC ---
+        await axios.put(`/packages/${packageData.slug}`, packageDataForAPI);
         toast.success("Package updated successfully");
+        onSave(); // Close and refresh
       } else {
-        response = await axios.post("packages/", packageForm);
-        toast.success("Package created successfully");
+        // --- CREATE LOGIC ---
+        // Step 1: Create the package with correct data types
+        const packageResponse = await axios.post(
+          "packages/",
+          packageDataForAPI
+        );
+        toast.success("Package created successfully!");
+
+        const newPackage = packageResponse.data.data; // e.g., { packageId: 1, ... }
+
+        // Step 2: If itinerary items exist, create them in bulk
+        if (itineraryItems.length > 0) {
+          // --- Prepare Itinerary Data with Correct Types ---
+          const itineraryDataForAPI = itineraryItems.map((item) => ({
+            package_id: newPackage.packageId, // Assumes this is a Number from response
+            day_number: Number(item.day_number), // "1" -> 1
+            duration: Number(item.duration), // "180" -> 180
+            start_time: item.start_time,
+            end_time: item.end_time,
+            title: item.title,
+            description: item.description,
+            street_name: item.street_name,
+            city: item.city,
+            state: item.state,
+            pin: item.pin,
+            // We intentionally do NOT include the temporary 'item.item_id'
+          }));
+
+          // Send the cleaned array directly as the request body
+          await axios.post("packages/itineraries", itineraryDataForAPI);
+          toast.success("Itinerary items added successfully!");
+        }
+        onSave(); // Close and refresh
       }
-      onSave();
     } catch (error) {
       console.error("Error saving package:", error);
       toast.error(error.response?.data?.error || "Failed to save package");
@@ -90,45 +130,62 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
 
   const handleItinerarySubmit = async (e) => {
     e.preventDefault();
-    if (!packageData) {
-      toast.error(
-        "Please save the package first before adding itinerary items"
-      );
-      return;
-    }
 
-    setLoading(true);
-    try {
-      if (editingItem) {
-        const response = await axios.put(
-          // Ensure packageData.slug and item_id are correct identifiers for the PUT endpoint
-          `packages/${packageData.slug}/${editingItem.item_id}`,
-          itineraryForm
+    // If we are editing an existing package, save item to DB immediately
+    if (packageData) {
+      setLoading(true);
+      try {
+        if (editingItem) {
+          const response = await axios.put(
+            `packages/${packageData.slug}/${editingItem.item_id}`,
+            itineraryForm
+          );
+          toast.success("Itinerary item updated successfully");
+          setItineraryItems(
+            itineraryItems.map((item) =>
+              item.item_id === editingItem.item_id ? response.data.data : item
+            )
+          );
+        } else {
+          const response = await axios.post("packages/itinerary", {
+            ...itineraryForm,
+            package_id: packageData.packageId,
+          });
+          toast.success("Itinerary item added successfully");
+          setItineraryItems([...itineraryItems, response.data.data]);
+        }
+        resetItineraryForm();
+      } catch (error) {
+        console.error("Error saving itinerary item:", error);
+        toast.error(
+          error.response?.data?.error || "Failed to save itinerary item"
         );
-        toast.success("Itinerary item updated successfully");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // If creating a NEW package, just update the local state
+      if (editingItem) {
+        // Update item in local array
         setItineraryItems(
           itineraryItems.map((item) =>
-            item.item_id === editingItem.item_id ? response.data.data : item
+            item.item_id === editingItem.item_id
+              ? { ...editingItem, ...itineraryForm } // Use editingItem.item_id to keep temp ID
+              : item
           )
         );
+        toast.success("Itinerary item updated locally");
       } else {
-        const response = await axios.post("packages/itinerary", {
+        // Add new item to local array with a temporary ID
+        const newItem = {
           ...itineraryForm,
-          // Assuming packageData.packageId is the correct ID to link the itinerary item
-          package_id: packageData.packageId,
-        });
-        toast.success("Itinerary item added successfully");
-        // Ensure the newly added item has a unique key/ID from the backend response
-        setItineraryItems([...itineraryItems, response.data.data]);
+          item_id: Date.now(), // Temporary unique ID for local management
+        };
+        setItineraryItems([...itineraryItems, newItem]);
+        toast.success("Itinerary item added locally");
       }
       resetItineraryForm();
-    } catch (error) {
-      console.error("Error saving itinerary item:", error);
-      toast.error(
-        error.response?.data?.error || "Failed to save itinerary item"
-      );
-    } finally {
-      setLoading(false);
+      // No need to set loading, as it's a local state update
     }
   };
 
@@ -136,19 +193,27 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
     if (!window.confirm("Are you sure you want to delete this itinerary item?"))
       return;
 
-    setLoading(true);
-    try {
-      // Endpoint is assumed to be `packages/:slug/:itemId`
-      await axios.delete(`packages/${packageData.slug}/${itemId}`);
-      toast.success("Itinerary item deleted successfully");
+    // If we are editing an existing package, delete from DB
+    if (packageData) {
+      setLoading(true);
+      try {
+        await axios.delete(`packages/${packageData.slug}/${itemId}`);
+        toast.success("Itinerary item deleted successfully");
+        setItineraryItems(
+          itineraryItems.filter((item) => item.item_id !== itemId)
+        );
+      } catch (error) {
+        console.error("Error deleting itinerary item:", error);
+        toast.error("Failed to delete itinerary item");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // If creating a new package, just remove from local state
       setItineraryItems(
         itineraryItems.filter((item) => item.item_id !== itemId)
       );
-    } catch (error) {
-      console.error("Error deleting itinerary item:", error);
-      toast.error("Failed to delete itinerary item");
-    } finally {
-      setLoading(false);
+      toast.success("Itinerary item removed locally");
     }
   };
 
@@ -226,14 +291,13 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
             Package Details
           </button>
 
-          {packageData && (
-            <button
-              className={`tab ${activeTab === "itinerary" ? "tabActive" : ""}`}
-              onClick={() => setActiveTab("itinerary")}
-            >
-              Itinerary ({itineraryItems.length})
-            </button>
-          )}
+          {/* This tab is now ALWAYS visible */}
+          <button
+            className={`tab ${activeTab === "itinerary" ? "tabActive" : ""}`}
+            onClick={() => setActiveTab("itinerary")}
+          >
+            Itinerary ({itineraryItems.length})
+          </button>
         </div>
 
         <div className="content">
@@ -593,8 +657,11 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                   <button
                     type="submit"
                     className="btnPrimary"
-                    disabled={loading}
+                    disabled={packageData && loading} // Only disable if saving to DB
                   >
+                    {/* When creating a new package, 'loading' isn't set here, 
+                      so this button is always active for local changes.
+                    */}
                     {loading
                       ? "Saving..."
                       : editingItem
@@ -676,5 +743,4 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
   );
 };
 
-// REMOVE THE STYLES OBJECT
 export default PackageFormModal;
