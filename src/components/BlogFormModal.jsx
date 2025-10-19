@@ -1,9 +1,10 @@
+// src/components/BlogFormModal.jsx (The new code, with old class names)
 import React, { useState, useEffect } from "react";
 import axios from "../utils/axios";
 import toast from "react-hot-toast";
 import "../styles/PackageFormModal.css";
 
-import Compressor from 'compressorjs';
+import Compressor from "compressorjs";
 
 const CloseIcon = () => (
   <svg
@@ -56,8 +57,6 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -66,7 +65,6 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
         toast.error("Please select a valid image file");
         return;
       }
-
 
       // Validate file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
@@ -80,10 +78,6 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
           setFormData((prev) => ({ ...prev, featuredImage: compressedResult }));
         },
       });
-
-      
-
-      
 
       // Create preview
       const reader = new FileReader();
@@ -118,29 +112,26 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
       if (formData.featuredImage) {
         formDataToSend.append("featuredImage", formData.featuredImage);
       } else if (formData.existingImageUrl) {
+        // Only send this if a new file isn't present, to maintain existing image
         formDataToSend.append("existingImageUrl", formData.existingImageUrl);
       }
 
+      // Determine the API endpoint
+      const config = {
+        headers: { "Content-Type": "multipart/form-data" },
+      };
+      
       if (postData) {
-        // Update existing post
-        await axios.put(`/blogs/update/${postData.blog_id}`, formDataToSend, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await axios.put(`/blogs/update/${postData.blog_id}`, formDataToSend, config);
         toast.success("Blog post updated successfully!");
       } else {
-        // Create new post
-        await axios.post("/blogs/add", formDataToSend, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await axios.post("/blogs/add", formDataToSend, config);
         toast.success("Blog post created successfully!");
       }
       onSave();
+      onClose();
     } catch (error) {
-      toast.error(error.response?.data || "Failed to save blog post.");
+      toast.error(error.response?.data?.message || "Failed to save blog post.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -152,7 +143,8 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
           <h2>{postData ? "Edit Blog Post" : "Add New Blog Post"}</h2>
-          <button className="modal-close" onClick={onClose}>
+          {/* Using close-modal-btn for styling consistency */}
+          <button className="modal-close close-modal-btn" onClick={onClose}> 
             <CloseIcon />
           </button>
         </header>
@@ -160,6 +152,7 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
         <form className="modal-form" onSubmit={handleSubmit}>
           <div className="modal-body">
             <div className="form-grid">
+              {/* Post Title */}
               <div className="input-group full-width">
                 <label htmlFor="title">Post Title</label>
                 <input
@@ -172,6 +165,7 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
                 />
               </div>
 
+              {/* Featured Image Upload */}
               <div className="input-group full-width">
                 <label htmlFor="featuredImage">Featured Image</label>
                 <input
@@ -182,46 +176,28 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
                   onChange={handleImageChange}
                 />
                 <small
-                  style={{ color: "#666", marginTop: "4px", display: "block" }}
+                  style={{ color: "#667", marginTop: "4px", display: "block" }}
                 >
-                  Maximum file size: 5MB. Supported formats: JPG, PNG, GIF, WebP
+                  Maximum file size: 5MB. Supported formats: JPG, PNG, GIF, WebP.
+                  A new upload will replace the existing image.
                 </small>
               </div>
 
+              {/* Image Preview */}
               {imagePreview && (
                 <div className="input-group full-width">
                   <label>Image Preview</label>
-                  <div
-                    style={{ position: "relative", display: "inline-block" }}
-                  >
+                  <div className="image-preview-container">
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      style={{
-                        maxWidth: "100%",
-                        maxHeight: "200px",
-                        borderRadius: "8px",
-                        border: "1px solid #ddd",
-                      }}
+                      className="preview-image"
                     />
                     <button
                       type="button"
                       onClick={handleRemoveImage}
-                      style={{
-                        position: "absolute",
-                        top: "8px",
-                        right: "8px",
-                        background: "rgba(255, 0, 0, 0.8)",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "50%",
-                        width: "30px",
-                        height: "30px",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
+                      className="remove-image-btn"
+                      title="Remove Image"
                     >
                       ×
                     </button>
@@ -229,6 +205,7 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
                 </div>
               )}
 
+              {/* Content Textarea */}
               <div className="input-group full-width">
                 <label htmlFor="content">Content</label>
                 <textarea
