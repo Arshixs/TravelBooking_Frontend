@@ -3,6 +3,8 @@ import axios from "../utils/axios";
 import toast from "react-hot-toast";
 import "../styles/PackageFormModal.css";
 
+import Compressor from 'compressorjs';
+
 const CloseIcon = () => (
   <svg
     viewBox="0 0 24 24"
@@ -54,6 +56,8 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -63,13 +67,23 @@ const BlogFormModal = ({ postData, onClose, onSave }) => {
         return;
       }
 
+
       // Validate file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error("Image size should not exceed 5MB");
         return;
       }
 
-      setFormData((prev) => ({ ...prev, featuredImage: file }));
+      new Compressor(file, {
+        quality: 0.6, //don't go below this
+        success: (compressedResult) => {
+          setFormData((prev) => ({ ...prev, featuredImage: compressedResult }));
+        },
+      });
+
+      
+
+      
 
       // Create preview
       const reader = new FileReader();
