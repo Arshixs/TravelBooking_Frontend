@@ -140,7 +140,7 @@ const TicketDetailPage = () => {
             <div className="conversation-container">
                 <div className="message customer-message">
                     <div className="message-header">
-                        <span className="sender">Customer (Original Message)</span>
+                        <span className="sender">Customer Query</span>
                         <span className="timestamp">{formatDate(ticket.created_at)}</span>
                     </div>
                     <div className="message-body">

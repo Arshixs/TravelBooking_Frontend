@@ -1,23 +1,34 @@
-/* Badges for Status and Priority */
-.status-badge, .priority-badge {
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
+/* --- NEW ALIGNMENT LOGIC --- */
+
+/* 1. Make the container a flex column to stack messages */
+.conversation-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* This creates space between messages */
 }
 
-.status-badge { background-color: #e0e0e0; color: #333; }
-.status-open { background-color: #d4edda; color: #155724; }
-.status-in_progress { background-color: #cce5ff; color: #004085; }
-.status-resolved, .status-closed { background-color: #f8d7da; color: #721c24; }
+/* 2. Set a max-width for all messages so they don't span the full container */
+.message {
+    max-width: 75%;
+    margin-bottom: 0; /* The gap property now handles spacing */
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
 
-.priority-badge { background-color: #e0e0e0; color: #333; }
-.priority-low { background-color: #d1ecf1; color: #0c5460; }
-.priority-medium { background-color: #fff3cd; color: #856404; }
-.priority-high { background-color: #f5c6cb; color: #721c24; }
+/* 3. Align customer messages to the left */
+.customer-message {
+    align-self: flex-start;
+}
 
-/* Ticket Detail Page */
+/* 4. Align staff messages to the right */
+.staff-message {
+    align-self: flex-end;
+}
+
+
+/* --- ALL OTHER STYLES REMAIN THE SAME --- */
+
+/* Header styles */
 .ticket-detail-page {
     max-width: 900px;
     margin: 2rem auto;
@@ -39,12 +50,10 @@
     align-items: center;
     gap: 1rem;
 }
-
 .ticket-detail-header h1 {
     font-size: 1.8rem;
     margin: 0;
 }
-
 .header-meta {
     display: flex;
     flex-wrap: wrap;
@@ -54,25 +63,51 @@
     margin-top: 0.75rem;
 }
 
-/* Conversation Thread */
-.conversation-container .message {
-    margin-bottom: 1.5rem;
-    border: 1px solid #e9ecef;
+/* Staff actions panel styles */
+.staff-actions-panel {
+    background-color: #f8f9fa;
     border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid #dee2e6;
 }
+.staff-actions-panel .action-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.staff-actions-panel label {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.staff-actions-panel select {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+}
+.staff-actions-panel button {
+    margin-left: auto;
+}
+
+/* Message box content styles (unchanged) */
 .message-header {
     display: flex;
     justify-content: space-between;
     padding: 0.75rem 1rem;
     border-bottom: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+}
+.staff-message .message-header {
+    background-color: #e7f5ff;
 }
 .message-header .sender { font-weight: 700; }
 .message-header .timestamp { font-size: 0.85rem; color: #6c757d; }
 .message-body { padding: 1rem; line-height: 1.6; }
 .message-body p { margin: 0; }
-
-.customer-message .message-header { background-color: #f8f9fa; }
-.staff-message .message-header { background-color: #e7f5ff; }
 
 .internal-note { border-left: 4px solid #ffc107; }
 .internal-note .message-header { background-color: #fff3cd; }
@@ -86,7 +121,7 @@
     margin-left: 1rem;
 }
 
-/* Reply & Satisfaction Forms */
+/* Reply & Satisfaction Forms (unchanged) */
 .reply-form-container, .satisfaction-form {
     margin-top: 2rem;
     padding-top: 2rem;
@@ -111,37 +146,8 @@
 }
 .satisfaction-buttons button:hover { background: #e9ecef; transform: translateY(-2px); }
 
-
-
-.staff-actions-panel {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    border: 1px solid #dee2e6;
-}
-
-.staff-actions-panel .action-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.staff-actions-panel label {
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.staff-actions-panel select {
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid #ced4da;
-    background-color: #fff;
-}
-
-.staff-actions-panel button {
-    margin-left: auto; /* Pushes button to the right */
-}
+/* Badges (unchanged) */
+.status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+.status-open, .status-customer_replied { background-color: #d4edda; color: #155724; }
+.status-in_progress, .status-awaiting_customer { background-color: #cce5ff; color: #004085; }
+.status-resolved, .status-closed { background-color: #f8d7da; color: #721c24; }
