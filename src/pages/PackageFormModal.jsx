@@ -1150,7 +1150,12 @@ const PackageFormModal = ({ packageData, onClose, onSave }) => {
                           {hotel.hotel_rating && (
                             <div>Rating: {hotel.hotel_rating} ⭐</div>
                           )}
+                          {console.log(hotel)}
                           <div>Room ID: {hotel.room_id}</div>
+                          <div>
+                            CheckIn Day: {hotel.check_in_day} | CheckOut Day:{" "}
+                            {hotel.check_out_day}{" "}
+                          </div>
                           {hotel.room_type && (
                             <div>
                               Type: {hotel.room_type} | Bed:{" "}
