@@ -319,6 +319,60 @@
   box-shadow: 0 8px 20px rgba(19, 70, 134, 0.25);
 }
 
+/* Add these new styles to your existing CSS */
+
+.btn-download-receipt {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn-download-receipt:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-download-receipt:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.booking-card-footer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.booking-card-footer button {
+  flex: 1;
+  min-width: 150px;
+}
+
 /* Animations */
 @keyframes fadeInUp {
   from {

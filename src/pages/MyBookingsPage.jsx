@@ -10,6 +10,7 @@ const MyBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("CONFIRMED");
+  const [downloadingReceipt, setDownloadingReceipt] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -33,11 +34,8 @@ const MyBookingsPage = () => {
       });
 
       response.data.data.sort((a, b) => {
-        // Convert date strings to Date objects for accurate comparison
         const dateA = new Date(a.booking_date);
         const dateB = new Date(b.booking_date);
-
-        // For reverse order, subtract A from B
         return dateB.getTime() - dateA.getTime();
       });
       setBookings(response.data.data);
@@ -48,14 +46,424 @@ const MyBookingsPage = () => {
     }
   };
 
+  const downloadReceipt = async (bookingId) => {
+    try {
+      setDownloadingReceipt(bookingId);
+      const token = localStorage.getItem("accessToken");
+
+      const response = await axios.get(
+        `/bookings/hotels/${bookingId}/receipt`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const receiptData = response.data.data;
+      generatePDF(receiptData);
+    } catch (error) {
+      console.error("Error downloading receipt:", error);
+      alert("Failed to download receipt. Please try again.");
+    } finally {
+      setDownloadingReceipt(null);
+    }
+  };
+
+  const generatePDF = (data) => {
+    const { booking, customer, hotel, room, payment } = data;
+
+    // Create a new window for printing
+    const printWindow = window.open("", "", "width=800,height=600");
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Booking Receipt - ${booking.booking_id}</title>
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+          }
+          
+          .receipt-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          }
+          
+          .header {
+            text-align: center;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+          }
+          
+          .header h1 {
+            color: #2563eb;
+            font-size: 32px;
+            margin-bottom: 10px;
+          }
+          
+          .header p {
+            color: #666;
+            font-size: 14px;
+          }
+          
+          .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+          }
+          
+          .receipt-info-block h3 {
+            color: #1f2937;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+          }
+          
+          .receipt-info-block p {
+            color: #4b5563;
+            font-size: 14px;
+            margin: 5px 0;
+          }
+          
+          .section {
+            margin-bottom: 30px;
+          }
+          
+          .section-title {
+            background: #f3f4f6;
+            padding: 10px 15px;
+            color: #1f2937;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-left: 4px solid #2563eb;
+          }
+          
+          .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 0 15px;
+          }
+          
+          .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+          }
+          
+          .detail-label {
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+          }
+          
+          .detail-value {
+            color: #1f2937;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+          }
+          
+          .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+          }
+          
+          .status-confirmed {
+            background: #dcfce7;
+            color: #166534;
+          }
+          
+          .status-finished {
+            background: #dbeafe;
+            color: #1e40af;
+          }
+          
+          .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+          }
+          
+          .total-section {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+          }
+          
+          .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 18px;
+          }
+          
+          .total-row.grand-total {
+            border-top: 2px solid #2563eb;
+            margin-top: 10px;
+            padding-top: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+          }
+          
+          .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+          }
+          
+          .footer p {
+            margin: 5px 0;
+          }
+          
+          @media print {
+            body {
+              background: white;
+              padding: 0;
+            }
+            
+            .receipt-container {
+              box-shadow: none;
+              padding: 20px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="receipt-container">
+          <div class="header">
+            <h1>BOOKING RECEIPT</h1>
+            <p>TravelPro - Your Travel Partner</p>
+          </div>
+          
+          <div class="receipt-info">
+            <div class="receipt-info-block">
+              <h3>Receipt Details</h3>
+              <p><strong>Booking ID:</strong> #${booking.booking_id}</p>
+              <p><strong>Booking Date:</strong> ${new Date(
+                booking.booking_date
+              ).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}</p>
+              <p><strong>Status:</strong> <span class="status-badge status-${booking.status.toLowerCase()}">${
+      booking.status
+    }</span></p>
+            </div>
+            
+            <div class="receipt-info-block">
+              <h3>Customer Information</h3>
+              <p><strong>${customer.name}</strong></p>
+              <p>${customer.email}</p>
+              <p>${customer.phone}</p>
+            </div>
+          </div>
+          
+          <div class="section">
+            <div class="section-title">Hotel Information</div>
+            <div style="padding: 0 15px;">
+              <p style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 10px;">${
+                hotel.name
+              }</p>
+              <p style="color: #4b5563; margin-bottom: 5px;">${
+                hotel.address
+              }</p>
+              <p style="color: #4b5563;">Phone: ${hotel.phone} | Email: ${
+      hotel.email
+    }</p>
+            </div>
+          </div>
+          
+          <div class="section">
+            <div class="section-title">Booking Details</div>
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Check-in Date:</span>
+                <span class="detail-value">${new Date(
+                  booking.check_in_date
+                ).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Check-out Date:</span>
+                <span class="detail-value">${new Date(
+                  booking.check_out_date
+                ).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Number of Nights:</span>
+                <span class="detail-value">${booking.number_of_nights}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Number of Rooms:</span>
+                <span class="detail-value">${booking.no_of_rooms}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Number of Guests:</span>
+                <span class="detail-value">${booking.guest_count}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Room Type:</span>
+                <span class="detail-value">${booking.room_type}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="section">
+            <div class="section-title">Room Details</div>
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Room Type:</span>
+                <span class="detail-value">${room.type}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Bed Type:</span>
+                <span class="detail-value">${room.bed_type}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Max Capacity:</span>
+                <span class="detail-value">${room.max_capacity} persons</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Balcony:</span>
+                <span class="detail-value">${
+                  room.balcony_available ? "Yes" : "No"
+                }</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Cost per Night:</span>
+                <span class="detail-value">₹${room.cost_per_night.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+          
+          ${
+            payment && payment.payment_id
+              ? `
+          <div class="section">
+            <div class="section-title">Payment Information</div>
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Payment ID:</span>
+                <span class="detail-value">#${payment.payment_id}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Payment Date:</span>
+                <span class="detail-value">${new Date(
+                  payment.payment_date
+                ).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Payment Mode:</span>
+                <span class="detail-value">${payment.payment_mode}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Transaction Ref:</span>
+                <span class="detail-value">${
+                  payment.transaction_reference || "N/A"
+                }</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Payment Status:</span>
+                <span class="detail-value"><span class="status-badge status-${payment.status.toLowerCase()}">${
+                  payment.status
+                }</span></span>
+              </div>
+            </div>
+          </div>
+          `
+              : ""
+          }
+          
+          <div class="total-section">
+            <div class="total-row">
+              <span>Room Charges (${booking.no_of_rooms} × ₹${
+      room.cost_per_night
+    } × ${booking.number_of_nights} nights):</span>
+              <span>₹${(
+                booking.no_of_rooms *
+                room.cost_per_night *
+                booking.number_of_nights
+              ).toLocaleString()}</span>
+            </div>
+            <div class="total-row grand-total">
+              <span>Total Amount:</span>
+              <span>₹${booking.total_cost.toLocaleString()}</span>
+            </div>
+          </div>
+          
+          <div class="footer">
+            <p><strong>Thank you for choosing TravelPro!</strong></p>
+            <p>For any queries, please contact us at support@travelpro.com or call +91-1234567890</p>
+            <p>This is a computer-generated receipt and does not require a signature.</p>
+            <p style="margin-top: 10px; font-size: 10px;">Generated on ${new Date().toLocaleString()}</p>
+          </div>
+        </div>
+        
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() {
+              window.close();
+            }, 100);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  };
+
   const getStatusClass = (status) => {
     switch (status) {
       case "CONFIRMED":
         return "status-confirmed";
       case "FINISHED":
         return "status-finished";
-      // case "CANCELLED":
-      //   return "status-cancelled";
       default:
         return "";
     }
@@ -113,14 +521,6 @@ const MyBookingsPage = () => {
           >
             Finished
           </button>
-          {/* <button
-            className={
-              filter === "CANCELLED" ? "filter-btn active" : "filter-btn"
-            }
-            onClick={() => setFilter("CANCELLED")}
-          >
-            Cancelled
-          </button> */}
         </div>
 
         {bookings.length === 0 ? (
@@ -210,6 +610,22 @@ const MyBookingsPage = () => {
                   >
                     View Hotel
                   </button>
+                  {(booking.status === "CONFIRMED" ||
+                    booking.status === "FINISHED") && (
+                    <button
+                      className="btn-download-receipt"
+                      onClick={() => downloadReceipt(booking.booking_id)}
+                      disabled={downloadingReceipt === booking.booking_id}
+                    >
+                      {downloadingReceipt === booking.booking_id ? (
+                        <>
+                          <span className="spinner-small"></span> Downloading...
+                        </>
+                      ) : (
+                        <>📄 Download Receipt</>
+                      )}
+                    </button>
+                  )}
                   {booking.status === "PENDING" && (
                     <button
                       className="btn-complete-payment"
