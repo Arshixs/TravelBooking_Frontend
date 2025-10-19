@@ -622,7 +622,7 @@ const MyBookingsPage = () => {
                           <span className="spinner-small"></span> Downloading...
                         </>
                       ) : (
-                        <>📄 Download Receipt</>
+                        <>📄 Print Receipt</>
                       )}
                     </button>
                   )}
