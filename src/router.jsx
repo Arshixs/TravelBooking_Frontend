@@ -31,6 +31,10 @@ import MyBookingsPage from "./pages/MyBookingsPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentFailurePage from "./pages/PaymentFailurePage";
 import ManagePackages from "./pages/ManagePackages";
+import PackageBookingPage from "./pages/PackageBookingPage";
+import MyPackageBookingsPage from "./pages/MyPackageBookingsPage";
+import PackagePaymentSuccessPage from "./pages/PackagePaymentSuccessPage";
+
 
 export const router = createBrowserRouter([
   {
@@ -234,6 +238,39 @@ export const router = createBrowserRouter([
       },
       {
         path: "/bookings/payment/failure",
+        element: (
+          <ProtectedRoute>
+            <PaymentFailurePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "packages/:packageId/book",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <PackageBookingPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/bookings/packages/my",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <MyPackageBookingsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/bookings/packages/payment/success",
+        element: (
+          <ProtectedRoute>
+            <PackagePaymentSuccessPage />
+          </ProtectedRoute>
+        ),
+      },
+      // Package payment failure can reuse the same PaymentFailurePage
+      {
+        path: "/bookings/packages/payment/failure",
         element: (
           <ProtectedRoute>
             <PaymentFailurePage />

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "../utils/axios";
 import "../styles/PackagePage.css";
 
+import { useNavigate } from "react-router-dom";
 // --- SVG Icons for details ---
 const CalendarIcon = () => (
   <svg
@@ -92,6 +93,7 @@ const PackagePage = () => {
   const { slug } = useParams();
   const [packageData, setPackageData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPackage = async () => {
@@ -148,6 +150,17 @@ const PackagePage = () => {
   }
 
   const hotels = groupHotelsByHotel(packageData.hotel_rooms || []);
+
+  const handleBook = (packageId)=>{
+    navigate(`/packages/${packageId}/book`);
+    //console.log("Booking room:", room)
+    //alert(`Booking ${room.type} room (${room.room_id})`)
+
+    // Navigate to booking page or call booking API
+    console.log("Booking package:", packageId);
+    alert(`Booking package:-> ${packageId}`);
+    
+  }
 
   return (
     <div className="package-page">
@@ -274,7 +287,7 @@ const PackagePage = () => {
 
               <p className="summary-text">{packageData.itinerary_summary}</p>
 
-              <button className="btn-book-now">Book This Tour</button>
+              <button className="btn-book-now" onClick={()=> handleBook(packageData.packageId)}>Book This Tour</button>
             </div>
           </aside>
         </div>

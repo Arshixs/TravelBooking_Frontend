@@ -137,13 +137,36 @@ const Navbar = () => {
                     {/* ...existing guide/transport links... */}
                   </>
                 )}
-                {isCustomer && (
+                {/* {isCustomer && (
                   <>
                     <li>
                       <a href="/hotels">View Hotels</a>
                     </li>
                     <li>
                       <a href="/bookings/hotels/my">View Hotel Bookings</a>
+                    </li>
+                    <li>
+                      <a href="/support/tickets">Raise Issue</a>
+                    </li>
+                    <li>
+                      <a href="/blogs">Read blogs</a>
+                    </li>
+                  </>
+                )} */}
+             
+                {isCustomer && (
+                  <>
+                    <li>
+                      <a href="/hotels">View Hotels</a>
+                    </li>
+                    <li>
+                      <a href="/explore">View Packages</a>
+                    </li>
+                    <li>
+                      <a href="/bookings/hotels/my">View Hotel Bookings</a>
+                    </li>
+                    <li>
+                      <a href="/bookings/packages/my">View Package Bookings</a>
                     </li>
                     <li>
                       <a href="/support/tickets">Raise Issue</a>
