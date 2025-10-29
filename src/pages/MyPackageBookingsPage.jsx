@@ -66,6 +66,10 @@ const MyPackageBookingsPage = () => {
     });
   };
 
+  const handleViewDetails = (bookingId) =>{
+    navigate(`/bookings/packages/${bookingId}/details`);
+  }
+
   if (loading) {
     return (
       <div className="my-package-bookings-page">
@@ -107,11 +111,11 @@ const MyPackageBookingsPage = () => {
           </button>
           <button
             className={
-              filter === "PENDING" ? "filter-btn active" : "filter-btn"
+              filter === "CANCELLED" ? "filter-btn active" : "filter-btn"
             }
-            onClick={() => setFilter("PENDING")}
+            onClick={() => setFilter("CANCELLED")}
           >
-            Pending
+            Cancelled
           </button>
           <button
             className={
@@ -195,6 +199,12 @@ const MyPackageBookingsPage = () => {
                     onClick={() => navigate(`/explore`)}
                   >
                     View Packages
+                  </button>
+                  <button
+                    className="btn-view-package"
+                    onClick={()=>handleViewDetails(booking.booking_id)}
+                  >
+                    View Details
                   </button>
                 </div>
               </div>

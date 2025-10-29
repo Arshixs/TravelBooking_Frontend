@@ -72,7 +72,7 @@ const Navbar = () => {
   // Check if user is vendor
   const isVendor = user?.data?.userType === "VENDOR";
 
-  console.log(user?.data?.role);
+  //console.log(user?.data?.role);
 
   const isContentWriter = isStaff && user?.data?.role === "ContentWriter";
   const isPackageManager = isStaff && user?.data?.role === "PackageManager";

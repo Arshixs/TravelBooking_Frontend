@@ -725,3 +725,279 @@
   /* [CHANGED] Use a thicker border for the active state to match */
   border-bottom-color: var(--accent-red);
 }
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-filter {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.badge-processing {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.refund-reason {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.refund-info {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.refund-info p {
+  margin: 8px 0;
+}
+
+.no-action {
+  color: #9ca3af;
+}
+
+/* Add these styles to your existing AdminDashboard.css file */
+
+/* Modal enhancements for refund details */
+.modal-large {
+  max-width: 1200px;
+  width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-large .modal-body {
+  max-height: calc(90vh - 200px);
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Detail sections */
+.detail-section {
+  margin-bottom: 28px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.detail-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #3498db;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-item.detail-full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-label {
+  text-wrap: wrap;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  font-size: 14px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.detail-value.amount {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+/* Edit section styling */
+.edit-section {
+  background: #fff;
+  border: 2px solid #3498db;
+  margin-top: 24px;
+}
+
+.edit-section .detail-section-title {
+  color: #3498db;
+}
+
+/* View button styling */
+.btn-view-action-admin {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.btn-view-action-admin:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-view-action-admin svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Refund reason styling */
+.refund-reason {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Badge variations */
+.badge-processing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Responsive design for modal */
+@media (max-width: 768px) {
+  .modal-large {
+    max-width: 95%;
+    margin: 20px auto;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-large .modal-body {
+    padding: 16px;
+  }
+
+  .detail-section {
+    padding: 16px;
+  }
+}
+
+/* Loading state in modal */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+/* Form group improvements for refund modal */
+.edit-section .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.edit-section .form-group {
+  margin-bottom: 0;
+}
+
+.edit-section .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.edit-section .form-group input,
+.edit-section .form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #dce4ec;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.edit-section .form-group input:focus,
+.edit-section .form-group select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* No action styling */
+.no-action {
+  color: #bdc3c7;
+  font-style: italic;
+}
+
+/* Refund info section in old modal */
+.refund-info {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.refund-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.refund-info strong {
+  font-weight: 600;
+  margin-right: 8px;
+}
