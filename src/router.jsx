@@ -34,7 +34,7 @@ import ManagePackages from "./pages/ManagePackages";
 import PackageBookingPage from "./pages/PackageBookingPage";
 import MyPackageBookingsPage from "./pages/MyPackageBookingsPage";
 import PackagePaymentSuccessPage from "./pages/PackagePaymentSuccessPage";
-
+import PackageBookingDetailPage from "./pages/PackageBookingDetailPage";
 
 export const router = createBrowserRouter([
   {
@@ -274,6 +274,15 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <PaymentFailurePage />
+          </ProtectedRoute>
+        ),
+      },
+      // Inside your Routes component:
+      {
+        path: "/bookings/packages/:bookingId/details",
+        element: (
+          <ProtectedRoute>
+            <PackageBookingDetailPage />
           </ProtectedRoute>
         ),
       },
