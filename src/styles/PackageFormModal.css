@@ -219,6 +219,12 @@
     transform: scale(1.05);
 }
 
+.read-only-input {
+  background-color: #e9ecef; /* Light grey background */
+  cursor: not-allowed;      /* Indicate it's not editable */
+  opacity: 0.8;             /* Slightly faded appearance */
+}
+
 
 /* --- Keyframes (Original) --- */
 @keyframes slideInUp {
