@@ -282,7 +282,7 @@ export const router = createBrowserRouter([
       {
         path: "/contact",
         element: <ContactPage />,
-      }
+      },
       // Inside your Routes component:
       {
         path: "/bookings/packages/:bookingId/details",
