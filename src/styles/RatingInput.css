@@ -1,0 +1,66 @@
+/* Added unique prefix to avoid conflicts with PackageReviewCard.css */
+.rating-input {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.rating-input .stars-container {
+  display: flex;
+  gap: 8px;
+}
+
+.rating-input .star {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.rating-input .star:hover {
+  transform: scale(1.15);
+}
+
+.rating-input .star.active {
+  color: #ffc107;
+  text-shadow: 0 2px 8px rgba(255, 193, 7, 0.4);
+}
+
+.rating-input .rating-display {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.rating-input .rating-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #134686;
+}
+
+.rating-input .rating-text {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+@media (max-width: 480px) {
+  .rating-input .star {
+    font-size: 2rem;
+  }
+
+  .rating-input .stars-container {
+    gap: 6px;
+  }
+
+  .rating-input .rating-value {
+    font-size: 1.2rem;
+  }
+
+  .rating-input .rating-text {
+    font-size: 0.85rem;
+  }
+}

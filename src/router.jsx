@@ -34,6 +34,8 @@ import ManagePackages from "./pages/ManagePackages";
 import PackageBookingPage from "./pages/PackageBookingPage";
 import MyPackageBookingsPage from "./pages/MyPackageBookingsPage";
 import PackagePaymentSuccessPage from "./pages/PackagePaymentSuccessPage";
+import PackageReviewPage from "./pages/PackageReviewPage";
+import CreatePackageReviewPage from "./pages/CreatePackageReviewPage";
 import ContactPage from "./pages/ContactPage";
 
 import PackageBookingDetailPage from "./pages/PackageBookingDetailPage";
@@ -280,6 +282,21 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/reviews/packages/my",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <PackageReviewPage />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: "/reviews/packages/create/:packageId",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <CreatePackageReviewPage />
+          </ProtectedRoute>
+        )
+      }
         path: "/contact",
         element: <ContactPage />,
       },

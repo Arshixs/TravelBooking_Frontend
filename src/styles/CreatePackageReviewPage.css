@@ -1,0 +1,139 @@
+/* Added unique prefix to avoid conflicts with PackageReviewPage.css */
+.create-review-page {
+  min-height: 100vh;
+  background: #fdf4e3;
+  padding: 40px 20px 80px;
+}
+
+.create-review-page .review-form-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(19, 70, 134, 0.1);
+  padding: 40px;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.create-review-page .form-header {
+  margin-bottom: 40px;
+}
+
+.create-review-page .back-button {
+  background: none;
+  border: none;
+  color: #134686;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-review-page .back-button:hover {
+  color: #ed3f27;
+  transform: translateX(-5px);
+}
+
+.create-review-page .form-header h1 {
+  font-size: 2.2rem;
+  color: #134686;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+}
+
+.create-review-page .package-info {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.create-review-page .package-info strong {
+  color: #134686;
+}
+
+.create-review-page .loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.create-review-page .spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #f0f0f0;
+  border-top: 5px solid #ed3f27;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.create-review-page .loading-spinner p {
+  color: #134686;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.create-review-page .error-message {
+  background: #ffebee;
+  border-left: 4px solid #ed3f27;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.create-review-page .error-message p {
+  color: #c62828;
+  margin: 0;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .create-review-page .review-form-container {
+    padding: 30px 20px;
+  }
+
+  .create-review-page .form-header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-review-page {
+    padding: 20px 15px 60px;
+  }
+
+  .create-review-page .review-form-container {
+    padding: 20px 15px;
+  }
+
+  .create-review-page .form-header h1 {
+    font-size: 1.5rem;
+  }
+}
