@@ -440,7 +440,7 @@ const PackageBookingPage = () => {
 
             <div className="summary-item">
               <span>Duration:</span>
-              <strong>{packageData.duration} days</strong>
+              <strong>{packageData.duration_days} days</strong>
             </div>
 
             <div className="summary-item">
