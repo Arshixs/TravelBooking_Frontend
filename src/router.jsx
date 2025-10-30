@@ -296,7 +296,8 @@ export const router = createBrowserRouter([
             <CreatePackageReviewPage />
           </ProtectedRoute>
         )
-      }
+      },
+      {
         path: "/contact",
         element: <ContactPage />,
       },
