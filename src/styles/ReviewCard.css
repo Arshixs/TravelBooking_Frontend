@@ -1,62 +1,114 @@
 .testimonial-card {
   background: white;
-  padding: 40px 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   animation: slideInUp 1s ease-out;
+  border: 1px solid #f0f0f0;
 }
 
 .testimonial-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.review-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.review-title {
+  color: #134686;
+  font-size: 1.1rem;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.review-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stay-date,
+.review-date {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.ratings-container {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+  padding: 15px 0;
+}
+
+.rating-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rating-label {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .stars {
-  color: #feb21a;
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-}
-
-.testimonial-card p {
-  color: #666;
-  line-height: 1.7;
-  margin-bottom: 25px;
-  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 2px;
   font-size: 1.1rem;
 }
 
-.testimonial-author {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.full-stars {
+  color: #feb21a;
 }
 
-.testimonial-author img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
+.empty-stars {
+  color: #ddd;
 }
 
-.testimonial-author h4 {
+.rating-value {
   color: #134686;
-  font-size: 1rem;
-  margin-bottom: 5px;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-.testimonial-author span {
-  color: #999;
-  font-size: 0.9rem;
+.review-body {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 1rem;
 }
 
 @keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(50px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .testimonial-card {
+    padding: 20px;
+  }
+
+  .ratings-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .review-meta {
+    flex-direction: column;
+    gap: 8px;
   }
 }

@@ -37,7 +37,6 @@ import PackagePaymentSuccessPage from "./pages/PackagePaymentSuccessPage";
 import PackageReviewPage from "./pages/PackageReviewPage";
 import CreatePackageReviewPage from "./pages/CreatePackageReviewPage";
 import ContactPage from "./pages/ContactPage";
-
 import PackageBookingDetailPage from "./pages/PackageBookingDetailPage";
 
 export const router = createBrowserRouter([

@@ -4,7 +4,7 @@ import ReviewCard from "../components/ReviewCard"
 import "../styles/HotelDetails.css"
 import axios from "../utils/axios"
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 const HotelDetails = () => {
   const { id } = useParams()
   const [loading, setLoading] = useState(true)
@@ -15,7 +15,7 @@ const HotelDetails = () => {
   const [allPhones, setAllPhones] = useState([])
   const [error, setError] = useState(null)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   useEffect(() => {
     fetchHotelData()
   }, [id])
@@ -39,8 +39,8 @@ const HotelDetails = () => {
 
       // Fetch additional emails
       try {
-        const emailsResponse = await axios.get(`/hotels/${id}/emails/`);
-        const emailsData = emailsResponse.data.data;
+        const emailsResponse = await axios.get(`/hotels/${id}/emails/`)
+        const emailsData = emailsResponse.data.data
         if (emailsData && Array.isArray(emailsData)) {
           emailsData.forEach((emailObj) => {
             if (emailObj.email && !emailsToDisplay.includes(emailObj.email)) {
@@ -63,7 +63,7 @@ const HotelDetails = () => {
       // Fetch additional phones
       try {
         const phonesResponse = await axios.get(`/hotels/${id}/phones/`)
-        const phonesData = phonesResponse.data.data;
+        const phonesData = phonesResponse.data.data
         if (phonesData && Array.isArray(phonesData)) {
           phonesData.forEach((phoneObj) => {
             if (phoneObj.phone && !phonesToDisplay.includes(phoneObj.phone)) {
@@ -77,9 +77,17 @@ const HotelDetails = () => {
 
       setAllPhones(phonesToDisplay)
 
-      // 3. Fetch reviews for this hotel
-      // const reviewsResponse = await axios.get(`/hotels/${id}/reviews`)
-      // setReviews(reviewsResponse.data) // array of reviews
+      try {
+        const reviewsResponse = await axios.get(`/hotel_review/${id}`);
+        console.log("Reviews response:", reviewsResponse);
+        const reviewsData = reviewsResponse.data.data;
+        if (Array.isArray(reviewsData)) {
+          setReviews(reviewsData)
+        }
+      } catch (err) {
+        console.error("Failed to fetch hotel reviews:", err)
+        setReviews([])
+      }
     } catch (err) {
       console.error("Failed to load hotel data:", err)
       setError("Failed to load hotel data. Please try again later.")
@@ -88,23 +96,22 @@ const HotelDetails = () => {
     }
   }
 
-
-    const handleBookRoom = (room) => {
+  const handleBookRoom = (room) => {
     // if (room.number_of_rooms_available === 0) {
     //     alert("Sorry, this room is fully booked!")
     //     return
-    const hotelId=room.hotel_id;;
-    const roomId=room.room_id;
+    const hotelId = room.hotel_id
+    const roomId = room.room_id
     // }
-        // Navigate to booking page or call booking API
-      navigate(`/hotels/${hotelId}/rooms/${roomId}/book`);
-        //console.log("Booking room:", room)
-        //alert(`Booking ${room.type} room (${room.room_id})`)
-    
-      // Navigate to booking page or call booking API
-      console.log("Booking room:", room)
-      alert(`Booking ${room.type} room (${room.room_id})`)
-    }
+    // Navigate to booking page or call booking API
+    navigate(`/hotels/${hotelId}/rooms/${roomId}/book`)
+    //console.log("Booking room:", room)
+    //alert(`Booking ${room.type} room (${room.room_id})`)
+
+    // Navigate to booking page or call booking API
+    console.log("Booking room:", room)
+    alert(`Booking ${room.type} room (${room.room_id})`)
+  }
 
   if (loading) {
     return (
@@ -123,10 +130,10 @@ const HotelDetails = () => {
           <div className="error-state">Hotel not found</div>
         </div>
       </main>
-    );
+    )
   }
 
-  const fullAddress = [hotel.street, hotel.city, hotel.state, hotel.pin].filter(Boolean).join(", ");
+  const fullAddress = [hotel.street, hotel.city, hotel.state, hotel.pin].filter(Boolean).join(", ")
 
   return (
     <main className="hotel-details-page">
@@ -238,12 +245,12 @@ const HotelDetails = () => {
                   </div>
 
                   {/* {room.number_of_rooms_available == 0 ? ( */}
-                    <div className="room-actions">
-                      {/* <span className="availability-badge available">{room.number_of_rooms_available} available</span> */}
-                      <button className="btn-book" onClick={() => handleBookRoom(room)}>
-                        Book Now
-                      </button>
-                    </div>
+                  <div className="room-actions">
+                    {/* <span className="availability-badge available">{room.number_of_rooms_available} available</span> */}
+                    <button className="btn-book" onClick={() => handleBookRoom(room)}>
+                      Book Now
+                    </button>
+                  </div>
                   {/* ) : (
                     <div className="room-actions">
                       <span className="availability-badge unavailable">Not Available</span>
@@ -256,16 +263,30 @@ const HotelDetails = () => {
           </div>
         </div>
 
-        {reviews && reviews.length > 0 && (
-          <div className="reviews-section">
+        <div className="reviews-section">
+          <div className="reviews-header">
             <h2>Guest Reviews</h2>
+            {reviews.length > 0 && (
+              <span className="reviews-count">
+                {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+              </span>
+            )}
+          </div>
+
+          {reviews && reviews.length > 0 ? (
             <div className="reviews-grid">
               {reviews.map((review, idx) => (
                 <ReviewCard key={idx} reviewData={review} />
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="reviews-empty-state">
+              <div className="empty-icon">⭐</div>
+              <p className="empty-title">No reviews yet</p>
+              <p className="empty-message">Be the first to share your experience at {hotel.name}</p>
+            </div>
+          )}
+        </div>
       </section>
     </main>
   )
