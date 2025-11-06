@@ -131,7 +131,7 @@ const Signup = () => {
               password: formData.password,
               userType: activeTab,
               vendorName: formData.vendorName,
-              serviceType: formData.serviceType.toUpperCase(),
+              serviceType: formData.serviceType,
               contactPersonFirstName: formData.contactPersonFirstName,
               contactPersonLastName: formData.contactPersonLastName,
               street_name: formData.streetName,
@@ -309,9 +309,9 @@ const Signup = () => {
                       required
                     >
                       <option value="">Select...</option>
-                      <option value="Guide">Guide</option>
-                      <option value="Transport">Transport</option>
-                      <option value="Hotel">Hotel</option>
+                      <option value="Guide_Provider">Guide</option>
+                      <option value="Transport_Provider">Transport</option>
+                      <option value="Hotel_Provider">Hotel</option>
                     </select>
                   </div>
                   <Inputbox

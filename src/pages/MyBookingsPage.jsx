@@ -38,7 +38,7 @@ const MyBookingsPage = () => {
     review_body: "",
     could_recommend: true,
   })
-  const [submittingReview, setSubmittingReview] = useState(false)
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {

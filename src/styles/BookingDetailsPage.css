@@ -1,0 +1,186 @@
+.booking-details-page {
+    padding-bottom: 4rem;
+}
+
+/* --- Header Section --- */
+.booking-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 3rem;
+}
+
+.booking-header h1 {
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.booking-header p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+.booking-header .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+}
+.booking-header .btn-primary svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* --- Timeline Container --- */
+.timeline-container {
+    max-width: 900px;
+    position: relative;
+    padding: 1rem 0;
+}
+
+/* Optional: Timeline center line */
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 40px;
+    width: 4px;
+    background-color: #e9ecef;
+    border-radius: 2px;
+}
+
+.timeline-day-card {
+    position: relative;
+    margin-left: 80px; /* Space for the day circle */
+    margin-bottom: 2rem;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Day circle on timeline */
+.timeline-day-card::before {
+    content: 'Day ' attr(data-day); /* We'll use JS to set this if needed, or just a marker */
+    content: ''; /* Simpler circle marker */
+    position: absolute;
+    top: 28px;
+    left: -59px; /* (80px margin - 21px) = 59px */
+    width: 40px;
+    height: 40px;
+    background-color: #007bff;
+    border: 4px solid #fff;
+    border-radius: 50%;
+    z-index: 1;
+    box-shadow: 0 0 0 4px #007bff;
+}
+
+.day-header {
+    background-color: #f8f9fa;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    border-radius: 8px 8px 0 0;
+}
+
+.day-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #0056b3;
+}
+
+.day-content {
+    padding: 1.5rem;
+}
+
+.day-description {
+    font-size: 1.05rem;
+    color: #495057;
+    line-height: 1.6;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed #ced4da;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Stack details by default */
+    gap: 1.5rem;
+}
+
+.detail-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: #fdfdfd;
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+}
+
+.detail-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #e7f5ff; /* Light blue bg */
+    color: #007bff; /* Primary color */
+}
+.detail-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.detail-info {
+    flex-grow: 1;
+}
+
+.detail-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.detail-info p {
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+    color: #495057;
+}
+
+.detail-info span {
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .timeline-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .timeline-container::before {
+        left: 20px;
+    }
+    .timeline-day-card {
+        margin-left: 40px;
+    }
+    .timeline-day-card::before {
+        width: 30px;
+        height: 30px;
+        left: -33px; /* (40px margin - 7px) */
+        top: 22px;
+        box-shadow: 0 0 0 3px #007bff;
+    }
+    .day-header h2 {
+        font-size: 1.4rem;
+    }
+}

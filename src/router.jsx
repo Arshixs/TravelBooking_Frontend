@@ -38,6 +38,8 @@ import PackageReviewPage from "./pages/PackageReviewPage";
 import CreatePackageReviewPage from "./pages/CreatePackageReviewPage";
 import ContactPage from "./pages/ContactPage";
 import PackageBookingDetailPage from "./pages/PackageBookingDetailPage";
+import BookingDetailsPage from "./pages/BookingDetailsPage";
+
 
 export const router = createBrowserRouter([
   {
@@ -286,7 +288,7 @@ export const router = createBrowserRouter([
           <ProtectedRoute requiredUserType="CUSTOMER">
             <PackageReviewPage />
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: "/reviews/packages/create/:packageId",
@@ -294,12 +296,21 @@ export const router = createBrowserRouter([
           <ProtectedRoute requiredUserType="CUSTOMER">
             <CreatePackageReviewPage />
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: "/contact",
         element: <ContactPage />,
       },
+      {
+        path: "/my-bookings/:package_booking_id",
+        element: (
+          <ProtectedRoute requiredUserType="CUSTOMER">
+            <BookingDetailsPage />
+          </ProtectedRoute>
+        ),
+      },
+
       // Inside your Routes component:
       {
         path: "/bookings/packages/:bookingId/details",

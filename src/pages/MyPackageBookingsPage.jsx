@@ -22,6 +22,7 @@ const MyPackageBookingsPage = () => {
   const [submittingRefund, setSubmittingRefund] = useState(false);
   const [loadingRefundStatus, setLoadingRefundStatus] = useState(false);
   const [refundStatus, setRefundStatus] = useState(null);
+  
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -49,6 +50,7 @@ const MyPackageBookingsPage = () => {
         const dateB = new Date(b.booking_date);
         return dateB.getTime() - dateA.getTime();
       });
+      console.log(response.data.data);
       setBookings(response.data.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -389,7 +391,7 @@ const MyPackageBookingsPage = () => {
                 <div className="booking-card-footer">
                   <button
                     className="btn-view-hotel"
-                    onClick={() => navigate(`/explore`)}
+                    onClick={() => navigate(`/my-bookings/${booking.package_id}`)}
                   >
                     View Packages
                   </button>
