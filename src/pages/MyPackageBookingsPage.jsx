@@ -306,14 +306,14 @@ const MyPackageBookingsPage = () => {
           >
             Finished
           </button>
-          <button
+          {/* <button
             className={
               filter === "CANCELLED" ? "filter-btn active" : "filter-btn"
             }
             onClick={() => setFilter("CANCELLED")}
           >
             Cancelled
-          </button>
+          </button> */}
         </div>
 
         {bookings.length === 0 ? (
